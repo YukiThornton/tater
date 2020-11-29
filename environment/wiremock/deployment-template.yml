@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wiremock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: wiremock
+  template:
+    metadata:
+      labels:
+        name: wiremock
+    spec:
+      containers:
+      - name: wiremock
+        image: rodolpheche/wiremock
+        ports:
+        - containerPort: 8080

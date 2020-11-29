@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tater-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: tater-db
+  template:
+    metadata:
+      labels:
+        name: tater-db
+    spec:
+      containers:
+      - name: tater-db
+        image: tater-db:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "password"
