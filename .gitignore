@@ -1,6 +1,8 @@
 .DS_Store
 target/
 
+**/.mvn/wrapper/maven-wrapper.jar
+
 **/.idea/*
 !**/.idea/**/workspace.xml
 !**/.idea/**/tasks.xml

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tater-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: tater-api
+  template:
+    metadata:
+      labels:
+        name: tater-api
+    spec:
+      containers:
+      - name: tater-api
+        image: tater-api:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
