@@ -24,6 +24,9 @@ fun Application.module(testing: Boolean = false) {
         get("/v1/systems/ping") {
             call.respondText("PONG!", contentType = ContentType.Text.Plain)
         }
+        get("/v1/watched") {
+            call.respond(HttpStatusCode.OK)
+        }
     }
 }
 
