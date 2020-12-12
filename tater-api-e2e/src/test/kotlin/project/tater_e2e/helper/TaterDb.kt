@@ -25,7 +25,7 @@ class TaterDb {
                 it.config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, PostgresqlDataTypeFactory())
             }
 
-    fun cleanInsert(dataSetName: String) {
+    fun loadData(dataSetName: String) {
         val dataSet = CsvDataSet(File(TaterDb::class.java.getResource("$dataSetBasePath/$dataSetName").file))
         DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet)
     }

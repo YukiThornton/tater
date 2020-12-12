@@ -9,21 +9,21 @@ class MovieApiMock {
 
     private val wireMock = WireMock(Configurations.wiremockHost, Configurations.wiremockPort)
 
-    fun reset() {
+    fun clearAll() {
         wireMock.resetMappings()
     }
 
-    fun resetAllRequests() {
+    fun clearAllRequests() {
         wireMock.resetRequests()
     }
 
-    fun stubGetMovie(movieId: String) {
+    fun returnsMovieDetailsWhenMovieIdIs(movieId: String) {
         wireMock.register(get("/3/movie/$movieId").willReturn(
             okJson(JsonReader.read("/project/tater_e2e/movie-api/responses/get-movie/$movieId.json"))
         ))
     }
 
-    fun verifyGetMovie(movieId: String) {
+    fun receivedARequestForMovieDetailsOf(movieId: String) {
         wireMock.verifyThat(getRequestedFor(urlEqualTo("/3/movie/$movieId"))
             .withHeader("Content-Type", equalTo("application/json"))
             .withHeader("Authorization", equalTo("Bearer ${Configurations.movieApiToken}")))
