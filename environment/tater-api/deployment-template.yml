@@ -18,3 +18,11 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8080
+        volumeMounts:
+        - name: tater-secret
+          mountPath: "/etc/tater"
+          readOnly: true
+      volumes:
+      - name: tater-secret
+        secret:
+          secretName: tater-secret

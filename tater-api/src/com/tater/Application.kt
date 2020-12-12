@@ -6,6 +6,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.http.*
 import com.fasterxml.jackson.databind.*
+import com.tater.config.Configuration
 import com.tater.driver.MovieApi
 import com.tater.driver.MovieApiClient
 import com.tater.driver.TaterDb
@@ -34,8 +35,10 @@ fun Application.module(testing: Boolean = false) {
     }
 
     kodein {
-        bind<TaterDb>() with singleton { TaterPostgresqlDb() }
-        bind<MovieApi>() with singleton { MovieApiClient() }
+        val configuration = Configuration("/etc/tater/app.properties")
+        bind<Configuration>() with singleton { configuration }
+        bind<TaterDb>() with singleton { TaterPostgresqlDb(configuration.taterDb()) }
+        bind<MovieApi>() with singleton { MovieApiClient(configuration.movieApi()) }
         bind<MovieSummaryPort>() with singleton { MovieSummaryGateway(instance()) }
         bind<ViewingHistoryPort>() with singleton { ViewingHistoryGateway(instance()) }
         bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance()) }

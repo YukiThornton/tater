@@ -2,8 +2,6 @@
 
 NAMESPACE=tater-e2e
 
-kubectl apply -f namespace-e2e.yml
-
 kubectl apply -n $NAMESPACE -f tater-api/service-template.yml
 kubectl apply -n $NAMESPACE -f wiremock/service-template.yml
 kubectl apply -n $NAMESPACE -f tater-db/service-template.yml

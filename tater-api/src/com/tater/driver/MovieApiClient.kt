@@ -6,8 +6,11 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
+import com.tater.config.MovieApiConfig
 
-class MovieApiClient: MovieApi {
+class MovieApiClient(
+    private val config: MovieApiConfig
+): MovieApi {
     private val client = OkHttpClient()
     private val mapper = ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -15,9 +18,9 @@ class MovieApiClient: MovieApi {
 
     override fun getMovie(id: String): MovieApi.MovieJson {
         val request = Request.Builder()
-            .url("http://wiremock-svc:8080/3/movie/$id")
+            .url("${config.endpoint()}/3/movie/$id")
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer movieApiFakeToken")
+            .header("Authorization", "Bearer ${config.authToken()}")
             .build()
         return client.newCall(request).execute()?.let {
             mapper.readValue(it.body().string())
