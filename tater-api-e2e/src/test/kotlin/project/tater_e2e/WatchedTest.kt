@@ -33,18 +33,18 @@ class WatchedTest {
         val expectedJsonPath = "/project/tater_e2e/tater-api/responses/get-v1-watched/001.json"
         val expectedJson = JsonReader.fromFilePath(expectedJsonPath)
 
-        movieApi.returnsMovieDetailsWhenMovieIdIs("1001")
-        movieApi.returnsMovieDetailsWhenMovieIdIs("1002")
-        movieApi.returnsMovieDetailsWhenMovieIdIs("1003")
+        movieApi.returnsMovieDetailsWhenMovieIdIs("497")
+        movieApi.returnsMovieDetailsWhenMovieIdIs("680")
+        movieApi.returnsMovieDetailsWhenMovieIdIs("13")
 
         val response = taterApi.getV1Watched("1")
 
         response.code() shouldBeEqualTo 200
         JsonReader.fromRawString(response.body().string()) shouldBeEqualTo  expectedJson
 
-        movieApi.receivedARequestForMovieDetailsOf("1001")
-        movieApi.receivedARequestForMovieDetailsOf("1002")
-        movieApi.receivedARequestForMovieDetailsOf("1003")
+        movieApi.receivedARequestForMovieDetailsOf("497")
+        movieApi.receivedARequestForMovieDetailsOf("680")
+        movieApi.receivedARequestForMovieDetailsOf("13")
     }
 
     // add test: no header
