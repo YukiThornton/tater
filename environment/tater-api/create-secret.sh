@@ -1,3 +1,6 @@
 #!/bin/bash
 
-kubectl -n tater-e2e create secret generic tater-secret --from-file=app.properties=$1
+NAMESPACE=$1
+PROPERTY_FILE=$2
+
+kubectl -n $NAMESPACE create secret generic tater-secret --from-file=app.properties=$PROPERTY_FILE

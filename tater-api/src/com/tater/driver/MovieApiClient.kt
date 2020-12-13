@@ -18,9 +18,8 @@ class MovieApiClient(
 
     override fun getMovie(id: String): MovieApi.MovieJson {
         val request = Request.Builder()
-            .url("${config.endpoint()}/3/movie/$id")
+            .url("${config.endpoint()}/3/movie/$id?api_key=${config.authToken()}")
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${config.authToken()}")
             .build()
         return client.newCall(request).execute()?.let {
             mapper.readValue(it.body().string())

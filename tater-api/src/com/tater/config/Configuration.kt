@@ -15,7 +15,6 @@ class Configuration(private val confFilePath: String) {
             override fun driver() = config.getProperty("taterDbDriver")
             override fun user() = config.getProperty("taterDbUser")
             override fun password() = config.getProperty("taterDbPassword")
-
         }
     }
 
