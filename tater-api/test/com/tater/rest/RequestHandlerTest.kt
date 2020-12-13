@@ -2,7 +2,9 @@ package com.tater.rest
 
 import com.tater.AutoResetMock
 import com.tater.domain.*
+import com.tater.usecase.UserNotSpecifiedException
 import com.tater.usecase.ViewingHistoryUsecase
+import com.tater.usecase.WatchedMoviesUnavailableException
 import io.ktor.http.*
 import io.ktor.request.*
 import io.mockk.*
@@ -31,7 +33,7 @@ class RequestHandlerTest: AutoResetMock {
                     MovieSummary(MovieId("id1"), MovieTitle("title1")),
                     MovieSummary(MovieId("id2"), MovieTitle("title2"))
             ))
-            val expected = RequestHandler.Response(
+            val expected = RequestHandler.Result(
                     HttpStatusCode.OK,
                     MovieSummariesJson(listOf(
                             MovieSummaryJson("id1", "title1"),
@@ -46,7 +48,58 @@ class RequestHandlerTest: AutoResetMock {
 
             verify { request.header("tater-user-id") }
             verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
+        }
 
+        @Test
+        fun `Gives usecase null for UserId when userId is missing in header`() {
+            val request = mockk<ApplicationRequest>()
+            val summaries = MovieSummaries(emptyList())
+
+            every { request.header("tater-user-id") } returns null
+            every { viewingHistoryUsecase.allMoviesWatchedBy(null) } returns summaries
+
+            sut.getV1Watched(request)
+
+            verify { request.header("tater-user-id") }
+            verify { viewingHistoryUsecase.allMoviesWatchedBy(null) }
+        }
+
+        @Test
+        fun `Returns Bad request response when usecase throws a UserNotSpecifiedException`() {
+            val request = mockk<ApplicationRequest>()
+            val exception = mockk<UserNotSpecifiedException>()
+            val expected = RequestHandler.Result(
+                HttpStatusCode.BadRequest,
+                null,
+                exception
+            )
+
+            every { request.header("tater-user-id") } returns "userId1"
+            every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws exception
+
+            sut.getV1Watched(request) shouldBeEqualTo expected
+
+            verify { request.header("tater-user-id") }
+            verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
+        }
+
+        @Test
+        fun `Returns Internal System Error response when usecase throws a WatchedMoviesUnavailableException`() {
+            val request = mockk<ApplicationRequest>()
+            val exception = mockk<WatchedMoviesUnavailableException>()
+            val expected = RequestHandler.Result(
+                HttpStatusCode.InternalServerError,
+                null,
+                exception
+            )
+
+            every { request.header("tater-user-id") } returns "userId1"
+            every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws exception
+
+            sut.getV1Watched(request) shouldBeEqualTo expected
+
+            verify { request.header("tater-user-id") }
+            verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
         }
     }
 }

@@ -5,4 +5,6 @@ import com.tater.domain.ViewingHistories
 
 interface ViewingHistoryPort {
     fun viewingHistoriesFor(userId: UserId): ViewingHistories
+
+    class UnavailableException(override val message: String?, override val cause: Throwable?): RuntimeException()
 }

@@ -22,6 +22,18 @@ class MovieApiMock {
         ))
     }
 
+    fun failsWithNotFoundForMovieDetailsWhenMovieIdIs(movieId: String) {
+        wireMock.register(get(urlPathEqualTo("/3/movie/$movieId"))
+                .withQueryParam("api_key", equalTo(Configurations.movieApiToken))
+                .willReturn(notFound()))
+    }
+
+    fun failsWithServerErrorForMovieDetailsWhenMovieIdIs(movieId: String) {
+        wireMock.register(get(urlPathEqualTo("/3/movie/$movieId"))
+                .withQueryParam("api_key", equalTo(Configurations.movieApiToken))
+                .willReturn(serverError()))
+    }
+
     fun receivedARequestForMovieDetailsOf(movieId: String) {
         wireMock.verifyThat(getRequestedFor(urlPathEqualTo("/3/movie/$movieId"))
             .withQueryParam("api_key", equalTo(Configurations.movieApiToken))

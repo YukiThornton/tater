@@ -18,4 +18,13 @@ class TaterApi {
 
         return client.newCall(request).execute()!!
     }
+
+    fun getV1WatchedWithoutUserId(): Response {
+        val request = Request.Builder()
+                .url("${Configurations.taterApiEndpoint}/v1/watched")
+                .header("Content-Type", "application/json")
+                .build()
+
+        return client.newCall(request).execute()!!
+    }
 }

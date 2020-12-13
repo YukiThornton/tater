@@ -7,12 +7,15 @@ import com.tater.port.MovieSummaryPort
 class MovieSummaryGateway(
     private val movieApi: MovieApi
 ): MovieSummaryPort {
-
-    override fun movieSummariesOf(movieIds: MovieIds): MovieSummaries {
-        return movieIds.map { movieId ->
+    override fun movieSummaryOf(movieId: MovieId): MovieSummary? {
+        return try {
             movieApi.getMovie(movieId.value).let { json ->
                 MovieSummary(MovieId(json.id), MovieTitle(json.title))
             }
-        }.let(::MovieSummaries)
+        } catch (e: MovieApi.NotFoundException) {
+            null
+        } catch (e: Throwable) {
+            throw MovieSummaryPort.UnavailableException("Movie summary for movie(id=${movieId.value}) unavailable", e)
+        }
     }
 }

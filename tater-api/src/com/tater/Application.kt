@@ -52,8 +52,11 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("PONG!", contentType = ContentType.Text.Plain)
         }
         get("/v1/watched") {
-            val (status, body) = handler.getV1Watched(call.request)
-            call.respond(status, body)
+            val result = handler.getV1Watched(call.request)
+            if (result.error != null) {
+                call.application.environment.log.error("Failed on GET /v1/watched", result.error)
+            }
+            call.respond(result.responseStatus, result.responseBody ?: "")
         }
     }
 }

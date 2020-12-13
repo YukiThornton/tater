@@ -22,7 +22,11 @@ class MovieApiClient(
             .header("Content-Type", "application/json")
             .build()
         return client.newCall(request).execute()?.let {
-            mapper.readValue(it.body().string())
+            when(it.code()) {
+                200 -> mapper.readValue(it.body().string())
+                404 -> throw MovieApi.NotFoundException("movie(id=$id) not found", null)
+                else -> throw RuntimeException("statusCode=${it.code()}, body=${it.body().string()}")
+            }
         }!!
     }
 }

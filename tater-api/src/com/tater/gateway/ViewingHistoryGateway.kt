@@ -12,7 +12,11 @@ class ViewingHistoryGateway(
 ): ViewingHistoryPort {
 
     override fun viewingHistoriesFor(userId: UserId): ViewingHistories {
-        val histories = taterDb.selectViewingHistoriesByUserId(userId.value)
-        return histories.map { ViewingHistory(userId, MovieId(it.movieId)) }.let(::ViewingHistories)
+        try {
+            val histories = taterDb.selectViewingHistoriesByUserId(userId.value)
+            return histories.map { ViewingHistory(userId, MovieId(it.movieId)) }.let(::ViewingHistories)
+        } catch (e: Throwable) {
+            throw ViewingHistoryPort.UnavailableException("Viewing history for user(id=${userId.value}) unavailable", e)
+        }
     }
 }

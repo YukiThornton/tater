@@ -6,12 +6,16 @@ import com.tater.domain.UserId
 import com.tater.domain.ViewingHistories
 import com.tater.domain.ViewingHistory
 import com.tater.driver.TaterDb
+import com.tater.port.ViewingHistoryPort
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withCause
+import org.amshove.kluent.withMessage
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.DisplayName
@@ -54,6 +58,20 @@ class ViewingHistoryGatewayTest: AutoResetMock {
             verify(exactly = 1) { taterDb.selectViewingHistoriesByUserId("userId1") }
             verify { historyData1.movieId }
             verify { historyData2.movieId }
+        }
+
+        @Test
+        fun `Throws a UnavailableException when db client throws any error`() {
+            val userId = UserId("userId1")
+            val errorFromClient = mockk<Throwable>()
+            val errorMessage = "Viewing history for user(id=userId1) unavailable"
+
+            every { taterDb.selectViewingHistoriesByUserId("userId1") } throws errorFromClient
+
+            val sutFunc = { sut.viewingHistoriesFor(userId) }
+            sutFunc shouldThrow ViewingHistoryPort.UnavailableException::class withCause Throwable::class withMessage errorMessage
+
+            verify(exactly = 1) { taterDb.selectViewingHistoriesByUserId("userId1") }
         }
     }
 }
