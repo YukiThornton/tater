@@ -4,7 +4,7 @@ import com.tater.domain.MovieId
 import com.tater.domain.MovieSummary
 
 interface MovieSummaryPort {
-    fun movieSummaryOf(movieId: MovieId): MovieSummary?
+    suspend fun movieSummaryOf(movieId: MovieId): MovieSummary?
 
     class UnavailableException(override val message: String?, override val cause: Throwable?): RuntimeException()
 }

@@ -63,9 +63,9 @@
             <version>${ktor_version}</version>
         </dependency>
         <dependency>
-            <groupId>com.squareup.okhttp</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>2.7.5</version>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-core</artifactId>
+            <version>1.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
-            <version>1.10.2</version>
+            <version>1.8.13.kotlin13</version>
             <scope>test</scope>
         </dependency>
         <dependency>

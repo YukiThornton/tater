@@ -67,7 +67,7 @@ class RequestHandlerTest: AutoResetMock {
         @Test
         fun `Returns Bad request response when usecase throws a UserNotSpecifiedException`() {
             val request = mockk<ApplicationRequest>()
-            val exception = mockk<UserNotSpecifiedException>()
+            val exception = UserNotSpecifiedException("error")
             val expected = RequestHandler.Result(
                 HttpStatusCode.BadRequest,
                 null,
@@ -86,7 +86,7 @@ class RequestHandlerTest: AutoResetMock {
         @Test
         fun `Returns Internal System Error response when usecase throws a WatchedMoviesUnavailableException`() {
             val request = mockk<ApplicationRequest>()
-            val exception = mockk<WatchedMoviesUnavailableException>()
+            val exception = WatchedMoviesUnavailableException("error", Exception(""))
             val expected = RequestHandler.Result(
                 HttpStatusCode.InternalServerError,
                 null,

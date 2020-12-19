@@ -5,6 +5,7 @@ import com.tater.domain.MovieSummaries
 import com.tater.domain.UserId
 import com.tater.port.MovieSummaryPort
 import com.tater.port.ViewingHistoryPort
+import kotlinx.coroutines.*
 
 class ViewingHistoryUsecase(
     private val viewingHistoryPort: ViewingHistoryPort,
@@ -13,19 +14,30 @@ class ViewingHistoryUsecase(
 
     fun allMoviesWatchedBy(userId: UserId?): MovieSummaries {
         if (userId == null) throw UserNotSpecifiedException("UserId is missing")
-        val movieIds = watchedMovieIds(userId)
-        return try {
-            movieIds.mapNotNull { movieSummaryPort.movieSummaryOf(it) }.let(::MovieSummaries)
-        } catch (e: MovieSummaryPort.UnavailableException) {
-            throw unavailableException(userId, movieIds, e)
+        val movieIds = movieIdsWatchedBy(userId)
+        return runBlocking {
+            try {
+                movieSummariesOf(movieIds)
+            } catch (e: MovieSummaryPort.UnavailableException) {
+                throw unavailableException(userId, movieIds, e)
+            }
         }
     }
 
-    private fun watchedMovieIds(userId: UserId): MovieIds {
+    private fun movieIdsWatchedBy(userId: UserId): MovieIds {
         return try {
             viewingHistoryPort.viewingHistoriesFor(userId).movieIds()
         } catch (e: ViewingHistoryPort.UnavailableException) {
             throw unavailableException(userId, e)
+        }
+    }
+
+    private suspend fun movieSummariesOf(movieIds: MovieIds): MovieSummaries {
+        return coroutineScope {
+            val movieTasks = movieIds.map {
+                async { movieSummaryPort.movieSummaryOf(it) }
+            }
+            awaitAll(*movieTasks.toTypedArray()).filterNotNull().let(::MovieSummaries)
         }
     }
 

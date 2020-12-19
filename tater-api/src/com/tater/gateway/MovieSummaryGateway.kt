@@ -7,7 +7,7 @@ import com.tater.port.MovieSummaryPort
 class MovieSummaryGateway(
     private val movieApi: MovieApi
 ): MovieSummaryPort {
-    override fun movieSummaryOf(movieId: MovieId): MovieSummary? {
+    override suspend fun movieSummaryOf(movieId: MovieId): MovieSummary? {
         return try {
             movieApi.getMovie(movieId.value).let { json ->
                 MovieSummary(MovieId(json.id), MovieTitle(json.title))
