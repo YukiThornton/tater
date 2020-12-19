@@ -1,5 +1,12 @@
 # tater
 
+## taterについて
+
+* プログラミング/設計勉強用として開発している (本格運用の予定はない)
+* 見るべき映画をオススメしてくれるアプリ
+  * API: Kotlin
+* 情報源として <a href="https://www.themoviedb.org/"><img src="tmdb-logo.svg" width="80" alt="The Movie DB Logo"></a> を利用している
+
 ## 使い方
 
 #### ローカル環境
