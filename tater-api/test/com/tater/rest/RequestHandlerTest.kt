@@ -26,80 +26,115 @@ class RequestHandlerTest: AutoResetMock {
     @DisplayName("getV1Watched")
     inner class GetV1WatchedTest {
 
-        @Test
-        fun `Returns status OK and MovieSummariesJson when usecase returns summaries`() {
-            val request = mockk<ApplicationRequest>()
-            val summaries = MovieSummaries(listOf(
+        @Nested
+        @DisplayName("When usecase returns summaries")
+        inner class WhenUsecaseReturnsSummaries {
+
+            private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
+            private val request = mockk<ApplicationRequest>()
+
+            @BeforeEach
+            fun setupAndExec() {
+                every { request.header("tater-user-id") } returns "userId1"
+                every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } returns MovieSummaries(listOf(
                     MovieSummary(MovieId("id1"), MovieTitle("title1")),
                     MovieSummary(MovieId("id2"), MovieTitle("title2"))
-            ))
-            val expected = RequestHandler.Result(
-                    HttpStatusCode.OK,
-                    MovieSummariesJson(listOf(
-                            MovieSummaryJson("id1", "title1"),
-                            MovieSummaryJson("id2", "title2")
-                    ))
-            )
+                ))
 
-            every { request.header("tater-user-id") } returns "userId1"
-            every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } returns summaries
+                actual = sut.getV1Watched(request)
+            }
 
-            sut.getV1Watched(request) shouldBeEqualTo expected
+            @Test
+            fun `Retrieves User ID from a header`() {
+                verify { request.header("tater-user-id") }
+            }
 
-            verify { request.header("tater-user-id") }
-            verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
+            @Test
+            fun `Calls usecase with User ID from the header`() {
+                verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
+            }
+
+            @Test
+            fun `Returns a result with status OK and MovieSummariesJson`() {
+                actual shouldBeEqualTo RequestHandler.Result(
+                        HttpStatusCode.OK,
+                        MovieSummariesJson(listOf(
+                                MovieSummaryJson("id1", "title1"),
+                                MovieSummaryJson("id2", "title2")
+                        )))
+            }
         }
 
-        @Test
-        fun `Gives usecase null for UserId when userId is missing in header`() {
-            val request = mockk<ApplicationRequest>()
-            val summaries = MovieSummaries(emptyList())
+        @Nested
+        @DisplayName("When userId is missing in header")
+        inner class WhenUserIdIsMissingInHeader {
 
-            every { request.header("tater-user-id") } returns null
-            every { viewingHistoryUsecase.allMoviesWatchedBy(null) } returns summaries
+            private val request = mockk<ApplicationRequest>()
 
-            sut.getV1Watched(request)
+            @BeforeEach
+            fun setupAndExec() {
+                every { request.header("tater-user-id") } returns null
+                every { viewingHistoryUsecase.allMoviesWatchedBy(null) } returns MovieSummaries(emptyList())
 
-            verify { request.header("tater-user-id") }
-            verify { viewingHistoryUsecase.allMoviesWatchedBy(null) }
+                sut.getV1Watched(request)
+            }
+
+            @Test
+            fun `Gives usecase null for UserId`() {
+                verify { viewingHistoryUsecase.allMoviesWatchedBy(null) }
+            }
         }
 
-        @Test
-        fun `Returns Bad request response when usecase throws a UserNotSpecifiedException`() {
-            val request = mockk<ApplicationRequest>()
-            val exception = UserNotSpecifiedException("error")
-            val expected = RequestHandler.Result(
-                HttpStatusCode.BadRequest,
-                null,
-                exception
-            )
+        @Nested
+        @DisplayName("When usecase throws a UserNotSpecifiedException")
+        inner class WhenUsecaseThrowsAUserNotSpecifiedException {
 
-            every { request.header("tater-user-id") } returns "userId1"
-            every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws exception
+            private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
+            private val request = mockk<ApplicationRequest>()
+            private val userNotSpecifiedException = UserNotSpecifiedException("error")
 
-            sut.getV1Watched(request) shouldBeEqualTo expected
+            @BeforeEach
+            fun setupAndExec() {
+                every { request.header("tater-user-id") } returns "userId1"
+                every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws userNotSpecifiedException
 
-            verify { request.header("tater-user-id") }
-            verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
+                actual = sut.getV1Watched(request)
+            }
+
+            @Test
+            fun `Returns a result with status BadRequest and the exception`() {
+                actual shouldBeEqualTo RequestHandler.Result(
+                    HttpStatusCode.BadRequest,
+                    null,
+                    userNotSpecifiedException
+                )
+            }
         }
 
-        @Test
-        fun `Returns Internal System Error response when usecase throws a WatchedMoviesUnavailableException`() {
-            val request = mockk<ApplicationRequest>()
-            val exception = WatchedMoviesUnavailableException("error", Exception(""))
-            val expected = RequestHandler.Result(
-                HttpStatusCode.InternalServerError,
-                null,
-                exception
-            )
+        @Nested
+        @DisplayName("When usecase throws a WatchedMoviesUnavailableException")
+        inner class WhenUsecaseThrowsAWatchedMoviesUnavailableException {
 
-            every { request.header("tater-user-id") } returns "userId1"
-            every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws exception
+            private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
+            private val request = mockk<ApplicationRequest>()
+            private val watchedMoviesUnavailableException = WatchedMoviesUnavailableException("error", Exception(""))
 
-            sut.getV1Watched(request) shouldBeEqualTo expected
+            @BeforeEach
+            fun setupAndExec() {
+                every { request.header("tater-user-id") } returns "userId1"
+                every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws watchedMoviesUnavailableException
 
-            verify { request.header("tater-user-id") }
-            verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
+                actual = sut.getV1Watched(request)
+            }
+
+            @Test
+            fun `Returns a result with status InternalServerError and the exception`() {
+                actual shouldBeEqualTo RequestHandler.Result(
+                    HttpStatusCode.InternalServerError,
+                    null,
+                    watchedMoviesUnavailableException
+                )
+            }
         }
     }
 }

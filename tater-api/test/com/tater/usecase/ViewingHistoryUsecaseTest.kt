@@ -11,6 +11,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withCause
 import org.amshove.kluent.withMessage
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -30,99 +31,127 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
     @Nested
     @DisplayName("allMoviesWatchedBy")
     inner class AllMoviesWatchedByTest {
-        @Test
-        fun `Returns MovieSummaries for specified user`() {
 
-            val userId = UserId("userId1")
-            val histories = mockk<ViewingHistories>()
-            val movieId1 = mockk<MovieId>()
-            val movieId2 = mockk<MovieId>()
-            val movieIds = MovieIds(listOf(movieId1, movieId2))
-            val summary1 = mockk<MovieSummary>()
-            val summary2 = mockk<MovieSummary>()
+        @Nested
+        @DisplayName("When all movie summaries are unavailable")
+        inner class WhenAllMovieSummariesAreUnavailable {
 
-            val expected = MovieSummaries(listOf(summary1, summary2))
+            private lateinit var actual: MovieSummaries
+            private val userId = UserId("userId1")
+            private val movieId1 = mockk<MovieId>()
+            private val movieId2 = mockk<MovieId>()
+            private val summary1 = mockk<MovieSummary>()
+            private val summary2 = mockk<MovieSummary>()
 
-            every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
-            every { histories.movieIds() } returns movieIds
-            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
-            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns summary2
+            @BeforeEach
+            fun setupAndExec() {
+                val histories = mockk<ViewingHistories>()
+                every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
+                every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2))
+                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
+                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns summary2
 
-            sut.allMoviesWatchedBy(userId) shouldBeEqualTo expected
+                actual = sut.allMoviesWatchedBy(userId)
+            }
 
-            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
-            verify { histories.movieIds() }
-            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
-            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId2) }
+            @Test
+            fun `Gets all viewing histories for specified user`() {
+                verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
+            }
+
+            @Test
+            fun `Fetches each movie summary of found viewing histories`() {
+                coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
+                coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId2) }
+            }
+
+            @Test
+            fun `Returns all movie summaries for specified user`() {
+                actual shouldBeEqualTo MovieSummaries(listOf(summary1, summary2))
+            }
         }
 
-        @Test
-        fun `Returns MovieSummaries skipping unavailable Movie Summaries`() {
+        @Nested
+        @DisplayName("When some movie summaries are available")
+        inner class WhenSomeMovieSummariesAreAvailable {
 
-            val userId = UserId("userId1")
-            val histories = mockk<ViewingHistories>()
-            val movieId1 = mockk<MovieId>()
-            val movieId2 = mockk<MovieId>()
-            val movieId3 = mockk<MovieId>()
-            val movieIds = MovieIds(listOf(movieId1, movieId2, movieId3))
-            val summary1 = mockk<MovieSummary>()
-            val summary3 = mockk<MovieSummary>()
+            private lateinit var actual: MovieSummaries
+            private val summary1 = mockk<MovieSummary>()
+            private val summary3 = mockk<MovieSummary>()
 
-            val expected = MovieSummaries(listOf(summary1, summary3))
+            @BeforeEach
+            fun setupAndExec() {
+                val userId = UserId("userId1")
+                val histories = mockk<ViewingHistories>()
+                val movieId1 = mockk<MovieId>()
+                val movieId2 = mockk<MovieId>()
+                val movieId3 = mockk<MovieId>()
+                every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
+                every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2, movieId3))
+                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
+                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns null
+                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId3) } returns summary3
 
-            every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
-            every { histories.movieIds() } returns movieIds
-            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
-            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns null
-            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId3) } returns summary3
+                actual = sut.allMoviesWatchedBy(userId)
+            }
 
-            sut.allMoviesWatchedBy(userId) shouldBeEqualTo expected
-
-            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
-            verify { histories.movieIds() }
-            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
-            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId2) }
-            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId3) }
+            @Test
+            fun `Returns only available movie summaries`() {
+                actual shouldBeEqualTo MovieSummaries(listOf(summary1, summary3))
+            }
         }
 
-        @Test
-        fun `Throws a UserNotSpecifiedException when UserId is null`() {
-            { sut.allMoviesWatchedBy(null) } shouldThrow UserNotSpecifiedException::class
+        @Nested
+        @DisplayName("When User ID is null")
+        inner class WhenUserIdIsNull {
+
+            @Test
+            fun `Throws a UserNotSpecifiedException`() {
+                { sut.allMoviesWatchedBy(null) } shouldThrow UserNotSpecifiedException::class
+            }
         }
 
-        @Test
-        fun `Throws a WatchedMoviesUnavailableException when viewingHistoryPort throws a UnavailableException`() {
-            val userId = UserId("userId1")
-            val errorFromPort = ViewingHistoryPort.UnavailableException("error", Exception(""))
-            val errorMessage = "Movies watched by user(id=userId1) are unavailable"
+        @Nested
+        @DisplayName("When viewingHistoryPort throws an UnavailableException")
+        inner class WhenViewingHistoryPortThrowsAnUnavailableException {
 
-            every { viewingHistoryPort.getViewingHistoriesFor(userId) } throws errorFromPort
+            private val userId = UserId("userId1")
 
-            { sut.allMoviesWatchedBy(userId) } shouldThrow WatchedMoviesUnavailableException::class withCause ViewingHistoryPort.UnavailableException::class withMessage errorMessage
+            @BeforeEach
+            fun setup() {
+                val errorFromPort = ViewingHistoryPort.UnavailableException("error", Exception(""))
+                every { viewingHistoryPort.getViewingHistoriesFor(userId) } throws errorFromPort
+            }
 
-            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
+            @Test
+            fun `Throws a WatchedMoviesUnavailableException`() {
+                val errorMessage = "Movies watched by user(id=userId1) are unavailable"
+                { sut.allMoviesWatchedBy(userId) } shouldThrow WatchedMoviesUnavailableException::class withCause ViewingHistoryPort.UnavailableException::class withMessage errorMessage
+            }
         }
 
-        @Test
-        fun `Throws a WatchedMoviesUnavailableException when movieSummaryPort throws a UnavailableException`() {
-            val userId = UserId("userId1")
-            val histories = mockk<ViewingHistories>()
-            val movieId1 = MovieId("movieId1")
-            val movieId2 = MovieId("movieId2")
-            val movieIds = MovieIds(listOf(movieId1, movieId2))
-            val errorFromPort = MovieSummaryPort.UnavailableException("error", Exception(""))
-            val errorMessage = "Movies(ids=[movieId1,movieId2]) watched by user(id=userId1) are unavailable"
+        @Nested
+        @DisplayName("When movieSummaryPort throws an UnavailableException")
+        inner class WhenMovieSummaryPortThrowsAnUnavailableException {
 
-            every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
-            every { histories.movieIds() } returns movieIds
-            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } throws errorFromPort
-            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns mockk();
+            private val userId = UserId("userId1")
 
-            { sut.allMoviesWatchedBy(userId) } shouldThrow WatchedMoviesUnavailableException::class withCause MovieSummaryPort.UnavailableException::class withMessage errorMessage
+            @BeforeEach
+            fun setup() {
+                val histories = mockk<ViewingHistories>()
+                val movieId1 = MovieId("movieId1")
+                val movieId2 = MovieId("movieId2")
+                every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
+                every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2))
+                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } throws MovieSummaryPort.UnavailableException("error", Exception(""))
+                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns mockk();
+            }
 
-            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
-            verify { histories.movieIds() }
-            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
+            @Test
+            fun `Throws a WatchedMoviesUnavailableException when movieSummaryPort throws a UnavailableException`() {
+                val errorMessage = "Movies(ids=[movieId1,movieId2]) watched by user(id=userId1) are unavailable"
+                { sut.allMoviesWatchedBy(userId) } shouldThrow WatchedMoviesUnavailableException::class withCause MovieSummaryPort.UnavailableException::class withMessage errorMessage
+            }
         }
     }
 }

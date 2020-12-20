@@ -16,6 +16,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withCause
 import org.amshove.kluent.withMessage
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.DisplayName
@@ -34,44 +35,61 @@ class ViewingHistoryGatewayTest: AutoResetMock {
     @DisplayName("getViewingHistoriesFor")
     inner class GetViewingHistoriesForTest {
 
-        @Test
-        fun `Returns ViewingHistories of specified user using db client`() {
-            val userId = UserId("userId1")
+        @Nested
+        @DisplayName("When Tater DB returns viewing histories of specified user")
+        inner class WhenTaterDbReturnsViewingHistories {
 
-            val expected = ViewingHistories(listOf(
-                ViewingHistory(userId, MovieId("movieId1")),
-                ViewingHistory(userId, MovieId("movieId2"))
-            ))
+            private lateinit var actual: ViewingHistories
+            private val userId = UserId("userId1")
+            private val historyData1 = mockk<TaterDb.ViewingHistoryDataset>()
+            private val historyData2 = mockk<TaterDb.ViewingHistoryDataset>()
+            private val datasets = listOf(historyData1, historyData2)
 
-            val historyData1 = mockk<TaterDb.ViewingHistoryDataset>()
-            val historyData2 = mockk<TaterDb.ViewingHistoryDataset>()
-            val datasets = listOf(historyData1, historyData2)
+            @BeforeEach
+            fun setupAndExec() {
+                every { taterDb.selectViewingHistoriesByUserId("userId1") } returns datasets
+                every { historyData1.movieId } returns "movieId1"
+                every { historyData2.movieId } returns "movieId2"
 
-            every { taterDb.selectViewingHistoriesByUserId("userId1") } returns datasets
-            every { historyData1.userId } returns "userId1"
-            every { historyData1.movieId } returns "movieId1"
-            every { historyData2.userId } returns "userId1"
-            every { historyData2.movieId } returns "movieId2"
+                actual = sut.getViewingHistoriesFor(userId)
+            }
 
-            sut.getViewingHistoriesFor(userId) shouldBeEqualTo expected
+            @Test
+            fun `Gets ViewingHistories from Tater DB`() {
+                verify(exactly = 1) { taterDb.selectViewingHistoriesByUserId("userId1") }
+            }
 
-            verify(exactly = 1) { taterDb.selectViewingHistoriesByUserId("userId1") }
-            verify { historyData1.movieId }
-            verify { historyData2.movieId }
+            @Test
+            fun `Gets movieId from data retrieved from Tater DB`() {
+                verify { historyData1.movieId }
+                verify { historyData2.movieId }
+            }
+
+            @Test
+            fun `Returns ViewingHistories of specified user`() {
+                actual shouldBeEqualTo ViewingHistories(listOf(
+                    ViewingHistory(userId, MovieId("movieId1")),
+                    ViewingHistory(userId, MovieId("movieId2"))
+                ))
+            }
         }
 
-        @Test
-        fun `Throws a UnavailableException when db client throws any error`() {
-            val userId = UserId("userId1")
-            val errorFromClient = mockk<Throwable>()
-            val errorMessage = "Viewing history for user(id=userId1) unavailable"
+        @Nested
+        @DisplayName("When Tater DB throws any error")
+        inner class WhenTaterDbThrowsError {
+            private val errorFromClient = mockk<Throwable>()
+            private val errorMessage = "Viewing history for user(id=userId1) unavailable"
 
-            every { taterDb.selectViewingHistoriesByUserId("userId1") } throws errorFromClient
+            @BeforeEach
+            fun setup() {
+                every { taterDb.selectViewingHistoriesByUserId("userId1") } throws errorFromClient
+            }
 
-            val sutFunc = { sut.getViewingHistoriesFor(userId) }
-            sutFunc shouldThrow ViewingHistoryPort.UnavailableException::class withCause Throwable::class withMessage errorMessage
-
-            verify(exactly = 1) { taterDb.selectViewingHistoriesByUserId("userId1") }
+            @Test
+            fun `Throws a UnavailableException`() {
+                val sutFunc = { sut.getViewingHistoriesFor(UserId("userId1")) }
+                sutFunc shouldThrow ViewingHistoryPort.UnavailableException::class withCause Throwable::class withMessage errorMessage
+            }
         }
     }
 }
