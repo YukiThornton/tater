@@ -119,7 +119,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
 
             @BeforeEach
             fun setup() {
-                val errorFromPort = ViewingHistoryPort.UnavailableException("error", Exception(""))
+                val errorFromPort = mockk<ViewingHistoryPort.UnavailableException>()
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } throws errorFromPort
             }
 

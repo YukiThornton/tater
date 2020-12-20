@@ -91,7 +91,7 @@ class RequestHandlerTest: AutoResetMock {
 
             private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
             private val request = mockk<ApplicationRequest>()
-            private val userNotSpecifiedException = UserNotSpecifiedException("error")
+            private val userNotSpecifiedException = mockk<UserNotSpecifiedException>()
 
             @BeforeEach
             fun setupAndExec() {
@@ -117,7 +117,7 @@ class RequestHandlerTest: AutoResetMock {
 
             private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
             private val request = mockk<ApplicationRequest>()
-            private val watchedMoviesUnavailableException = WatchedMoviesUnavailableException("error", Exception(""))
+            private val watchedMoviesUnavailableException = mockk<WatchedMoviesUnavailableException>()
 
             @BeforeEach
             fun setupAndExec() {

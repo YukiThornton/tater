@@ -51,16 +51,21 @@ class ViewingHistoryUsecase(
 
     private class DataAccessException(override val cause: Throwable, val movieIds: MovieIds? = null): RuntimeException() {
         fun toUnavailableExceptionWith(userId: UserId): WatchedMoviesUnavailableException {
-            val message = if (movieIds == null) {
-                "Movies watched by user(id=${userId.value}) are unavailable"
-            } else {
-                "Movies(ids=[${movieIds.join(",")}]) watched by user(id=${userId.value}) are unavailable"
-            }
-            return WatchedMoviesUnavailableException(message, cause)
+            return WatchedMoviesUnavailableException(cause, userId, movieIds)
         }
-        private fun MovieIds.join(separator: String) = this.joinToString(separator) { it.value }
     }
 }
 
 class UserNotSpecifiedException(override val message: String?) : RuntimeException()
-class WatchedMoviesUnavailableException(override val message: String?, override val cause: Throwable?): RuntimeException()
+class WatchedMoviesUnavailableException(
+    override val cause: Throwable,
+    userId: UserId,
+    movieIds: MovieIds?
+): RuntimeException() {
+    override val message: String = if (movieIds == null) {
+        "Movies watched by user(id=${userId.value}) are unavailable"
+    } else {
+        "Movies(ids=[${movieIds.join(",")}]) watched by user(id=${userId.value}) are unavailable"
+    }
+    private fun MovieIds.join(separator: String) = this.joinToString(separator) { it.value }
+}
