@@ -11,7 +11,7 @@ class ViewingHistoryGateway(
     private val taterDb: TaterDb
 ): ViewingHistoryPort {
 
-    override fun viewingHistoriesFor(userId: UserId): ViewingHistories {
+    override fun getViewingHistoriesFor(userId: UserId): ViewingHistories {
         try {
             val histories = taterDb.selectViewingHistoriesByUserId(userId.value)
             return histories.map { ViewingHistory(userId, MovieId(it.movieId)) }.let(::ViewingHistories)

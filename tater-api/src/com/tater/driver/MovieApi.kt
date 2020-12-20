@@ -1,7 +1,7 @@
 package com.tater.driver
 
 interface MovieApi {
-    suspend fun getMovie(id: String): MovieJson
+    suspend fun fetchMovie(id: String): MovieJson
 
     data class MovieJson(val id: String, val title: String)
 

@@ -19,7 +19,7 @@ class MovieApiClient(
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .registerKotlinModule()
 
-    override suspend fun getMovie(id: String): MovieApi.MovieJson {
+    override suspend fun fetchMovie(id: String): MovieApi.MovieJson {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${config.endpoint()}/3/movie/$id?api_key=${config.authToken()}"))
             .header("Content-Type", "application/json")

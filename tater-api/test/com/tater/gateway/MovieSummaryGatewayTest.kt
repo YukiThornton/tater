@@ -24,8 +24,8 @@ class MovieSummaryGatewayTest: AutoResetMock {
     private lateinit var movieApi: MovieApi
 
     @Nested
-    @DisplayName("movieSummaryOf")
-    inner class MovieSummaryOfTest {
+    @DisplayName("fetchMovieSummaryOf")
+    inner class FetchMovieSummaryOfTest {
 
         @Test
         fun `Return MovieSummary of specified MovieId`() {
@@ -33,11 +33,11 @@ class MovieSummaryGatewayTest: AutoResetMock {
                 val movieId = MovieId("movieId1")
                 val expected = MovieSummary(MovieId("movieId1"), MovieTitle("title1"))
 
-                coEvery { movieApi.getMovie("movieId1") } returns MovieApi.MovieJson("movieId1", "title1")
+                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieJson("movieId1", "title1")
 
-                sut.movieSummaryOf(movieId) shouldBeEqualTo expected
+                sut.fetchMovieSummaryOf(movieId) shouldBeEqualTo expected
 
-                coVerify(exactly = 1) { movieApi.getMovie("movieId1") }
+                coVerify(exactly = 1) { movieApi.fetchMovie("movieId1") }
             }
         }
 
@@ -46,11 +46,11 @@ class MovieSummaryGatewayTest: AutoResetMock {
             runBlocking {
                 val movieId = MovieId("movieId1")
 
-                coEvery { movieApi.getMovie("movieId1") } throws MovieApi.NotFoundException("", RuntimeException())
+                coEvery { movieApi.fetchMovie("movieId1") } throws MovieApi.NotFoundException("", RuntimeException())
 
-                sut.movieSummaryOf(movieId) shouldBeEqualTo null
+                sut.fetchMovieSummaryOf(movieId) shouldBeEqualTo null
 
-                coVerify(exactly = 1) { movieApi.getMovie("movieId1") }
+                coVerify(exactly = 1) { movieApi.fetchMovie("movieId1") }
             }
         }
 
@@ -61,11 +61,11 @@ class MovieSummaryGatewayTest: AutoResetMock {
                 val errorFromMovieApi = mockk<Throwable>()
                 val errorMessage = "Movie summary for movie(id=movieId1) unavailable"
 
-                coEvery { movieApi.getMovie("movieId1") } throws errorFromMovieApi
+                coEvery { movieApi.fetchMovie("movieId1") } throws errorFromMovieApi
 
-                coInvoking { sut.movieSummaryOf(movieId) } shouldThrow MovieSummaryPort.UnavailableException::class withMessage errorMessage withCause Throwable::class
+                coInvoking { sut.fetchMovieSummaryOf(movieId) } shouldThrow MovieSummaryPort.UnavailableException::class withMessage errorMessage withCause Throwable::class
 
-                coVerify(exactly = 1) { movieApi.getMovie("movieId1") }
+                coVerify(exactly = 1) { movieApi.fetchMovie("movieId1") }
             }
         }
     }

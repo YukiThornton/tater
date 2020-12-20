@@ -43,17 +43,17 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
 
             val expected = MovieSummaries(listOf(summary1, summary2))
 
-            every { viewingHistoryPort.viewingHistoriesFor(userId) } returns histories
+            every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
             every { histories.movieIds() } returns movieIds
-            coEvery { movieSummaryPort.movieSummaryOf(movieId1) } returns summary1
-            coEvery { movieSummaryPort.movieSummaryOf(movieId2) } returns summary2
+            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
+            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns summary2
 
             sut.allMoviesWatchedBy(userId) shouldBeEqualTo expected
 
-            verify { viewingHistoryPort.viewingHistoriesFor(userId) }
+            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
             verify { histories.movieIds() }
-            coVerify { movieSummaryPort.movieSummaryOf(movieId1) }
-            coVerify { movieSummaryPort.movieSummaryOf(movieId2) }
+            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
+            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId2) }
         }
 
         @Test
@@ -70,19 +70,19 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
 
             val expected = MovieSummaries(listOf(summary1, summary3))
 
-            every { viewingHistoryPort.viewingHistoriesFor(userId) } returns histories
+            every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
             every { histories.movieIds() } returns movieIds
-            coEvery { movieSummaryPort.movieSummaryOf(movieId1) } returns summary1
-            coEvery { movieSummaryPort.movieSummaryOf(movieId2) } returns null
-            coEvery { movieSummaryPort.movieSummaryOf(movieId3) } returns summary3
+            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
+            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns null
+            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId3) } returns summary3
 
             sut.allMoviesWatchedBy(userId) shouldBeEqualTo expected
 
-            verify { viewingHistoryPort.viewingHistoriesFor(userId) }
+            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
             verify { histories.movieIds() }
-            coVerify { movieSummaryPort.movieSummaryOf(movieId1) }
-            coVerify { movieSummaryPort.movieSummaryOf(movieId2) }
-            coVerify { movieSummaryPort.movieSummaryOf(movieId3) }
+            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
+            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId2) }
+            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId3) }
         }
 
         @Test
@@ -96,11 +96,11 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
             val errorFromPort = ViewingHistoryPort.UnavailableException("error", Exception(""))
             val errorMessage = "Movies watched by user(id=userId1) are unavailable"
 
-            every { viewingHistoryPort.viewingHistoriesFor(userId) } throws errorFromPort
+            every { viewingHistoryPort.getViewingHistoriesFor(userId) } throws errorFromPort
 
             { sut.allMoviesWatchedBy(userId) } shouldThrow WatchedMoviesUnavailableException::class withCause ViewingHistoryPort.UnavailableException::class withMessage errorMessage
 
-            verify { viewingHistoryPort.viewingHistoriesFor(userId) }
+            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
         }
 
         @Test
@@ -113,16 +113,16 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
             val errorFromPort = MovieSummaryPort.UnavailableException("error", Exception(""))
             val errorMessage = "Movies(ids=[movieId1,movieId2]) watched by user(id=userId1) are unavailable"
 
-            every { viewingHistoryPort.viewingHistoriesFor(userId) } returns histories
+            every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
             every { histories.movieIds() } returns movieIds
-            coEvery { movieSummaryPort.movieSummaryOf(movieId1) } throws errorFromPort
-            coEvery { movieSummaryPort.movieSummaryOf(movieId2) } returns mockk();
+            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } throws errorFromPort
+            coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns mockk();
 
             { sut.allMoviesWatchedBy(userId) } shouldThrow WatchedMoviesUnavailableException::class withCause MovieSummaryPort.UnavailableException::class withMessage errorMessage
 
-            verify { viewingHistoryPort.viewingHistoriesFor(userId) }
+            verify { viewingHistoryPort.getViewingHistoriesFor(userId) }
             verify { histories.movieIds() }
-            coVerify { movieSummaryPort.movieSummaryOf(movieId1) }
+            coVerify { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
         }
     }
 }

@@ -31,8 +31,8 @@ class ViewingHistoryGatewayTest: AutoResetMock {
     private lateinit var taterDb: TaterDb
 
     @Nested
-    @DisplayName("viewingHistoriesFor")
-    inner class ViewingHistoriesForTest {
+    @DisplayName("getViewingHistoriesFor")
+    inner class GetViewingHistoriesForTest {
 
         @Test
         fun `Returns ViewingHistories of specified user using db client`() {
@@ -53,7 +53,7 @@ class ViewingHistoryGatewayTest: AutoResetMock {
             every { historyData2.userId } returns "userId1"
             every { historyData2.movieId } returns "movieId2"
 
-            sut.viewingHistoriesFor(userId) shouldBeEqualTo expected
+            sut.getViewingHistoriesFor(userId) shouldBeEqualTo expected
 
             verify(exactly = 1) { taterDb.selectViewingHistoriesByUserId("userId1") }
             verify { historyData1.movieId }
@@ -68,7 +68,7 @@ class ViewingHistoryGatewayTest: AutoResetMock {
 
             every { taterDb.selectViewingHistoriesByUserId("userId1") } throws errorFromClient
 
-            val sutFunc = { sut.viewingHistoriesFor(userId) }
+            val sutFunc = { sut.getViewingHistoriesFor(userId) }
             sutFunc shouldThrow ViewingHistoryPort.UnavailableException::class withCause Throwable::class withMessage errorMessage
 
             verify(exactly = 1) { taterDb.selectViewingHistoriesByUserId("userId1") }
