@@ -39,4 +39,8 @@ class MovieApiMock {
             .withQueryParam("api_key", equalTo(Configurations.movieApiToken))
             .withHeader("Content-Type", equalTo("application/json")))
     }
+
+    fun didNotReceiveAnyRequests() {
+        wireMock.verifyThat(0, anyRequestedFor(anyUrl()))
+    }
 }

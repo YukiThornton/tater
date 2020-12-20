@@ -1,10 +1,8 @@
 package project.tater_e2e
 
+import com.squareup.okhttp.Response
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import project.tater_e2e.helper.*
 
 @DisplayName("GET /v1/watched 指定したユーザに紐づく視聴履歴のある映画のタイトルを全て返す")
@@ -29,67 +27,126 @@ class WatchedTest {
         movieApi.clearAllRequests()
     }
 
-    @Test
-    fun `001_指定したユーザに紐づく視聴履歴のある映画のタイトルを全て返す`() {
-        val expectedResponse = JsonReader.fromFilePath("$responseJsonRoot/001.json")
+    @Nested
+    @DisplayName("001_指定したユーザに紐づく視聴履歴が複数あるとき")
+    inner class WhenViewingHistoriesExistForUser {
 
-        movieApi.returnsMovieDetailsWhenMovieIdIs("497")
-        movieApi.returnsMovieDetailsWhenMovieIdIs("680")
-        movieApi.returnsMovieDetailsWhenMovieIdIs("13")
+        private lateinit var response: Response
 
-        val response = taterApi.getV1Watched("1")
+        @BeforeEach
+        fun setupAndExec() {
+            movieApi.returnsMovieDetailsWhenMovieIdIs("497")
+            movieApi.returnsMovieDetailsWhenMovieIdIs("680")
+            movieApi.returnsMovieDetailsWhenMovieIdIs("13")
 
-        response.code() shouldBeEqualTo 200
-        JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedResponse
+            response = taterApi.getV1Watched("1")
+        }
 
-        movieApi.receivedARequestForMovieDetailsOf("497")
-        movieApi.receivedARequestForMovieDetailsOf("680")
-        movieApi.receivedARequestForMovieDetailsOf("13")
+        @Test
+        fun `MovieAPIに対して視聴履歴のある映画の情報を問い合わせていること`() {
+            movieApi.receivedARequestForMovieDetailsOf("497")
+            movieApi.receivedARequestForMovieDetailsOf("680")
+            movieApi.receivedARequestForMovieDetailsOf("13")
+        }
+
+        @Test
+        fun `ステータスコードが200になること`() {
+            response.code() shouldBeEqualTo 200
+        }
+
+        @Test
+        fun `視聴履歴のある映画のタイトル全てを返すこと`() {
+            val expectedBody = JsonReader.fromFilePath("$responseJsonRoot/001.json")
+            JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedBody
+        }
     }
 
-    @Test
-    fun `002_指定したユーザに紐づく視聴履歴がないときは空の結果を返す`() {
-        val expectedResponse = JsonReader.fromFilePath("$responseJsonRoot/002.json")
+    @Nested
+    @DisplayName("002_指定したユーザに紐づく視聴履歴がないとき")
+    inner class WhenViewingHistoriesDoNotExistForUser {
+        private lateinit var response: Response
 
-        val response = taterApi.getV1Watched("9999")
+        @BeforeEach
+        fun exec() {
+            response = taterApi.getV1Watched("9999")
+        }
 
-        response.code() shouldBeEqualTo 200
-        JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedResponse
+        @Test
+        fun `MovieAPIに対していかなる問い合わせもしていないこと`() {
+            movieApi.didNotReceiveAnyRequests()
+        }
+
+        @Test
+        fun `ステータスコードが200になること`() {
+            response.code() shouldBeEqualTo 200
+        }
+
+        @Test
+        fun `空の結果を返す`() {
+            val expectedResponse = JsonReader.fromFilePath("$responseJsonRoot/002.json")
+            JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedResponse
+        }
     }
 
-    @Test
-    fun `003_一部の映画情報が存在せず取得に失敗した場合は取得に成功したものだけを返す`() {
-        val expectedResponse = JsonReader.fromFilePath("$responseJsonRoot/003.json")
+    @Nested
+    @DisplayName("003_一部の映画情報が存在せず取得に失敗した場合は")
+    inner class WhenFailsToFetchNonExistentMovies {
+        private lateinit var response: Response
 
-        movieApi.returnsMovieDetailsWhenMovieIdIs("497")
-        movieApi.failsWithNotFoundForMovieDetailsWhenMovieIdIs("680")
-        movieApi.returnsMovieDetailsWhenMovieIdIs("13")
+        @BeforeEach
+        fun setupAndExec() {
+            movieApi.returnsMovieDetailsWhenMovieIdIs("497")
+            movieApi.failsWithNotFoundForMovieDetailsWhenMovieIdIs("680")
+            movieApi.returnsMovieDetailsWhenMovieIdIs("13")
 
-        val response = taterApi.getV1Watched("1")
+            response = taterApi.getV1Watched("1")
+        }
 
-        response.code() shouldBeEqualTo 200
-        JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedResponse
+        @Test
+        fun `ステータスコードが200になること`() {
+            response.code() shouldBeEqualTo 200
+        }
 
-        movieApi.receivedARequestForMovieDetailsOf("497")
-        movieApi.receivedARequestForMovieDetailsOf("680")
-        movieApi.receivedARequestForMovieDetailsOf("13")
+        @Test
+        fun `取得に成功したものだけを返す`() {
+            val expectedBody = JsonReader.fromFilePath("$responseJsonRoot/003.json")
+            JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedBody
+        }
     }
 
-    @Test
-    fun `501_ユーザを指定しないと400エラーを返す`() {
-        val response = taterApi.getV1WatchedWithoutUserId()
+    @Nested
+    @DisplayName("501_ユーザを指定しないと")
+    inner class WhenUserIsNotSpecified {
+        private lateinit var response: Response
 
-        response.code() shouldBeEqualTo 400
+        @BeforeEach
+        fun exec() {
+            response = taterApi.getV1WatchedWithoutUserId()
+        }
+
+        @Test
+        fun `ステータスコードが400になること`() {
+            response.code() shouldBeEqualTo 400
+        }
     }
 
-    @Test
-    fun `502_映画情報の取得に失敗した場合は500エラーを返す`() {
-        movieApi.failsWithServerErrorForMovieDetailsWhenMovieIdIs("497")
-        movieApi.failsWithServerErrorForMovieDetailsWhenMovieIdIs("680")
-        movieApi.failsWithServerErrorForMovieDetailsWhenMovieIdIs("13")
+    @Nested
+    @DisplayName("502_映画情報の取得に失敗した場合は")
+    inner class WhenFailsToFetchMoviesWithError {
+        private lateinit var response: Response
 
-        val response = taterApi.getV1Watched("1")
+        @BeforeEach
+        fun setupAndExec() {
+            movieApi.failsWithServerErrorForMovieDetailsWhenMovieIdIs("497")
+            movieApi.failsWithServerErrorForMovieDetailsWhenMovieIdIs("680")
+            movieApi.failsWithServerErrorForMovieDetailsWhenMovieIdIs("13")
 
-        response.code() shouldBeEqualTo 500
+            response = taterApi.getV1Watched("1")
+        }
+
+        @Test
+        fun `ステータスコードが500になること`() {
+            response.code() shouldBeEqualTo 500
+        }
     }
 }
