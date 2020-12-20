@@ -103,6 +103,13 @@ class WatchedTest {
         }
 
         @Test
+        fun `処理を中断することなくMovieAPIに対して視聴履歴のある全ての映画の情報を問い合わせていること`() {
+            movieApi.receivedARequestForMovieDetailsOf("497")
+            movieApi.receivedARequestForMovieDetailsOf("680")
+            movieApi.receivedARequestForMovieDetailsOf("13")
+        }
+
+        @Test
         fun `ステータスコードが200になること`() {
             response.code() shouldBeEqualTo 200
         }
