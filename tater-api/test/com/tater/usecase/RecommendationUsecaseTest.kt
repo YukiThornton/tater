@@ -8,9 +8,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
-import org.amshove.kluent.any
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -97,9 +95,29 @@ class RecommendationUsecaseTest: AutoResetMock {
             }
 
             @Test
-            fun `Throws a UserNotSpecifiedException`() {
+            fun `Throws the same UserNotSpecifiedException`() {
                 { sut.recommendedMovies(null) } shouldThrow UserNotSpecifiedException::class
                 verify { userIdChecker.makeSureUserIdExists(null) }
+            }
+        }
+
+        @Nested
+        @DisplayName("When port throws an exception")
+        inner class WhenMoviePortThrowsAnException {
+
+            private val userId = UserId("userId1")
+
+            @BeforeEach
+            fun setup() {
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
+                every { moviePort.searchMovies(any(), any()) } throws MoviePort.SearchUnavailableException("", null)
+            }
+
+            @Test
+            fun `Throws a RecommendedMoviesUnavailableException`() {
+                val errorMessage = "Recommended movies for user(id=userId1) are unavailable"
+                { sut.recommendedMovies(userId) } shouldThrow RecommendedMoviesUnavailableException::class withCause MoviePort.SearchUnavailableException::class withMessage errorMessage
+                verify { moviePort.searchMovies(any(), any()) }
             }
         }
     }

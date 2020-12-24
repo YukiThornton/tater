@@ -1,10 +1,7 @@
 package com.tater.rest
 
 import com.tater.domain.*
-import com.tater.usecase.RecommendationUsecase
-import com.tater.usecase.UserNotSpecifiedException
-import com.tater.usecase.ViewingHistoryUsecase
-import com.tater.usecase.WatchedMoviesUnavailableException
+import com.tater.usecase.*
 import io.ktor.http.*
 import io.ktor.request.*
 
@@ -33,8 +30,13 @@ class HttpRequestExecutor(
 
     fun getV1Recommended(request: ApplicationRequest): Result<MovieListJson> {
         val userId = request.header(HEADER_USER_ID)?.let(::UserId)
-        return recommendationUsecase.recommendedMovies(userId).toJson().let {
-            Result(HttpStatusCode.OK, it, null)
+        return try {
+            recommendationUsecase.recommendedMovies(userId).toJson()
+                    .let { Result(HttpStatusCode.OK, it, null) }
+        } catch (e: UserNotSpecifiedException) {
+            Result(HttpStatusCode.BadRequest, null, e)
+        } catch (e: RecommendedMoviesUnavailableException) {
+            Result(HttpStatusCode.InternalServerError, null, e)
         }
     }
 }

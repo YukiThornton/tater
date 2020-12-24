@@ -67,7 +67,10 @@ fun Application.module(testing: Boolean = false) {
         }
         get("/v1/recommended") {
             val result = executor.getV1Recommended(call.request)
-            call.respond(result.responseStatus, result.responseBody!!)
+            if (result.error != null) {
+                call.application.environment.log.error("Failed on GET /v1/recommended", result.error)
+            }
+            call.respond(result.responseStatus, result.responseBody ?: "")
         }
     }
 }

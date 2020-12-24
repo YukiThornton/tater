@@ -6,7 +6,11 @@ import com.tater.port.MoviePort
 
 class MovieGateway(private val movieApi: MovieApi): MoviePort {
     override fun searchMovies(searchFilter: MovieSearchFilter, sort: SortedBy): Movies {
-        return movieApi.searchMovies(createConditions(sort, searchFilter)).toMovies()
+        return try {
+            movieApi.searchMovies(createConditions(sort, searchFilter)).toMovies()
+        } catch (e: Throwable) {
+            throw MoviePort.SearchUnavailableException("MovieApi's movie search functionality is not available", e)
+        }
     }
 
     private fun createConditions(sort: SortedBy, searchFilter: MovieSearchFilter): Map<String, Any> {

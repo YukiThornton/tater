@@ -14,21 +14,24 @@ class TaterApi {
     }
 
     fun getV1WatchedWithoutUserId(): Response {
-        val request = Request.Builder()
-                .url("${Configurations.taterApiEndpoint}/v1/watched")
-                .build()
-
-        return client.newCall(request).execute()!!
+        return getRequestWith("${Configurations.taterApiEndpoint}/v1/watched")
     }
 
     fun getV1Recommended(userId: String): Response {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/recommended", userId)
     }
 
-    private fun getRequestWith(path: String, userId: String): Response {
-        return Request.Builder()
-                .url(path)
-                .header("tater-user-id", userId)
+    fun getV1RecommendedWithoutUserId(): Response {
+        return getRequestWith("${Configurations.taterApiEndpoint}/v1/recommended")
+    }
+
+    private fun getRequestWith(path: String, userId: String? = null): Response {
+        val builder = if (userId != null ) {
+            Request.Builder().url(path).header("tater-user-id", userId)
+        } else {
+            Request.Builder().url(path)
+        }
+        return builder
                 .build()
                 .let {
                     client.newCall(it).execute()!!

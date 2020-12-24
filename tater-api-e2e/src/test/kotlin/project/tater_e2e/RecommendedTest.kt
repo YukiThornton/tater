@@ -41,7 +41,7 @@ class RecommendedTest {
 
         @Test
         fun `MovieAPIに対して一定の条件でオススメの映画を問い合わせていること`() {
-            movieApi.receivedARequestForMovieDiscoveryWithFixedConditions()
+            movieApi.receivedARequestForMovieDiscoveryOfPage(1)
         }
 
         @Test
@@ -86,6 +86,40 @@ class RecommendedTest {
             responseJson.shouldHaveValueOf("movies.0.review.count", 1048)
             responseJson.shouldHaveValueOf("movies.1.review.count", 1724)
             responseJson.shouldHaveValueOf("movies.2.review.count", 17767)
+        }
+    }
+
+    @Nested
+    @DisplayName("501_ユーザを指定しないと")
+    inner class WhenUserIsNotSpecified {
+        private lateinit var response: Response
+
+        @BeforeEach
+        fun exec() {
+            response = taterApi.getV1RecommendedWithoutUserId()
+        }
+
+        @Test
+        fun `ステータスコードが400になること`() {
+            response.code() shouldBeEqualTo 400
+        }
+    }
+
+    @Nested
+    @DisplayName("502_オススメな映画の取得に失敗した場合は")
+    inner class WhenFailsToFetchMoviesWithError {
+        private lateinit var response: Response
+
+        @BeforeEach
+        fun setupAndExec() {
+            movieApi.failsWithServerErrorForMovieDiscoveryOfPage(1)
+
+            response = taterApi.getV1Recommended("1")
+        }
+
+        @Test
+        fun `ステータスコードが500になること`() {
+            response.code() shouldBeEqualTo 500
         }
     }
 }

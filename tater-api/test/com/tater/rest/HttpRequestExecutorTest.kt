@@ -2,10 +2,7 @@ package com.tater.rest
 
 import com.tater.AutoResetMock
 import com.tater.domain.*
-import com.tater.usecase.RecommendationUsecase
-import com.tater.usecase.UserNotSpecifiedException
-import com.tater.usecase.ViewingHistoryUsecase
-import com.tater.usecase.WatchedMoviesUnavailableException
+import com.tater.usecase.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.mockk.*
@@ -182,6 +179,70 @@ class HttpRequestExecutorTest: AutoResetMock {
                         MovieJson("id2", "title2", ReviewJson(5.5, 1200)),
                         MovieJson("id3", "title3", ReviewJson(5.4, 900)),
                 ))
+            }
+        }
+
+        @Nested
+        @DisplayName("When usecase throws a UserNotSpecifiedException")
+        inner class WhenUsecaseThrowsAUserNotSpecifiedException {
+
+            private lateinit var actual: HttpRequestExecutor.Result<MovieListJson>
+            private val request = mockk<ApplicationRequest>()
+            private val userId = UserId("userId1")
+            private val userNotSpecifiedException = mockk<UserNotSpecifiedException>()
+
+            @BeforeEach
+            fun setupAndExec() {
+                every { request.header("tater-user-id") } returns "userId1"
+                every { recommendationUsecase.recommendedMovies(userId) } throws userNotSpecifiedException
+
+                actual = sut.getV1Recommended(request)
+            }
+
+            @Test
+            fun `Calls usecase function`() {
+                verify { recommendationUsecase.recommendedMovies(userId) }
+            }
+
+            @Test
+            fun `Returns a result with status BadRequest and the exception`() {
+                actual shouldBeEqualTo HttpRequestExecutor.Result(
+                        HttpStatusCode.BadRequest,
+                        null,
+                        userNotSpecifiedException
+                )
+            }
+        }
+
+        @Nested
+        @DisplayName("When usecase throws a RecommendedMoviesUnavailableException")
+        inner class WhenUsecaseThrowsARecommendedMoviesUnavailableException {
+
+            private lateinit var actual: HttpRequestExecutor.Result<MovieListJson>
+            private val request = mockk<ApplicationRequest>()
+            private val userId = UserId("userId1")
+            private val unavailableException = mockk<RecommendedMoviesUnavailableException>()
+
+            @BeforeEach
+            fun setupAndExec() {
+                every { request.header("tater-user-id") } returns "userId1"
+                every { recommendationUsecase.recommendedMovies(userId) } throws unavailableException
+
+                actual = sut.getV1Recommended(request)
+            }
+
+            @Test
+            fun `Calls usecase function`() {
+                verify { recommendationUsecase.recommendedMovies(userId) }
+            }
+
+            @Test
+            fun `Returns a result with status InternalServerError and the exception`() {
+                actual shouldBeEqualTo HttpRequestExecutor.Result(
+                        HttpStatusCode.InternalServerError,
+                        null,
+                        unavailableException
+                )
             }
         }
     }
