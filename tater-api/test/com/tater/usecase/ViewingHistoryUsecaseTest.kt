@@ -23,6 +23,9 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
     private lateinit var sut: ViewingHistoryUsecase
 
     @MockK
+    private lateinit var userIdChecker: UserIdChecker
+
+    @MockK
     private lateinit var viewingHistoryPort: ViewingHistoryPort
 
     @MockK
@@ -46,12 +49,18 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
             @BeforeEach
             fun setupAndExec() {
                 val histories = mockk<ViewingHistories>()
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
                 every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2))
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns summary2
 
                 actual = sut.allMoviesWatchedBy(userId)
+            }
+
+            @Test
+            fun `Checks userId with UserIdChecker`() {
+                verify { userIdChecker.makeSureUserIdExists(userId) }
             }
 
             @Test
@@ -86,6 +95,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
                 val movieId1 = mockk<MovieId>()
                 val movieId2 = mockk<MovieId>()
                 val movieId3 = mockk<MovieId>()
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
                 every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2, movieId3))
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
@@ -102,12 +112,18 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
         }
 
         @Nested
-        @DisplayName("When User ID is null")
-        inner class WhenUserIdIsNull {
+        @DisplayName("When UserIdChecker throws an exception")
+        inner class WhenUserIdCheckerThrowsAnException {
+
+            @BeforeEach
+            fun setup() {
+                every { userIdChecker.makeSureUserIdExists(null) } throws UserNotSpecifiedException("")
+            }
 
             @Test
             fun `Throws a UserNotSpecifiedException`() {
                 { sut.allMoviesWatchedBy(null) } shouldThrow UserNotSpecifiedException::class
+                verify { userIdChecker.makeSureUserIdExists(null) }
             }
         }
 
@@ -120,6 +136,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
             @BeforeEach
             fun setup() {
                 val errorFromPort = mockk<ViewingHistoryPort.UnavailableException>()
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } throws errorFromPort
             }
 
@@ -141,6 +158,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
                 val histories = mockk<ViewingHistories>()
                 val movieId1 = MovieId("movieId1")
                 val movieId2 = MovieId("movieId2")
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
                 every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2))
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } throws MovieSummaryPort.UnavailableException("error", Exception(""))

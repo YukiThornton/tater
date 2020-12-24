@@ -6,23 +6,19 @@ import com.tater.port.ViewingHistoryPort
 import kotlinx.coroutines.*
 
 class ViewingHistoryUsecase(
+    private val userIdChecker: UserIdChecker,
     private val viewingHistoryPort: ViewingHistoryPort,
     private val movieSummaryPort: MovieSummaryPort
 ) {
 
     fun allMoviesWatchedBy(userIdOrNull: UserId?): MovieSummaries = runBlocking {
-        val userId = makeSureUserIdExists(userIdOrNull)
+        val userId = userIdChecker.makeSureUserIdExists(userIdOrNull)
         try {
             val movieIds = getMovieIdsWatchedBy(userId)
             fetchMovieSummariesOf(movieIds)
         } catch (e: DataAccessException) {
             throw e.toUnavailableExceptionWith(userId)
         }
-    }
-
-    private fun makeSureUserIdExists(userId: UserId?): UserId {
-        if (userId == null) throw UserNotSpecifiedException("UserId is missing")
-        return userId
     }
 
     private fun getMovieIdsWatchedBy(userId: UserId): MovieIds = try {
@@ -56,7 +52,6 @@ class ViewingHistoryUsecase(
     }
 }
 
-class UserNotSpecifiedException(override val message: String?) : RuntimeException()
 class WatchedMoviesUnavailableException(
     override val cause: Throwable,
     userId: UserId,

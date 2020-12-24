@@ -1,9 +1,18 @@
 package com.tater.driver
 
-interface MovieApi {
-    suspend fun fetchMovie(id: String): MovieJson
+import com.fasterxml.jackson.annotation.JsonAlias
 
-    data class MovieJson(val id: String, val title: String)
+interface MovieApi {
+    suspend fun fetchMovie(id: String): MovieDetailJson
+    fun searchMovies(conditions: Map<String, Any>): MovieListJson
+
+    data class MovieDetailJson(val id: String, val title: String)
+    data class MovieJson(
+            val id: String,
+            val title: String,
+            @JsonAlias("vote_average") val voteAverage: Double,
+            @JsonAlias("vote_count") val voteCount: Int)
+    data class MovieListJson(val results: List<MovieJson>)
 
     class NotFoundException(override val message: String?, override val cause: Throwable?): RuntimeException()
 }

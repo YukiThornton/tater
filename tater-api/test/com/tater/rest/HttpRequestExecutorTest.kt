@@ -2,6 +2,7 @@ package com.tater.rest
 
 import com.tater.AutoResetMock
 import com.tater.domain.*
+import com.tater.usecase.RecommendationUsecase
 import com.tater.usecase.UserNotSpecifiedException
 import com.tater.usecase.ViewingHistoryUsecase
 import com.tater.usecase.WatchedMoviesUnavailableException
@@ -13,14 +14,17 @@ import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.*
 
-@DisplayName("RequestHandler")
-class RequestHandlerTest: AutoResetMock {
+@DisplayName("HttpRequestExecutor")
+class HttpRequestExecutorTest: AutoResetMock {
 
     @InjectMockKs
-    private lateinit var sut: RequestHandler
+    private lateinit var sut: HttpRequestExecutor
 
     @MockK
     private lateinit var viewingHistoryUsecase: ViewingHistoryUsecase
+
+    @MockK
+    private lateinit var recommendationUsecase: RecommendationUsecase
 
     @Nested
     @DisplayName("getV1Watched")
@@ -30,7 +34,7 @@ class RequestHandlerTest: AutoResetMock {
         @DisplayName("When usecase returns summaries")
         inner class WhenUsecaseReturnsSummaries {
 
-            private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
+            private lateinit var actual: HttpRequestExecutor.Result<MovieSummariesJson>
             private val request = mockk<ApplicationRequest>()
 
             @BeforeEach
@@ -56,7 +60,7 @@ class RequestHandlerTest: AutoResetMock {
 
             @Test
             fun `Returns a result with status OK and MovieSummariesJson`() {
-                actual shouldBeEqualTo RequestHandler.Result(
+                actual shouldBeEqualTo HttpRequestExecutor.Result(
                         HttpStatusCode.OK,
                         MovieSummariesJson(listOf(
                                 MovieSummaryJson("id1", "title1"),
@@ -89,7 +93,7 @@ class RequestHandlerTest: AutoResetMock {
         @DisplayName("When usecase throws a UserNotSpecifiedException")
         inner class WhenUsecaseThrowsAUserNotSpecifiedException {
 
-            private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
+            private lateinit var actual: HttpRequestExecutor.Result<MovieSummariesJson>
             private val request = mockk<ApplicationRequest>()
             private val userNotSpecifiedException = mockk<UserNotSpecifiedException>()
 
@@ -103,7 +107,7 @@ class RequestHandlerTest: AutoResetMock {
 
             @Test
             fun `Returns a result with status BadRequest and the exception`() {
-                actual shouldBeEqualTo RequestHandler.Result(
+                actual shouldBeEqualTo HttpRequestExecutor.Result(
                     HttpStatusCode.BadRequest,
                     null,
                     userNotSpecifiedException
@@ -115,7 +119,7 @@ class RequestHandlerTest: AutoResetMock {
         @DisplayName("When usecase throws a WatchedMoviesUnavailableException")
         inner class WhenUsecaseThrowsAWatchedMoviesUnavailableException {
 
-            private lateinit var actual: RequestHandler.Result<MovieSummariesJson>
+            private lateinit var actual: HttpRequestExecutor.Result<MovieSummariesJson>
             private val request = mockk<ApplicationRequest>()
             private val watchedMoviesUnavailableException = mockk<WatchedMoviesUnavailableException>()
 
@@ -129,11 +133,55 @@ class RequestHandlerTest: AutoResetMock {
 
             @Test
             fun `Returns a result with status InternalServerError and the exception`() {
-                actual shouldBeEqualTo RequestHandler.Result(
+                actual shouldBeEqualTo HttpRequestExecutor.Result(
                     HttpStatusCode.InternalServerError,
                     null,
                     watchedMoviesUnavailableException
                 )
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("getV1Recommended")
+    inner class GetV1RecommendedTest {
+
+        private lateinit var actual: HttpRequestExecutor.Result<MovieListJson>
+        private val request = mockk<ApplicationRequest>()
+
+        @Nested
+        @DisplayName("When usecase returns movies")
+        inner class WhenUsecaseReturnsMovies {
+            @BeforeEach
+            fun setupAndExec() {
+                every { request.header("tater-user-id") } returns "userId1"
+                every { recommendationUsecase.recommendedMovies(UserId("userId1")) } returns Movies(listOf(
+                        Movie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000))),
+                        Movie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200))),
+                        Movie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900))),
+                ))
+
+                actual = sut.getV1Recommended(request)
+            }
+
+            @Test
+            fun `Retrieves User ID from a header`() {
+                verify { request.header("tater-user-id") }
+            }
+
+            @Test
+            fun `Calls usecase with User ID from the header`() {
+                verify { recommendationUsecase.recommendedMovies(UserId("userId1")) }
+            }
+
+            @Test
+            fun `Returns a result with status OK and json`() {
+                actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
+                actual.responseBody shouldBeEqualTo MovieListJson(listOf(
+                        MovieJson("id1", "title1", ReviewJson(5.6, 1000)),
+                        MovieJson("id2", "title2", ReviewJson(5.5, 1200)),
+                        MovieJson("id3", "title3", ReviewJson(5.4, 900)),
+                ))
             }
         }
     }

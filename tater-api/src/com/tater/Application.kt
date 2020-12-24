@@ -1,6 +1,6 @@
 package com.tater
 
-import com.tater.rest.RequestHandler
+import com.tater.rest.HttpRequestExecutor
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -11,10 +11,14 @@ import com.tater.driver.MovieApi
 import com.tater.driver.MovieApiClient
 import com.tater.driver.TaterDb
 import com.tater.driver.TaterPostgresqlDb
+import com.tater.gateway.MovieGateway
 import com.tater.gateway.MovieSummaryGateway
 import com.tater.gateway.ViewingHistoryGateway
+import com.tater.port.MoviePort
 import com.tater.port.MovieSummaryPort
 import com.tater.port.ViewingHistoryPort
+import com.tater.usecase.RecommendationUsecase
+import com.tater.usecase.UserIdChecker
 import com.tater.usecase.ViewingHistoryUsecase
 import io.ktor.jackson.*
 import io.ktor.features.*
@@ -41,22 +45,29 @@ fun Application.module(testing: Boolean = false) {
         bind<MovieApi>() with singleton { MovieApiClient(configuration.movieApi()) }
         bind<MovieSummaryPort>() with singleton { MovieSummaryGateway(instance()) }
         bind<ViewingHistoryPort>() with singleton { ViewingHistoryGateway(instance()) }
-        bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance()) }
-        bind<RequestHandler>() with singleton { RequestHandler(instance()) }
+        bind<MoviePort>() with singleton { MovieGateway(instance()) }
+        bind<UserIdChecker>() with singleton { UserIdChecker() }
+        bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance(), instance()) }
+        bind<RecommendationUsecase>() with singleton { RecommendationUsecase(instance(), instance()) }
+        bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(instance(), instance()) }
     }
 
-    val handler by kodein().instance<RequestHandler>()
+    val executor by kodein().instance<HttpRequestExecutor>()
 
     routing {
         get("/v1/systems/ping") {
             call.respondText("PONG!", contentType = ContentType.Text.Plain)
         }
         get("/v1/watched") {
-            val result = handler.getV1Watched(call.request)
+            val result = executor.getV1Watched(call.request)
             if (result.error != null) {
                 call.application.environment.log.error("Failed on GET /v1/watched", result.error)
             }
             call.respond(result.responseStatus, result.responseBody ?: "")
+        }
+        get("/v1/recommended") {
+            val result = executor.getV1Recommended(call.request)
+            call.respond(result.responseStatus, result.responseBody!!)
         }
     }
 }

@@ -19,11 +19,8 @@ class MovieApiClient(
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .registerKotlinModule()
 
-    override suspend fun fetchMovie(id: String): MovieApi.MovieJson {
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("${config.endpoint()}/3/movie/$id?api_key=${config.authToken()}"))
-            .header("Content-Type", "application/json")
-            .build()
+    override suspend fun fetchMovie(id: String): MovieApi.MovieDetailJson {
+        val request = createRequest("/3/movie/$id", mapOf("api_key" to config.authToken()))
         val asyncRequest = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
         val response = asyncRequest.await()
         return when(response.statusCode()) {
@@ -32,4 +29,25 @@ class MovieApiClient(
             else -> throw RuntimeException("statusCode=${response.statusCode()}, body=${response.body()}")
         }
     }
+
+    override fun searchMovies(conditions: Map<String, Any>): MovieApi.MovieListJson {
+        val queryParams = conditions.plus(mapOf(
+                "api_key" to config.authToken(),
+                "page" to 1
+        ))
+        val request = createRequest("/3/discover/movie", queryParams)
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return when (response.statusCode()) {
+            200 -> mapper.readValue(response.body())
+            else -> throw RuntimeException("statusCode=${response.statusCode()}, body=${response.body()}")
+        }
+    }
+
+    private fun createRequest(path: String, queryParams: Map<String, Any>): HttpRequest? {
+        val query = queryParams.map { (key, value) -> "$key=$value" }.joinToString("&")
+        return HttpRequest.newBuilder()
+                .uri(URI.create("${config.endpoint()}$path?$query"))
+                .build()
+    }
+
 }

@@ -12,7 +12,6 @@ class WatchedTest {
         private val taterApi = TaterApi()
         private val movieApi = MovieApiMock()
         private val taterDb = TaterDb()
-        private const val responseJsonRoot = "/project/tater_e2e/tater-api/responses/get-v1-watched"
 
         @BeforeAll
         @JvmStatic
@@ -55,9 +54,26 @@ class WatchedTest {
         }
 
         @Test
-        fun `視聴履歴のある映画のタイトル全てを返すこと`() {
-            val expectedBody = JsonReader.fromFilePath("$responseJsonRoot/001.json")
-            JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedBody
+        fun `視聴履歴のある映画全てを返すこと`() {
+            val responseJson = JsonReader.fromResponseBody(response)
+            responseJson.shouldNotBeEmpty()
+            responseJson.shouldHaveExpectedAmountOf("movies", 3)
+        }
+
+        @Test
+        fun `それぞれの映画のIDを返すこと`() {
+            val responseJson = JsonReader.fromResponseBody(response)
+            responseJson.shouldHaveValueOf("movies.0.id", "497")
+            responseJson.shouldHaveValueOf("movies.1.id", "680")
+            responseJson.shouldHaveValueOf("movies.2.id", "13")
+        }
+
+        @Test
+        fun `それぞれの映画のタイトルを返すこと`() {
+            val responseJson = JsonReader.fromResponseBody(response)
+            responseJson.shouldHaveValueOf("movies.0.title", "The Green Mile")
+            responseJson.shouldHaveValueOf("movies.1.title", "Pulp Fiction")
+            responseJson.shouldHaveValueOf("movies.2.title", "Forrest Gump")
         }
     }
 
@@ -82,9 +98,10 @@ class WatchedTest {
         }
 
         @Test
-        fun `空の結果を返す`() {
-            val expectedResponse = JsonReader.fromFilePath("$responseJsonRoot/002.json")
-            JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedResponse
+        fun `一つも映画を返さない`() {
+            val responseJson = JsonReader.fromResponseBody(response)
+            responseJson.shouldNotBeEmpty()
+            responseJson.shouldHaveExpectedAmountOf("movies", 0)
         }
     }
 
@@ -116,8 +133,11 @@ class WatchedTest {
 
         @Test
         fun `取得に成功したものだけを返す`() {
-            val expectedBody = JsonReader.fromFilePath("$responseJsonRoot/003.json")
-            JsonReader.fromRawString(response.body().string()) shouldBeEqualTo expectedBody
+            val responseJson = JsonReader.fromResponseBody(response)
+            responseJson.shouldNotBeEmpty()
+            responseJson.shouldHaveExpectedAmountOf("movies", 2)
+            responseJson.shouldHaveValueOf("movies.0.id", "497")
+            responseJson.shouldHaveValueOf("movies.1.id", "13")
         }
     }
 

@@ -36,7 +36,7 @@ class MovieSummaryGatewayTest: AutoResetMock {
 
             @BeforeEach
             fun setupAndExec() {
-                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieJson("movieId1", "title1")
+                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieDetailJson("movieId1", "title1")
 
                 runBlocking {
                     actual = sut.fetchMovieSummaryOf(MovieId("movieId1"))
