@@ -19,6 +19,10 @@ data class AssertableJson(private val jsonMap: Map<Any, Any>) {
         this.getDoubleValueOf(keys) == expected
     }
 
+    fun shouldHaveValueOf(keys: String, expected: Boolean) = should("The value of key \"$keys\" should be $expected, but it was ${getBooleanValueOf(keys)} in json ${this.jsonMap}") {
+        this.getBooleanValueOf(keys) == expected
+    }
+
     fun shouldHaveExpectedAmountOf(keys: String, expectedAmount: Int) = should("Element amount of key \"$keys\" should be $expectedAmount, but it was ${elementCountOf(keys)} in json $jsonMap") {
         elementCountOf(keys) ==  expectedAmount
     }
@@ -42,6 +46,11 @@ data class AssertableJson(private val jsonMap: Map<Any, Any>) {
     private fun getDoubleValueOf(keys: String): Double? {
         if (jsonMap.isEmpty()) return null
         return getRecursively(jsonMap, keys.split(".")) as Double?
+    }
+
+    private fun getBooleanValueOf(keys: String): Boolean? {
+        if (jsonMap.isEmpty()) return null
+        return getRecursively(jsonMap, keys.split(".")) as Boolean?
     }
 
     private fun getRecursively(target: Any?, keys: List<String>): Any? {

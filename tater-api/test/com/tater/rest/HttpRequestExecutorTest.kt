@@ -152,10 +152,10 @@ class HttpRequestExecutorTest: AutoResetMock {
             @BeforeEach
             fun setupAndExec() {
                 every { request.header("tater-user-id") } returns "userId1"
-                every { recommendationUsecase.recommendedMovies(UserId("userId1")) } returns Movies(listOf(
-                        Movie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000))),
-                        Movie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200))),
-                        Movie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900))),
+                every { recommendationUsecase.topRatedMovies(UserId("userId1")) } returns PersonalizedMovies(listOf(
+                        PersonalizedMovie(UserId("userId1"), false, Movie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000)))),
+                        PersonalizedMovie(UserId("userId1"), true, Movie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200)))),
+                        PersonalizedMovie(UserId("userId1"), true, Movie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900)))),
                 ))
 
                 actual = sut.getV1Recommended(request)
@@ -168,16 +168,16 @@ class HttpRequestExecutorTest: AutoResetMock {
 
             @Test
             fun `Calls usecase with User ID from the header`() {
-                verify { recommendationUsecase.recommendedMovies(UserId("userId1")) }
+                verify { recommendationUsecase.topRatedMovies(UserId("userId1")) }
             }
 
             @Test
             fun `Returns a result with status OK and json`() {
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
                 actual.responseBody shouldBeEqualTo MovieListJson(listOf(
-                        MovieJson("id1", "title1", ReviewJson(5.6, 1000)),
-                        MovieJson("id2", "title2", ReviewJson(5.5, 1200)),
-                        MovieJson("id3", "title3", ReviewJson(5.4, 900)),
+                        MovieJson("id1", "title1", false, ReviewJson(5.6, 1000)),
+                        MovieJson("id2", "title2", true, ReviewJson(5.5, 1200)),
+                        MovieJson("id3", "title3", true, ReviewJson(5.4, 900)),
                 ))
             }
         }
@@ -194,14 +194,14 @@ class HttpRequestExecutorTest: AutoResetMock {
             @BeforeEach
             fun setupAndExec() {
                 every { request.header("tater-user-id") } returns "userId1"
-                every { recommendationUsecase.recommendedMovies(userId) } throws userNotSpecifiedException
+                every { recommendationUsecase.topRatedMovies(userId) } throws userNotSpecifiedException
 
                 actual = sut.getV1Recommended(request)
             }
 
             @Test
             fun `Calls usecase function`() {
-                verify { recommendationUsecase.recommendedMovies(userId) }
+                verify { recommendationUsecase.topRatedMovies(userId) }
             }
 
             @Test
@@ -226,14 +226,14 @@ class HttpRequestExecutorTest: AutoResetMock {
             @BeforeEach
             fun setupAndExec() {
                 every { request.header("tater-user-id") } returns "userId1"
-                every { recommendationUsecase.recommendedMovies(userId) } throws unavailableException
+                every { recommendationUsecase.topRatedMovies(userId) } throws unavailableException
 
                 actual = sut.getV1Recommended(request)
             }
 
             @Test
             fun `Calls usecase function`() {
-                verify { recommendationUsecase.recommendedMovies(userId) }
+                verify { recommendationUsecase.topRatedMovies(userId) }
             }
 
             @Test

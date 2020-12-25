@@ -36,7 +36,7 @@ class RecommendedTest {
         fun setupAndExec() {
             movieApi.returnsDiscoveredMoviesOfPage(1)
 
-            response = taterApi.getV1Recommended("1")
+            response = taterApi.getV1Recommended("2")
         }
 
         @Test
@@ -87,6 +87,14 @@ class RecommendedTest {
             responseJson.shouldHaveValueOf("movies.1.review.count", 1724)
             responseJson.shouldHaveValueOf("movies.2.review.count", 17767)
         }
+
+        @Test
+        fun `それぞれの映画にユーザの視聴記録があるかどうかを返すこと`() {
+            val responseJson = JsonReader.fromResponseBody(response)
+            responseJson.shouldHaveValueOf("movies.0.watched", false)
+            responseJson.shouldHaveValueOf("movies.1.watched", false)
+            responseJson.shouldHaveValueOf("movies.2.watched", true)
+        }
     }
 
     @Nested
@@ -114,7 +122,7 @@ class RecommendedTest {
         fun setupAndExec() {
             movieApi.failsWithServerErrorForMovieDiscoveryOfPage(1)
 
-            response = taterApi.getV1Recommended("1")
+            response = taterApi.getV1Recommended("2")
         }
 
         @Test

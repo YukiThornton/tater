@@ -3,11 +3,10 @@ package com.tater.usecase
 import com.tater.AutoResetMock
 import com.tater.domain.*
 import com.tater.port.MoviePort
-import io.mockk.every
+import com.tater.port.ViewingHistoryPort
+import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.verify
 import org.amshove.kluent.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -26,41 +25,52 @@ class RecommendationUsecaseTest: AutoResetMock {
     @MockK
     private lateinit var moviePort: MoviePort
 
+    @MockK
+    private lateinit var viewingHistoryPort: ViewingHistoryPort
+
     @Nested
-    @DisplayName("recommendedMovies")
-    inner class RecommendedMovies {
+    @DisplayName("topRatedMovies")
+    inner class TopRatedMovies {
 
         @Nested
         @DisplayName("When enough movies are available")
         inner class WhenEnoughMoviesAreAvailable {
 
-            private lateinit var actual: Movies
+            private lateinit var actual: PersonalizedMovies
             private val userId = UserId("userId1")
             private val movies = mockk<Movies>("Movies returned from port")
             private val searchFilter = MovieSearchFilter.withMinimumReviewCount(ReviewCount(1000))
             private val sort = SortedBy.ReviewAverageDesc
+            private val viewingHistories = mockk<ViewingHistories>()
+            private val personalizedMovies = mockk<PersonalizedMovies>()
 
             @BeforeEach
             fun setupAndExec() {
-                every { userIdChecker.makeSureUserIdExists(userId) } returns any()
+                mockkObject(PersonalizedMovies.Companion)
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { moviePort.searchMovies(searchFilter, sort) } returns movies
+                every { movies.isEmpty() } returns false
+                every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns viewingHistories
+                every { PersonalizedMovies.from(movies, viewingHistories) } returns personalizedMovies
 
-                actual = sut.recommendedMovies(userId)
+                actual = sut.topRatedMovies(userId)
             }
 
             @Test
-            fun `Checks userId with UserIdChecker`() {
+            fun `Makes sure that userId exists with UserIdChecker`() {
                 verify { userIdChecker.makeSureUserIdExists(userId) }
             }
 
             @Test
-            fun `Gets movies with a filter`() {
-                verify { moviePort.searchMovies(searchFilter, sort) }
+            fun `Gets necessary data from each port and create personalized movies out of them`() {
+                verify(exactly = 1) { moviePort.searchMovies(searchFilter, sort) }
+                verify(exactly = 1) { viewingHistoryPort.getViewingHistoriesFor(userId) }
+                verify { PersonalizedMovies.from(movies, viewingHistories) }
             }
 
             @Test
-            fun `Returns all movies retrieved from port`() {
-                actual shouldBeEqualTo movies
+            fun `Returns created data`() {
+                actual shouldBeEqualTo personalizedMovies
             }
         }
 
@@ -68,20 +78,28 @@ class RecommendationUsecaseTest: AutoResetMock {
         @DisplayName("When no movies are available")
         inner class WhenNoMoviesAreAvailable {
 
-            private lateinit var actual: Movies
+            private lateinit var actual: PersonalizedMovies
 
             @BeforeEach
             fun setupAndExec() {
                 val userId = UserId("userId1")
-                every { userIdChecker.makeSureUserIdExists(userId) } returns any()
-                every { moviePort.searchMovies(any(), any()) } returns Movies(emptyList())
+                val movies = mockk<Movies>()
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
+                every { moviePort.searchMovies(any(), any()) } returns movies
+                every { movies.isEmpty() } returns true
 
-                actual = sut.recommendedMovies(userId)
+                actual = sut.topRatedMovies(userId)
+            }
+
+            @Test
+            fun `Gets movies but does not get viewing histories`() {
+                verify(exactly = 1) { moviePort.searchMovies(any(), any()) }
+                verify(exactly = 0) { viewingHistoryPort.getViewingHistoriesFor(any()) }
             }
 
             @Test
             fun `Returns no movies`() {
-                actual shouldBeEqualTo Movies(emptyList())
+                actual shouldBeEqualTo PersonalizedMovies(emptyList())
             }
         }
 
@@ -96,7 +114,7 @@ class RecommendationUsecaseTest: AutoResetMock {
 
             @Test
             fun `Throws the same UserNotSpecifiedException`() {
-                { sut.recommendedMovies(null) } shouldThrow UserNotSpecifiedException::class
+                { sut.topRatedMovies(null) } shouldThrow UserNotSpecifiedException::class
                 verify { userIdChecker.makeSureUserIdExists(null) }
             }
         }
@@ -116,7 +134,7 @@ class RecommendationUsecaseTest: AutoResetMock {
             @Test
             fun `Throws a RecommendedMoviesUnavailableException`() {
                 val errorMessage = "Recommended movies for user(id=userId1) are unavailable"
-                { sut.recommendedMovies(userId) } shouldThrow RecommendedMoviesUnavailableException::class withCause MoviePort.SearchUnavailableException::class withMessage errorMessage
+                { sut.topRatedMovies(userId) } shouldThrow RecommendedMoviesUnavailableException::class withCause MoviePort.SearchUnavailableException::class withMessage errorMessage
                 verify { moviePort.searchMovies(any(), any()) }
             }
         }

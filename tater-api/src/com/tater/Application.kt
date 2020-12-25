@@ -48,7 +48,7 @@ fun Application.module(testing: Boolean = false) {
         bind<MoviePort>() with singleton { MovieGateway(instance()) }
         bind<UserIdChecker>() with singleton { UserIdChecker() }
         bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance(), instance()) }
-        bind<RecommendationUsecase>() with singleton { RecommendationUsecase(instance(), instance()) }
+        bind<RecommendationUsecase>() with singleton { RecommendationUsecase(instance(), instance(), instance()) }
         bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(instance(), instance()) }
     }
 
