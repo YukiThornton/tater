@@ -22,9 +22,14 @@ class RecommendationUsecase(
             val histories = viewingHistoryPort.getViewingHistoriesFor(userId)
             PersonalizedMovies.from(movies, histories)
         } catch (e: MoviePort.SearchUnavailableException) {
-            throw RecommendedMoviesUnavailableException(e, "Recommended movies for user(id=${userId.value}) are unavailable")
+            throw createException(e, userId)
+        } catch (e: ViewingHistoryPort.UnavailableException) {
+            throw createException(e, userId)
         }
     }
+
+    private fun createException(e: Throwable, userId: UserId) =
+            RecommendedMoviesUnavailableException(e, "Recommended movies for user(id=${userId.value}) are unavailable")
 }
 
 class RecommendedMoviesUnavailableException(override val cause: Throwable, override val message: String?): RuntimeException()

@@ -120,7 +120,7 @@ class RecommendationUsecaseTest: AutoResetMock {
         }
 
         @Nested
-        @DisplayName("When port throws an exception")
+        @DisplayName("When movie port throws an exception")
         inner class WhenMoviePortThrowsAnException {
 
             private val userId = UserId("userId1")
@@ -135,7 +135,30 @@ class RecommendationUsecaseTest: AutoResetMock {
             fun `Throws a RecommendedMoviesUnavailableException`() {
                 val errorMessage = "Recommended movies for user(id=userId1) are unavailable"
                 { sut.topRatedMovies(userId) } shouldThrow RecommendedMoviesUnavailableException::class withCause MoviePort.SearchUnavailableException::class withMessage errorMessage
-                verify { moviePort.searchMovies(any(), any()) }
+                verify(exactly = 1) { moviePort.searchMovies(any(), any()) }
+            }
+        }
+
+        @Nested
+        @DisplayName("When viewing history port throws an exception")
+        inner class WhenViewingHistoryPortThrowsAnException {
+
+            private val userId = UserId("userId1")
+
+            @BeforeEach
+            fun setup() {
+                val movies = mockk<Movies>()
+                every { userIdChecker.makeSureUserIdExists(userId) } returns userId
+                every { moviePort.searchMovies(any(), any()) } returns movies
+                every { movies.isEmpty() } returns false
+                every { viewingHistoryPort.getViewingHistoriesFor(userId) } throws ViewingHistoryPort.UnavailableException("", null)
+            }
+
+            @Test
+            fun `Throws a RecommendedMoviesUnavailableException`() {
+                val errorMessage = "Recommended movies for user(id=userId1) are unavailable"
+                { sut.topRatedMovies(userId) } shouldThrow RecommendedMoviesUnavailableException::class withCause ViewingHistoryPort.UnavailableException::class withMessage errorMessage
+                verify(exactly = 1) { viewingHistoryPort.getViewingHistoriesFor(userId) }
             }
         }
     }
