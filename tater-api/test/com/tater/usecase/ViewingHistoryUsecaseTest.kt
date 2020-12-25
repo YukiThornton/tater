@@ -51,7 +51,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
                 val histories = mockk<ViewingHistories>()
                 every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
-                every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2))
+                every { histories.watchedMovieIds } returns MovieIds(listOf(movieId1, movieId2))
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns summary2
 
@@ -97,7 +97,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
                 val movieId3 = mockk<MovieId>()
                 every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
-                every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2, movieId3))
+                every { histories.watchedMovieIds } returns MovieIds(listOf(movieId1, movieId2, movieId3))
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns null
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId3) } returns summary3
@@ -160,7 +160,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
                 val movieId2 = MovieId("movieId2")
                 every { userIdChecker.makeSureUserIdExists(userId) } returns userId
                 every { viewingHistoryPort.getViewingHistoriesFor(userId) } returns histories
-                every { histories.movieIds() } returns MovieIds(listOf(movieId1, movieId2))
+                every { histories.watchedMovieIds } returns MovieIds(listOf(movieId1, movieId2))
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } throws MovieSummaryPort.UnavailableException("error", Exception(""))
                 coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns mockk();
             }

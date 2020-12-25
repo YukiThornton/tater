@@ -22,7 +22,7 @@ class ViewingHistoryUsecase(
     }
 
     private fun getMovieIdsWatchedBy(userId: UserId): MovieIds = try {
-        viewingHistoryPort.getViewingHistoriesFor(userId).movieIds()
+        viewingHistoryPort.getViewingHistoriesFor(userId).watchedMovieIds
     } catch (e: ViewingHistoryPort.UnavailableException) {
         throw DataAccessException(e)
     }

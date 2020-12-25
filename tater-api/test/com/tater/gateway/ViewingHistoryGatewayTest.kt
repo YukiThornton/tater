@@ -1,10 +1,7 @@
 package com.tater.gateway
 
 import com.tater.AutoResetMock
-import com.tater.domain.MovieId
-import com.tater.domain.UserId
-import com.tater.domain.ViewingHistories
-import com.tater.domain.ViewingHistory
+import com.tater.domain.*
 import com.tater.driver.TaterDb
 import com.tater.port.ViewingHistoryPort
 import io.mockk.every
@@ -67,10 +64,7 @@ class ViewingHistoryGatewayTest: AutoResetMock {
 
             @Test
             fun `Returns ViewingHistories of specified user`() {
-                actual shouldBeEqualTo ViewingHistories(listOf(
-                    ViewingHistory(userId, MovieId("movieId1")),
-                    ViewingHistory(userId, MovieId("movieId2"))
-                ))
+                actual shouldBeEqualTo ViewingHistories(userId, MovieIds(listOf(MovieId("movieId1"), MovieId("movieId2"))))
             }
         }
 
