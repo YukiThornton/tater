@@ -9,7 +9,7 @@ class TaterApi {
         private val client = OkHttpClient()
     }
 
-    fun getV1Watched(userId: String): Response {
+    fun getV1WatchedForUser(userId: String): Response {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/watched", userId)
     }
 
@@ -17,7 +17,7 @@ class TaterApi {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/watched")
     }
 
-    fun getV1TopRated(userId: String): Response {
+    fun getV1TopRatedForUser(userId: String): Response {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/top-rated", userId)
     }
 

@@ -22,7 +22,7 @@ class MovieApiMock {
 
     fun returnsMovieDetailsWhenMovieIdIs(movieId: String) {
         wireMock.register(requestForMovieDetailsFor(movieId)
-                .willReturn(okJson(JsonReader.read("$responseBasePath/get-movie/$movieId.json"))
+                .willReturn(okJson(JsonReader.readFile("$responseBasePath/get-movie/$movieId.json"))
         ))
     }
 
@@ -52,7 +52,7 @@ class MovieApiMock {
 
     fun returnsDiscoveredMoviesOfPage(page: Int) {
         wireMock.register(requestForMovieDiscovery(page)
-                .willReturn(okJson(JsonReader.read("$responseBasePath/movie-discovery/$page.json"))
+                .willReturn(okJson(JsonReader.readFile("$responseBasePath/movie-discovery/$page.json"))
                 ))
     }
 

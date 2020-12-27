@@ -3,10 +3,6 @@ package project.tater_e2e.helper
 import org.amshove.kluent.should
 
 data class AssertableJson(private val jsonMap: Map<Any, Any>) {
-    fun shouldNotBeEmpty() = should("Json should not be empty, but it was $jsonMap") {
-        this.jsonMap.isNotEmpty()
-    }
-
     fun shouldHaveValueOf(keys: String, expected: String) = should("The value of key \"$keys\" should be \"$expected\", but it was ${getValueOf(keys)?.let{ "\"$it\"" } ?: "null"} in json ${this.jsonMap}") {
         this.getValueOf(keys) == expected
     }
