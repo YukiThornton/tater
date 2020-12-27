@@ -21,12 +21,12 @@ class UserIdCheckerTest: AutoResetMock {
     inner class MakeSureUserIdExists {
 
         @Test
-        fun returnsUserIdWhenGivenArgumentIsNotNull() {
+        fun `Returns UserId when given argument is not null`() {
             sut.makeSureUserIdExists(UserId("id1")) shouldBeEqualTo UserId(("id1"))
         }
 
         @Test
-        fun throwsAUserNotSpecifiedExceptionWhenGivenArgumentIsNull() {
+        fun `Throws a UserNotSpecifiedException when given argument is null`() {
             { sut.makeSureUserIdExists(null) } shouldThrow UserNotSpecifiedException::class withMessage "UserId is missing"
         }
     }

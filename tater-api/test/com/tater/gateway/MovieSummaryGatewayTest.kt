@@ -32,24 +32,26 @@ class MovieSummaryGatewayTest: AutoResetMock {
         @DisplayName("When movie exists")
         inner class WhenMovieExists {
 
-            private var actual: MovieSummary? = null
-
             @BeforeEach
-            fun setupAndExec() {
+            fun setup() {
                 coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieDetailJson("movieId1", "title1")
-
-                runBlocking {
-                    actual = sut.fetchMovieSummaryOf(MovieId("movieId1"))
-                }
             }
 
             @Test
             fun `Returns MovieSummary of specified MovieId`() {
-                actual shouldBeEqualTo MovieSummary(MovieId("movieId1"), MovieTitle("title1"))
+                runBlocking {
+                    val actual = sut.fetchMovieSummaryOf(MovieId("movieId1"))
+
+                    actual shouldBeEqualTo MovieSummary(MovieId("movieId1"), MovieTitle("title1"))
+                }
             }
 
             @Test
             fun `Fetches movie from MovieApi`() {
+                runBlocking {
+                    sut.fetchMovieSummaryOf(MovieId("movieId1"))
+                }
+
                 coVerify(exactly = 1) { movieApi.fetchMovie("movieId1") }
             }
         }
@@ -58,20 +60,18 @@ class MovieSummaryGatewayTest: AutoResetMock {
         @DisplayName("When movie does not exist")
         inner class WhenMovieDoesNotExist {
 
-            private var actual: MovieSummary? = null
-
             @BeforeEach
-            fun setupAndExec() {
+            fun setup() {
                 coEvery { movieApi.fetchMovie("movieId1") } throws MovieApi.NotFoundException("", RuntimeException())
-
-                runBlocking {
-                    actual = sut.fetchMovieSummaryOf(MovieId("movieId1"))
-                }
             }
 
             @Test
             fun `Returns null`() {
-                actual shouldBeEqualTo null
+                runBlocking {
+                    val actual = sut.fetchMovieSummaryOf(MovieId("movieId1"))
+
+                    actual shouldBeEqualTo null
+                }
             }
         }
 
@@ -80,7 +80,6 @@ class MovieSummaryGatewayTest: AutoResetMock {
         inner class WhenMovieApiThrowsAnError {
 
             private val errorFromMovieApi = mockk<Throwable>()
-            private val errorMessage = "Movie summary for movie(id=movieId1) unavailable"
 
             @BeforeEach
             fun setup() {
@@ -89,8 +88,12 @@ class MovieSummaryGatewayTest: AutoResetMock {
 
             @Test
             fun `Throws a UnavailableException`() {
+                val expectedException = MovieSummaryPort.UnavailableException::class
+                val exceptionCause = Throwable::class
+                val exceptionMessage = "Movie summary for movie(id=movieId1) unavailable"
+
                 runBlocking {
-                    coInvoking{ sut.fetchMovieSummaryOf(MovieId("movieId1")) } shouldThrow MovieSummaryPort.UnavailableException::class withMessage errorMessage withCause Throwable::class
+                    coInvoking{ sut.fetchMovieSummaryOf(MovieId("movieId1")) } shouldThrow expectedException withMessage exceptionMessage withCause exceptionCause
                 }
             }
         }
