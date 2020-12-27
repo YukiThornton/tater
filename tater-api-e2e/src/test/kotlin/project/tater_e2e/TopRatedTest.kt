@@ -5,8 +5,8 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.*
 import project.tater_e2e.helper.*
 
-@DisplayName("GET /v1/recommended オススメの映画のタイトルを全て返す")
-class RecommendedTest {
+@DisplayName("GET /v1/top-rated 高評価の映画の情報を全て返す")
+class TopRatedTest {
 
     companion object {
         private val taterApi = TaterApi()
@@ -27,8 +27,8 @@ class RecommendedTest {
     }
 
     @Nested
-    @DisplayName("001_オススメできる映画があるとき")
-    inner class WhenMoreThanOneRecommendableMoviesExist {
+    @DisplayName("001_高評価の映画の取得に成功したとき")
+    inner class WhenSucceedsToFetchTopRatedMovies {
 
         private lateinit var response: Response
 
@@ -36,11 +36,11 @@ class RecommendedTest {
         fun setupAndExec() {
             movieApi.returnsDiscoveredMoviesOfPage(1)
 
-            response = taterApi.getV1Recommended("2")
+            response = taterApi.getV1TopRated("2")
         }
 
         @Test
-        fun `MovieAPIに対して一定の条件でオススメの映画を問い合わせていること`() {
+        fun `MovieAPIに対して一定の条件の映画を問い合わせていること`() {
             movieApi.receivedARequestForMovieDiscoveryOfPage(1)
         }
 
@@ -50,7 +50,7 @@ class RecommendedTest {
         }
 
         @Test
-        fun `オススメの映画20本を返すこと`() {
+        fun `高評価の映画20本を返すこと`() {
             val responseJson = JsonReader.fromResponseBody(response)
             responseJson.shouldNotBeEmpty()
             responseJson.shouldHaveExpectedAmountOf("movies", 20)
@@ -104,7 +104,7 @@ class RecommendedTest {
 
         @BeforeEach
         fun exec() {
-            response = taterApi.getV1RecommendedWithoutUserId()
+            response = taterApi.getV1TopRatedWithoutUserId()
         }
 
         @Test
@@ -114,15 +114,15 @@ class RecommendedTest {
     }
 
     @Nested
-    @DisplayName("502_オススメな映画の取得に失敗した場合は")
-    inner class WhenFailsToFetchMoviesWithError {
+    @DisplayName("502_高評価の映画の取得に失敗した場合は")
+    inner class WhenFailsToFetchTopRatedMoviesWithError {
         private lateinit var response: Response
 
         @BeforeEach
         fun setupAndExec() {
             movieApi.failsWithServerErrorForMovieDiscoveryOfPage(1)
 
-            response = taterApi.getV1Recommended("2")
+            response = taterApi.getV1TopRated("2")
         }
 
         @Test

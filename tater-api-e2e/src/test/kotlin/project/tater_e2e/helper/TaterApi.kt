@@ -17,12 +17,12 @@ class TaterApi {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/watched")
     }
 
-    fun getV1Recommended(userId: String): Response {
-        return getRequestWith("${Configurations.taterApiEndpoint}/v1/recommended", userId)
+    fun getV1TopRated(userId: String): Response {
+        return getRequestWith("${Configurations.taterApiEndpoint}/v1/top-rated", userId)
     }
 
-    fun getV1RecommendedWithoutUserId(): Response {
-        return getRequestWith("${Configurations.taterApiEndpoint}/v1/recommended")
+    fun getV1TopRatedWithoutUserId(): Response {
+        return getRequestWith("${Configurations.taterApiEndpoint}/v1/top-rated")
     }
 
     private fun getRequestWith(path: String, userId: String? = null): Response {

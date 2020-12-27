@@ -13,11 +13,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("RecommendationUsecase")
-class RecommendationUsecaseTest: AutoResetMock {
+@DisplayName("MovieSearchUsecase")
+class MovieSearchUsecaseTest: AutoResetMock {
 
     @InjectMockKs
-    private lateinit var sut: RecommendationUsecase
+    private lateinit var sut: MovieSearchUsecase
 
     @MockK
     private lateinit var userIdChecker: UserIdChecker
@@ -132,9 +132,9 @@ class RecommendationUsecaseTest: AutoResetMock {
             }
 
             @Test
-            fun `Throws a RecommendedMoviesUnavailableException`() {
-                val errorMessage = "Recommended movies for user(id=userId1) are unavailable"
-                { sut.topRatedMovies(userId) } shouldThrow RecommendedMoviesUnavailableException::class withCause MoviePort.SearchUnavailableException::class withMessage errorMessage
+            fun `Throws a TopRatedMoviesUnavailableException`() {
+                val errorMessage = "Top rated movies for user(id=userId1) are unavailable"
+                { sut.topRatedMovies(userId) } shouldThrow TopRatedMoviesUnavailableException::class withCause MoviePort.SearchUnavailableException::class withMessage errorMessage
                 verify(exactly = 1) { moviePort.searchMovies(any(), any()) }
             }
         }
@@ -155,9 +155,9 @@ class RecommendationUsecaseTest: AutoResetMock {
             }
 
             @Test
-            fun `Throws a RecommendedMoviesUnavailableException`() {
-                val errorMessage = "Recommended movies for user(id=userId1) are unavailable"
-                { sut.topRatedMovies(userId) } shouldThrow RecommendedMoviesUnavailableException::class withCause ViewingHistoryPort.UnavailableException::class withMessage errorMessage
+            fun `Throws a TopRatedMoviesUnavailableException`() {
+                val errorMessage = "Top rated movies for user(id=userId1) are unavailable"
+                { sut.topRatedMovies(userId) } shouldThrow TopRatedMoviesUnavailableException::class withCause ViewingHistoryPort.UnavailableException::class withMessage errorMessage
                 verify(exactly = 1) { viewingHistoryPort.getViewingHistoriesFor(userId) }
             }
         }

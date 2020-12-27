@@ -21,7 +21,7 @@ class HttpRequestExecutorTest: AutoResetMock {
     private lateinit var viewingHistoryUsecase: ViewingHistoryUsecase
 
     @MockK
-    private lateinit var recommendationUsecase: RecommendationUsecase
+    private lateinit var movieSearchUsecase: MovieSearchUsecase
 
     @Nested
     @DisplayName("getV1Watched")
@@ -140,8 +140,8 @@ class HttpRequestExecutorTest: AutoResetMock {
     }
 
     @Nested
-    @DisplayName("getV1Recommended")
-    inner class GetV1RecommendedTest {
+    @DisplayName("getV1TopRated")
+    inner class GetV1TopRatedTest {
 
         private lateinit var actual: HttpRequestExecutor.Result<MovieListJson>
         private val request = mockk<ApplicationRequest>()
@@ -152,13 +152,13 @@ class HttpRequestExecutorTest: AutoResetMock {
             @BeforeEach
             fun setupAndExec() {
                 every { request.header("tater-user-id") } returns "userId1"
-                every { recommendationUsecase.topRatedMovies(UserId("userId1")) } returns PersonalizedMovies(listOf(
+                every { movieSearchUsecase.topRatedMovies(UserId("userId1")) } returns PersonalizedMovies(listOf(
                         PersonalizedMovie(UserId("userId1"), false, Movie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000)))),
                         PersonalizedMovie(UserId("userId1"), true, Movie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200)))),
                         PersonalizedMovie(UserId("userId1"), true, Movie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900)))),
                 ))
 
-                actual = sut.getV1Recommended(request)
+                actual = sut.getV1TopRated(request)
             }
 
             @Test
@@ -168,7 +168,7 @@ class HttpRequestExecutorTest: AutoResetMock {
 
             @Test
             fun `Calls usecase with User ID from the header`() {
-                verify { recommendationUsecase.topRatedMovies(UserId("userId1")) }
+                verify { movieSearchUsecase.topRatedMovies(UserId("userId1")) }
             }
 
             @Test
@@ -194,14 +194,14 @@ class HttpRequestExecutorTest: AutoResetMock {
             @BeforeEach
             fun setupAndExec() {
                 every { request.header("tater-user-id") } returns "userId1"
-                every { recommendationUsecase.topRatedMovies(userId) } throws userNotSpecifiedException
+                every { movieSearchUsecase.topRatedMovies(userId) } throws userNotSpecifiedException
 
-                actual = sut.getV1Recommended(request)
+                actual = sut.getV1TopRated(request)
             }
 
             @Test
             fun `Calls usecase function`() {
-                verify { recommendationUsecase.topRatedMovies(userId) }
+                verify { movieSearchUsecase.topRatedMovies(userId) }
             }
 
             @Test
@@ -215,25 +215,25 @@ class HttpRequestExecutorTest: AutoResetMock {
         }
 
         @Nested
-        @DisplayName("When usecase throws a RecommendedMoviesUnavailableException")
-        inner class WhenUsecaseThrowsARecommendedMoviesUnavailableException {
+        @DisplayName("When usecase throws a TopRatedMoviesUnavailableException")
+        inner class WhenUsecaseThrowsATopRatedMoviesUnavailableException {
 
             private lateinit var actual: HttpRequestExecutor.Result<MovieListJson>
             private val request = mockk<ApplicationRequest>()
             private val userId = UserId("userId1")
-            private val unavailableException = mockk<RecommendedMoviesUnavailableException>()
+            private val unavailableException = mockk<TopRatedMoviesUnavailableException>()
 
             @BeforeEach
             fun setupAndExec() {
                 every { request.header("tater-user-id") } returns "userId1"
-                every { recommendationUsecase.topRatedMovies(userId) } throws unavailableException
+                every { movieSearchUsecase.topRatedMovies(userId) } throws unavailableException
 
-                actual = sut.getV1Recommended(request)
+                actual = sut.getV1TopRated(request)
             }
 
             @Test
             fun `Calls usecase function`() {
-                verify { recommendationUsecase.topRatedMovies(userId) }
+                verify { movieSearchUsecase.topRatedMovies(userId) }
             }
 
             @Test

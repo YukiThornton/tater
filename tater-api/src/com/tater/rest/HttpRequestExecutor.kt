@@ -7,7 +7,7 @@ import io.ktor.request.*
 
 class HttpRequestExecutor(
     private val viewingHistoryUsecase: ViewingHistoryUsecase,
-    private val recommendationUsecase: RecommendationUsecase
+    private val movieSearchUsecase: MovieSearchUsecase
 ) {
 
     companion object {
@@ -28,14 +28,14 @@ class HttpRequestExecutor(
         }
     }
 
-    fun getV1Recommended(request: ApplicationRequest): Result<MovieListJson> {
+    fun getV1TopRated(request: ApplicationRequest): Result<MovieListJson> {
         val userId = request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
-            recommendationUsecase.topRatedMovies(userId).toJson()
+            movieSearchUsecase.topRatedMovies(userId).toJson()
                     .let { Result(HttpStatusCode.OK, it, null) }
         } catch (e: UserNotSpecifiedException) {
             Result(HttpStatusCode.BadRequest, null, e)
-        } catch (e: RecommendedMoviesUnavailableException) {
+        } catch (e: TopRatedMoviesUnavailableException) {
             Result(HttpStatusCode.InternalServerError, null, e)
         }
     }

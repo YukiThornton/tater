@@ -4,7 +4,7 @@ import com.tater.domain.*
 import com.tater.port.MoviePort
 import com.tater.port.ViewingHistoryPort
 
-class RecommendationUsecase(
+class MovieSearchUsecase(
         private val userIdChecker: UserIdChecker,
         private val moviePort: MoviePort,
         private val viewingHistoryPort: ViewingHistoryPort
@@ -29,7 +29,7 @@ class RecommendationUsecase(
     }
 
     private fun createException(e: Throwable, userId: UserId) =
-            RecommendedMoviesUnavailableException(e, "Recommended movies for user(id=${userId.value}) are unavailable")
+            TopRatedMoviesUnavailableException(e, "Top rated movies for user(id=${userId.value}) are unavailable")
 }
 
-class RecommendedMoviesUnavailableException(override val cause: Throwable, override val message: String?): RuntimeException()
+class TopRatedMoviesUnavailableException(override val cause: Throwable, override val message: String?): RuntimeException()

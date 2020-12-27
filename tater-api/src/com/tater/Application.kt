@@ -17,7 +17,7 @@ import com.tater.gateway.ViewingHistoryGateway
 import com.tater.port.MoviePort
 import com.tater.port.MovieSummaryPort
 import com.tater.port.ViewingHistoryPort
-import com.tater.usecase.RecommendationUsecase
+import com.tater.usecase.MovieSearchUsecase
 import com.tater.usecase.UserIdChecker
 import com.tater.usecase.ViewingHistoryUsecase
 import io.ktor.jackson.*
@@ -48,7 +48,7 @@ fun Application.module(testing: Boolean = false) {
         bind<MoviePort>() with singleton { MovieGateway(instance()) }
         bind<UserIdChecker>() with singleton { UserIdChecker() }
         bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance(), instance()) }
-        bind<RecommendationUsecase>() with singleton { RecommendationUsecase(instance(), instance(), instance()) }
+        bind<MovieSearchUsecase>() with singleton { MovieSearchUsecase(instance(), instance(), instance()) }
         bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(instance(), instance()) }
     }
 
@@ -65,10 +65,10 @@ fun Application.module(testing: Boolean = false) {
             }
             call.respond(result.responseStatus, result.responseBody ?: "")
         }
-        get("/v1/recommended") {
-            val result = executor.getV1Recommended(call.request)
+        get("/v1/top-rated") {
+            val result = executor.getV1TopRated(call.request)
             if (result.error != null) {
-                call.application.environment.log.error("Failed on GET /v1/recommended", result.error)
+                call.application.environment.log.error("Failed on GET /v1/top-rated", result.error)
             }
             call.respond(result.responseStatus, result.responseBody ?: "")
         }
