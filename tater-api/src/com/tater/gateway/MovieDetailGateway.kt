@@ -14,6 +14,7 @@ class MovieDetailGateway(
     private fun MovieApi.MovieDetailJson.toMovieDetails() = MovieDetails(
             MovieId(this.id),
             MovieTitle(this.title),
+            MovieOverview(this.overview),
             MovieReview(AverageScore(this.voteAverage), ReviewCount(this.voteCount))
     )
 }

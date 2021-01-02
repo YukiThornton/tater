@@ -266,6 +266,7 @@ class HttpRequestExecutorTest: AutoResetMock {
                 every { theCall.parameters["id"] } returns "movieId1"
                 every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } returns MovieDetails(
                         MovieId("movieId1"), MovieTitle("title1"),
+                        MovieOverview("overview1"),
                         MovieReview(AverageScore(5.6), ReviewCount(1000))
                 )
             }
@@ -287,6 +288,7 @@ class HttpRequestExecutorTest: AutoResetMock {
                 actual.responseBody shouldBeEqualTo MovieDetailJson(
                         "movieId1",
                         "title1",
+                        "overview1",
                         ReviewJson(5.6, 1000)
                 )
             }

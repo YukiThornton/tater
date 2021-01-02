@@ -34,7 +34,7 @@ class MovieSummaryGatewayTest: AutoResetMock {
 
             @BeforeEach
             fun setup() {
-                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieDetailJson("movieId1", "title1", 5.6, 1000)
+                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieDetailJson("movieId1", "title1", "", 0.0, 0)
             }
 
             @Test

@@ -10,8 +10,9 @@ interface MovieApi {
     data class MovieDetailJson(
             val id: String,
             val title: String,
+            val overview: String,
             @JsonAlias("vote_average") val voteAverage: Double,
-            @JsonAlias("vote_count")val voteCount: Int)
+            @JsonAlias("vote_count") val voteCount: Int)
 
     data class MovieJson(
             val id: String,
