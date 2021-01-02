@@ -18,11 +18,10 @@ class HttpRequestExecutor(
 
     data class Result<T>(val responseStatus: HttpStatusCode, val responseBody: T? = null, val error: Throwable? = null)
 
-    fun getV1Watched(request: ApplicationRequest): Result<MovieSummariesJson> {
-        val userId = request.header(HEADER_USER_ID)?.let(::UserId)
+    fun getV1Watched(requestCall: ApplicationCall): Result<MovieSummariesJson> {
+        val userId = requestCall.request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
-            val summaries = viewingHistoryUsecase.allMoviesWatchedBy(userId)
-            Result(HttpStatusCode.OK, summaries.toJson())
+            viewingHistoryUsecase.allMoviesWatchedBy(userId).toJson().toOkResult()
         } catch (e: UserNotSpecifiedException) {
             Result(HttpStatusCode.BadRequest, null, e)
         } catch (e: WatchedMoviesUnavailableException) {
@@ -30,11 +29,10 @@ class HttpRequestExecutor(
         }
     }
 
-    fun getV1TopRated(request: ApplicationRequest): Result<ReviewedMovieListJson> {
-        val userId = request.header(HEADER_USER_ID)?.let(::UserId)
+    fun getV1TopRated(request: ApplicationCall): Result<ReviewedMovieListJson> {
+        val userId = request.request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
-            movieSearchUsecase.topRatedMovies(userId).toJson()
-                    .let { Result(HttpStatusCode.OK, it, null) }
+            movieSearchUsecase.topRatedMovies(userId).toJson().toOkResult()
         } catch (e: UserNotSpecifiedException) {
             Result(HttpStatusCode.BadRequest, null, e)
         } catch (e: TopRatedMoviesUnavailableException) {
@@ -42,13 +40,20 @@ class HttpRequestExecutor(
         }
     }
 
-    fun getV1MoviesWithId(requestCall: ApplicationCall): Result<MovieDetailJson> {
+    fun getV1MovieWithId(requestCall: ApplicationCall): Result<MovieDetailJson> {
         val movieId = requestCall.parameters["id"]!!.let(::MovieId)
         val userId = requestCall.request.header(HEADER_USER_ID)?.let(::UserId)
-        return movieDetailUsecase.detailsOf(movieId, userId).toJson().let {
-            Result(HttpStatusCode.OK, it)
+        return try {
+            movieDetailUsecase.detailsOf(movieId, userId)?.toJson()?.toOkResult()
+                    ?: Result(HttpStatusCode.NotFound, null, null)
+        } catch (e: UserNotSpecifiedException) {
+            Result(HttpStatusCode.BadRequest, null, e)
+        } catch (e: MovieDetailsUnavailableException) {
+            Result(HttpStatusCode.InternalServerError, null, e)
         }
     }
+
+    private fun <T> T.toOkResult(): Result<T> = Result(HttpStatusCode.OK, this)
 }
 
 fun MovieSummary.toJson() = MovieSummaryJson(this.id.value, this.title.value)

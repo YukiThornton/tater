@@ -35,11 +35,11 @@ class HttpRequestExecutorTest: AutoResetMock {
         @DisplayName("When usecase returns summaries")
         inner class WhenUsecaseReturnsSummaries {
 
-            private val theRequest = mockk<ApplicationRequest>()
+            private val theCall = mockk<ApplicationCall>()
 
             @BeforeEach
             fun setup() {
-                every { theRequest.header("tater-user-id") } returns "userId1"
+                every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } returns MovieSummaries(listOf(
                     MovieSummary(MovieId("id1"), MovieTitle("title1")),
                     MovieSummary(MovieId("id2"), MovieTitle("title2"))
@@ -48,15 +48,15 @@ class HttpRequestExecutorTest: AutoResetMock {
 
             @Test
             fun `Retrieves User ID from a header to call usecase with it`() {
-                sut.getV1Watched(theRequest)
+                sut.getV1Watched(theCall)
 
-                verify { theRequest.header("tater-user-id") }
+                verify { theCall.request.header("tater-user-id") }
                 verify { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) }
             }
 
             @Test
             fun `Returns a result with status OK and MovieSummariesJson`() {
-                val actual = sut.getV1Watched(theRequest)
+                val actual = sut.getV1Watched(theCall)
 
                 actual shouldBeEqualTo HttpRequestExecutor.Result(
                         HttpStatusCode.OK,
@@ -71,17 +71,17 @@ class HttpRequestExecutorTest: AutoResetMock {
         @DisplayName("When userId is missing in header")
         inner class WhenUserIdIsMissingInHeader {
 
-            private val theRequest = mockk<ApplicationRequest>()
+            private val theCall = mockk<ApplicationCall>()
 
             @BeforeEach
             fun setup() {
-                every { theRequest.header("tater-user-id") } returns null
+                every { theCall.request.header("tater-user-id") } returns null
                 every { viewingHistoryUsecase.allMoviesWatchedBy(null) } returns MovieSummaries(emptyList())
             }
 
             @Test
             fun `Gives usecase null for UserId`() {
-                sut.getV1Watched(theRequest)
+                sut.getV1Watched(theCall)
 
                 verify { viewingHistoryUsecase.allMoviesWatchedBy(null) }
             }
@@ -91,19 +91,19 @@ class HttpRequestExecutorTest: AutoResetMock {
         @DisplayName("When usecase throws a UserNotSpecifiedException")
         inner class WhenUsecaseThrowsAUserNotSpecifiedException {
 
-            private val theRequest = mockk<ApplicationRequest>()
+            private val theCall = mockk<ApplicationCall>()
 
             private val userNotSpecifiedException = mockk<UserNotSpecifiedException>()
 
             @BeforeEach
             fun setup() {
-                every { theRequest.header("tater-user-id") } returns "userId1"
+                every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws userNotSpecifiedException
             }
 
             @Test
             fun `Returns a result with status BadRequest and the exception`() {
-                val actual = sut.getV1Watched(theRequest)
+                val actual = sut.getV1Watched(theCall)
 
                 actual shouldBeEqualTo HttpRequestExecutor.Result(
                     HttpStatusCode.BadRequest,
@@ -117,19 +117,19 @@ class HttpRequestExecutorTest: AutoResetMock {
         @DisplayName("When usecase throws a WatchedMoviesUnavailableException")
         inner class WhenUsecaseThrowsAWatchedMoviesUnavailableException {
 
-            private val theRequest = mockk<ApplicationRequest>()
+            private val theCall = mockk<ApplicationCall>()
 
             private val watchedMoviesUnavailableException = mockk<WatchedMoviesUnavailableException>()
 
             @BeforeEach
             fun setup() {
-                every { theRequest.header("tater-user-id") } returns "userId1"
+                every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } throws watchedMoviesUnavailableException
             }
 
             @Test
             fun `Returns a result with status InternalServerError and the exception`() {
-                val actual = sut.getV1Watched(theRequest)
+                val actual = sut.getV1Watched(theCall)
 
                 actual shouldBeEqualTo HttpRequestExecutor.Result(
                     HttpStatusCode.InternalServerError,
@@ -148,11 +148,11 @@ class HttpRequestExecutorTest: AutoResetMock {
         @DisplayName("When usecase returns movies")
         inner class WhenUsecaseReturnsMovies {
 
-            private val theRequest = mockk<ApplicationRequest>()
+            private val theCall = mockk<ApplicationCall>()
 
             @BeforeEach
             fun setup() {
-                every { theRequest.header("tater-user-id") } returns "userId1"
+                every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { movieSearchUsecase.topRatedMovies(UserId("userId1")) } returns PersonalizedMovies(listOf(
                         PersonalizedMovie(UserId("userId1"), false, Movie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000)))),
                         PersonalizedMovie(UserId("userId1"), true, Movie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200)))),
@@ -162,15 +162,15 @@ class HttpRequestExecutorTest: AutoResetMock {
 
             @Test
             fun `Retrieves User ID from a header to call usecase with it`() {
-                sut.getV1TopRated(theRequest)
+                sut.getV1TopRated(theCall)
 
-                verify { theRequest.header("tater-user-id") }
+                verify { theCall.request.header("tater-user-id") }
                 verify { movieSearchUsecase.topRatedMovies(UserId("userId1")) }
             }
 
             @Test
             fun `Returns a result with status OK and json`() {
-                val actual = sut.getV1TopRated(theRequest)
+                val actual = sut.getV1TopRated(theCall)
 
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
                 actual.responseBody shouldBeEqualTo ReviewedMovieListJson(listOf(
@@ -185,27 +185,27 @@ class HttpRequestExecutorTest: AutoResetMock {
         @DisplayName("When usecase throws a UserNotSpecifiedException")
         inner class WhenUsecaseThrowsAUserNotSpecifiedException {
 
-            private val theRequest = mockk<ApplicationRequest>()
+            private val theCall = mockk<ApplicationCall>()
 
             private val userId = UserId("userId1")
             private val userNotSpecifiedException = mockk<UserNotSpecifiedException>()
 
             @BeforeEach
             fun setup() {
-                every { theRequest.header("tater-user-id") } returns "userId1"
+                every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { movieSearchUsecase.topRatedMovies(userId) } throws userNotSpecifiedException
             }
 
             @Test
             fun `Calls usecase function`() {
-                sut.getV1TopRated(theRequest)
+                sut.getV1TopRated(theCall)
 
                 verify { movieSearchUsecase.topRatedMovies(userId) }
             }
 
             @Test
             fun `Returns a result with status BadRequest and the exception`() {
-                val actual = sut.getV1TopRated(theRequest)
+                val actual = sut.getV1TopRated(theCall)
 
                 actual shouldBeEqualTo HttpRequestExecutor.Result(
                         HttpStatusCode.BadRequest,
@@ -219,27 +219,27 @@ class HttpRequestExecutorTest: AutoResetMock {
         @DisplayName("When usecase throws a TopRatedMoviesUnavailableException")
         inner class WhenUsecaseThrowsATopRatedMoviesUnavailableException {
 
-            private val theRequest = mockk<ApplicationRequest>()
+            private val theCall = mockk<ApplicationCall>()
 
             private val userId = UserId("userId1")
             private val unavailableException = mockk<TopRatedMoviesUnavailableException>()
 
             @BeforeEach
             fun setup() {
-                every { theRequest.header("tater-user-id") } returns "userId1"
+                every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { movieSearchUsecase.topRatedMovies(userId) } throws unavailableException
             }
 
             @Test
             fun `Calls usecase function`() {
-                sut.getV1TopRated(theRequest)
+                sut.getV1TopRated(theCall)
 
                 verify { movieSearchUsecase.topRatedMovies(userId) }
             }
 
             @Test
             fun `Returns a result with status InternalServerError and the exception`() {
-                val actual = sut.getV1TopRated(theRequest)
+                val actual = sut.getV1TopRated(theCall)
 
                 actual shouldBeEqualTo HttpRequestExecutor.Result(
                         HttpStatusCode.InternalServerError,
@@ -251,7 +251,7 @@ class HttpRequestExecutorTest: AutoResetMock {
     }
 
     @Nested
-    @DisplayName("getV1MoviesWithId")
+    @DisplayName("getV1MovieWithId")
     inner class GetV1MoviesWithIdTest {
 
         @Nested
@@ -273,7 +273,7 @@ class HttpRequestExecutorTest: AutoResetMock {
 
             @Test
             fun `Retrieves Movie ID and User Id from the parameter to call usecase with them`() {
-                sut.getV1MoviesWithId(theCall)
+                sut.getV1MovieWithId(theCall)
 
                 verify { theCall.request.header("tater-user-id") }
                 verify { theCall.parameters["id"] }
@@ -282,7 +282,7 @@ class HttpRequestExecutorTest: AutoResetMock {
 
             @Test
             fun `Returns a result with status OK and json`() {
-                val actual = sut.getV1MoviesWithId(theCall)
+                val actual = sut.getV1MovieWithId(theCall)
 
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
                 actual.responseBody shouldBeEqualTo MovieDetailJson(
@@ -291,6 +291,85 @@ class HttpRequestExecutorTest: AutoResetMock {
                         "overview1",
                         ReviewJson(5.6, 1000)
                 )
+            }
+        }
+
+        @Nested
+        @DisplayName("When usecase returns null")
+        inner class WhenUsecaseThrowsAMovieNotFoundException {
+
+            private val theCall = mockk<ApplicationCall>()
+
+            @BeforeEach
+            fun setup() {
+                every { theCall.request.header("tater-user-id") } returns "userId1"
+                every { theCall.parameters["id"] } returns "movieId1"
+                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } returns null
+            }
+
+            @Test
+            fun `Returns a result with status BadRequest`() {
+                val actual = sut.getV1MovieWithId(theCall)
+
+                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+
+                actual.responseStatus shouldBeEqualTo HttpStatusCode.NotFound
+                actual.responseBody shouldBeEqualTo null
+                actual.error shouldBeEqualTo null
+            }
+        }
+
+        @Nested
+        @DisplayName("When usecase throws a UserNotSpecifiedException")
+        inner class WhenUsecaseThrowsAUserNotSpecifiedException {
+
+            private val theCall = mockk<ApplicationCall>()
+
+            private val userNotSpecifiedException = UserNotSpecifiedException("")
+
+            @BeforeEach
+            fun setup() {
+                every { theCall.request.header("tater-user-id") } returns "userId1"
+                every { theCall.parameters["id"] } returns "movieId1"
+                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } throws userNotSpecifiedException
+            }
+
+            @Test
+            fun `Returns a result with status BadRequest and error`() {
+                val actual = sut.getV1MovieWithId(theCall)
+
+                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+
+                actual.responseStatus shouldBeEqualTo HttpStatusCode.BadRequest
+                actual.responseBody shouldBeEqualTo null
+                actual.error shouldBeEqualTo userNotSpecifiedException
+            }
+        }
+
+        @Nested
+        @DisplayName("When usecase throws a MovieDetailsUnavailableException")
+        inner class WhenUsecaseThrowsAMovieDetailsUnavailableException {
+
+            private val theCall = mockk<ApplicationCall>()
+
+            private val movieDetailsUnavailableException = MovieDetailsUnavailableException(RuntimeException(""), "")
+
+            @BeforeEach
+            fun setup() {
+                every { theCall.request.header("tater-user-id") } returns "userId1"
+                every { theCall.parameters["id"] } returns "movieId1"
+                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } throws movieDetailsUnavailableException
+            }
+
+            @Test
+            fun `Returns a result with status InternalServerError and error`() {
+                val actual = sut.getV1MovieWithId(theCall)
+
+                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+
+                actual.responseStatus shouldBeEqualTo HttpStatusCode.InternalServerError
+                actual.responseBody shouldBeEqualTo null
+                actual.error shouldBeEqualTo movieDetailsUnavailableException
             }
         }
     }

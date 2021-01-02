@@ -25,8 +25,12 @@ class TaterApi {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/top-rated")
     }
 
-    fun getV1MoviesWithId(movieId: String, userId: String): Response {
+    fun getV1Movie(movieId: String, userId: String): Response {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/movies/$movieId", userId)
+    }
+
+    fun getV1MovieWithoutUserId(movieId: String): Response {
+        return getRequestWith("${Configurations.taterApiEndpoint}/v1/movies/$movieId")
     }
 
     private fun getRequestWith(path: String, userId: String? = null): Response {

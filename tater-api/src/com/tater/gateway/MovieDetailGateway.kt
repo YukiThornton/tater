@@ -7,8 +7,14 @@ import com.tater.port.MovieDetailPort
 class MovieDetailGateway(
         private val movieApi: MovieApi
 ): MovieDetailPort {
-    override fun getDetailsOf(movieId: MovieId): MovieDetails {
-        return movieApi.getMovie(movieId.value).toMovieDetails()
+    override fun getDetailsOf(movieId: MovieId): MovieDetails? {
+        return try {
+            movieApi.getMovie(movieId.value).toMovieDetails()
+        } catch (e: MovieApi.NotFoundException) {
+            null
+        } catch (e: Throwable) {
+            throw MovieDetailPort.UnavailableException(e, "Movie(id=${movieId.value}) is unavailable")
+        }
     }
 
     private fun MovieApi.MovieDetailJson.toMovieDetails() = MovieDetails(

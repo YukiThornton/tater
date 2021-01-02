@@ -64,18 +64,21 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("PONG!", contentType = ContentType.Text.Plain)
         }
         get("/v1/movies/{id}") {
-            val result = executor.getV1MoviesWithId(call)
+            val result = executor.getV1MovieWithId(call)
+            if (result.error != null) {
+                call.application.environment.log.error("Failed on GET /v1/movies/:id", result.error)
+            }
             call.respond(result.responseStatus, result.responseBody ?: "")
         }
         get("/v1/watched") {
-            val result = executor.getV1Watched(call.request)
+            val result = executor.getV1Watched(call)
             if (result.error != null) {
                 call.application.environment.log.error("Failed on GET /v1/watched", result.error)
             }
             call.respond(result.responseStatus, result.responseBody ?: "")
         }
         get("/v1/top-rated") {
-            val result = executor.getV1TopRated(call.request)
+            val result = executor.getV1TopRated(call)
             if (result.error != null) {
                 call.application.environment.log.error("Failed on GET /v1/top-rated", result.error)
             }

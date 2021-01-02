@@ -11,6 +11,9 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withCause
+import org.amshove.kluent.withMessage
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -40,8 +43,8 @@ class MovieDetailUsecaseTest: AutoResetMock {
 
             @BeforeEach
             fun setup() {
-                every { movieDetailPort.getDetailsOf(MovieId("movieId1")) } returns expected
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
+                every { movieDetailPort.getDetailsOf(MovieId("movieId1")) } returns expected
             }
 
             @Test
@@ -59,6 +62,46 @@ class MovieDetailUsecaseTest: AutoResetMock {
                 actual shouldBeEqualTo expected
             }
         }
-    }
 
+        @Nested
+        @DisplayName("When movie details is not found")
+        inner class WhenMovieDetailsIsNotFound {
+
+            @BeforeEach
+            fun setup() {
+                every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
+                every { movieDetailPort.getDetailsOf(MovieId("movieId1")) } returns null
+            }
+
+            @Test
+            fun `Returns null`() {
+                val actual = sut.detailsOf(MovieId("movieId1"), UserId("userId1"))
+
+                verify(exactly = 1) { movieDetailPort.getDetailsOf(MovieId("movieId1")) }
+                actual shouldBeEqualTo null
+            }
+        }
+
+        @Nested
+        @DisplayName("When movie details is unavailable")
+        inner class WhenMovieDetailsIsUnavailable {
+
+            @BeforeEach
+            fun setup() {
+                every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
+                every { movieDetailPort.getDetailsOf(MovieId("movieId1")) } throws MovieDetailPort.UnavailableException(RuntimeException(""), "")
+            }
+
+            @Test
+            fun `Throws a MovieDetailsUnavailableException`() {
+                val expectedException = MovieDetailsUnavailableException::class
+                val exceptionCause = MovieDetailPort.UnavailableException::class
+                val exceptionMessage = "Movie(id=movieId1) requested by user(id=userId1) is unavailable"
+
+                { sut.detailsOf(MovieId("movieId1"), UserId("userId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
+
+                verify(exactly = 1) { movieDetailPort.getDetailsOf(MovieId("movieId1")) }
+            }
+        }
+    }
 }

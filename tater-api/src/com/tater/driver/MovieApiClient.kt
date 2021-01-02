@@ -25,8 +25,8 @@ class MovieApiClient(
         val response = asyncRequest.await()
         return when(response.statusCode()) {
             200 -> mapper.readValue(response.body())
-            404 -> throw MovieApi.NotFoundException("movie(id=$id) not found", null)
-            else -> throw RuntimeException("statusCode=${response.statusCode()}, body=${response.body()}")
+            404 -> throw notFoundException(id)
+            else -> throw response.toException()
         }
     }
 
@@ -35,9 +35,12 @@ class MovieApiClient(
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         return when(response.statusCode()) {
             200 -> mapper.readValue(response.body())
-            else -> TODO("Not yet implemented")
+            404 -> throw notFoundException(id)
+            else -> throw response.toException()
         }
     }
+
+    private fun notFoundException(id: String) = MovieApi.NotFoundException("movie(id=$id) not found", null)
 
     override fun searchMovies(conditions: Map<String, Any>): MovieApi.MovieListJson {
         val queryParams = conditions.plus(mapOf(
@@ -48,9 +51,12 @@ class MovieApiClient(
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         return when (response.statusCode()) {
             200 -> mapper.readValue(response.body())
-            else -> throw RuntimeException("statusCode=${response.statusCode()}, body=${response.body()}")
+            else -> throw response.toException()
         }
     }
+
+    private fun HttpResponse<String>.toException() =
+            RuntimeException("statusCode=${this.statusCode()}, body=${this.body()}")
 
     private fun createRequest(path: String, queryParams: Map<String, Any>): HttpRequest? {
         val query = queryParams.map { (key, value) -> "$key=$value" }.joinToString("&")
