@@ -30,6 +30,15 @@ class MovieApiClient(
         }
     }
 
+    override fun getMovie(id: String): MovieApi.MovieDetailJson {
+        val request = createRequest("/3/movie/$id", mapOf("api_key" to config.authToken()))
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return when(response.statusCode()) {
+            200 -> mapper.readValue(response.body())
+            else -> TODO("Not yet implemented")
+        }
+    }
+
     override fun searchMovies(conditions: Map<String, Any>): MovieApi.MovieListJson {
         val queryParams = conditions.plus(mapOf(
                 "api_key" to config.authToken(),

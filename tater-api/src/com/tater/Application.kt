@@ -11,12 +11,15 @@ import com.tater.driver.MovieApi
 import com.tater.driver.MovieApiClient
 import com.tater.driver.TaterDb
 import com.tater.driver.TaterPostgresqlDb
+import com.tater.gateway.MovieDetailGateway
 import com.tater.gateway.MovieGateway
 import com.tater.gateway.MovieSummaryGateway
 import com.tater.gateway.ViewingHistoryGateway
+import com.tater.port.MovieDetailPort
 import com.tater.port.MoviePort
 import com.tater.port.MovieSummaryPort
 import com.tater.port.ViewingHistoryPort
+import com.tater.usecase.MovieDetailUsecase
 import com.tater.usecase.MovieSearchUsecase
 import com.tater.usecase.UserIdChecker
 import com.tater.usecase.ViewingHistoryUsecase
@@ -43,13 +46,15 @@ fun Application.module(testing: Boolean = false) {
         bind<Configuration>() with singleton { configuration }
         bind<TaterDb>() with singleton { TaterPostgresqlDb(configuration.taterDb()) }
         bind<MovieApi>() with singleton { MovieApiClient(configuration.movieApi()) }
+        bind<MovieDetailPort>() with singleton { MovieDetailGateway(instance()) }
         bind<MovieSummaryPort>() with singleton { MovieSummaryGateway(instance()) }
         bind<ViewingHistoryPort>() with singleton { ViewingHistoryGateway(instance()) }
         bind<MoviePort>() with singleton { MovieGateway(instance()) }
         bind<UserIdChecker>() with singleton { UserIdChecker() }
+        bind<MovieDetailUsecase>() with singleton { MovieDetailUsecase(instance(), instance()) }
         bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance(), instance()) }
         bind<MovieSearchUsecase>() with singleton { MovieSearchUsecase(instance(), instance(), instance()) }
-        bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(instance(), instance()) }
+        bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(instance(), instance(), instance()) }
     }
 
     val executor by kodein().instance<HttpRequestExecutor>()
@@ -57,6 +62,10 @@ fun Application.module(testing: Boolean = false) {
     routing {
         get("/v1/systems/ping") {
             call.respondText("PONG!", contentType = ContentType.Text.Plain)
+        }
+        get("/v1/movies/{id}") {
+            val result = executor.getV1MoviesWithId(call)
+            call.respond(result.responseStatus, result.responseBody ?: "")
         }
         get("/v1/watched") {
             val result = executor.getV1Watched(call.request)

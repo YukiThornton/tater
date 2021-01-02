@@ -3,6 +3,7 @@ package com.tater.rest
 import com.tater.AutoResetMock
 import com.tater.domain.*
 import com.tater.usecase.*
+import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.mockk.*
@@ -22,6 +23,9 @@ class HttpRequestExecutorTest: AutoResetMock {
 
     @MockK
     private lateinit var movieSearchUsecase: MovieSearchUsecase
+
+    @MockK
+    private lateinit var movieDetailUsecase: MovieDetailUsecase
 
     @Nested
     @DisplayName("getV1Watched")
@@ -169,10 +173,10 @@ class HttpRequestExecutorTest: AutoResetMock {
                 val actual = sut.getV1TopRated(theRequest)
 
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
-                actual.responseBody shouldBeEqualTo MovieListJson(listOf(
-                        MovieJson("id1", "title1", false, ReviewJson(5.6, 1000)),
-                        MovieJson("id2", "title2", true, ReviewJson(5.5, 1200)),
-                        MovieJson("id3", "title3", true, ReviewJson(5.4, 900)),
+                actual.responseBody shouldBeEqualTo ReviewedMovieListJson(listOf(
+                        ReviewedMovieJson("id1", "title1", false, ReviewJson(5.6, 1000)),
+                        ReviewedMovieJson("id2", "title2", true, ReviewJson(5.5, 1200)),
+                        ReviewedMovieJson("id3", "title3", true, ReviewJson(5.4, 900)),
                 ))
             }
         }
@@ -241,6 +245,49 @@ class HttpRequestExecutorTest: AutoResetMock {
                         HttpStatusCode.InternalServerError,
                         null,
                         unavailableException
+                )
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("getV1MoviesWithId")
+    inner class GetV1MoviesWithIdTest {
+
+        @Nested
+        @DisplayName("When usecase returns movie details")
+        inner class WhenUsecaseReturnsMovies {
+
+            private val theCall = mockk<ApplicationCall>()
+
+            @BeforeEach
+            fun setup() {
+                every { theCall.request.header("tater-user-id") } returns "userId1"
+                every { theCall.parameters["id"] } returns "movieId1"
+                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } returns MovieDetails(
+                        MovieId("movieId1"), MovieTitle("title1"),
+                        MovieReview(AverageScore(5.6), ReviewCount(1000))
+                )
+            }
+
+            @Test
+            fun `Retrieves Movie ID and User Id from the parameter to call usecase with them`() {
+                sut.getV1MoviesWithId(theCall)
+
+                verify { theCall.request.header("tater-user-id") }
+                verify { theCall.parameters["id"] }
+                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+            }
+
+            @Test
+            fun `Returns a result with status OK and json`() {
+                val actual = sut.getV1MoviesWithId(theCall)
+
+                actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
+                actual.responseBody shouldBeEqualTo MovieDetailJson(
+                        "movieId1",
+                        "title1",
+                        ReviewJson(5.6, 1000)
                 )
             }
         }

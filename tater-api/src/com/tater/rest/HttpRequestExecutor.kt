@@ -2,12 +2,14 @@ package com.tater.rest
 
 import com.tater.domain.*
 import com.tater.usecase.*
+import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 
 class HttpRequestExecutor(
     private val viewingHistoryUsecase: ViewingHistoryUsecase,
-    private val movieSearchUsecase: MovieSearchUsecase
+    private val movieSearchUsecase: MovieSearchUsecase,
+    private val movieDetailUsecase: MovieDetailUsecase,
 ) {
 
     companion object {
@@ -28,7 +30,7 @@ class HttpRequestExecutor(
         }
     }
 
-    fun getV1TopRated(request: ApplicationRequest): Result<MovieListJson> {
+    fun getV1TopRated(request: ApplicationRequest): Result<ReviewedMovieListJson> {
         val userId = request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
             movieSearchUsecase.topRatedMovies(userId).toJson()
@@ -39,11 +41,21 @@ class HttpRequestExecutor(
             Result(HttpStatusCode.InternalServerError, null, e)
         }
     }
+
+    fun getV1MoviesWithId(requestCall: ApplicationCall): Result<MovieDetailJson> {
+        val movieId = requestCall.parameters["id"]!!.let(::MovieId)
+        val userId = requestCall.request.header(HEADER_USER_ID)?.let(::UserId)
+        return movieDetailUsecase.detailsOf(movieId, userId).toJson().let {
+            Result(HttpStatusCode.OK, it)
+        }
+    }
 }
 
 fun MovieSummary.toJson() = MovieSummaryJson(this.id.value, this.title.value)
 fun MovieSummaries.toJson() = this.map { summary -> summary.toJson() }.let(::MovieSummariesJson)
 
 fun MovieReview.toJson() = ReviewJson(this.averageScore.value, this.count.value)
-fun PersonalizedMovie.toJson() = MovieJson(this.movieId.value, this.movieTitle.value, this.watched, this.movieReview.toJson())
-fun PersonalizedMovies.toJson() = this.map { movie -> movie.toJson() }.let(::MovieListJson)
+fun PersonalizedMovie.toJson() = ReviewedMovieJson(this.movieId.value, this.movieTitle.value, this.watched, this.movieReview.toJson())
+fun PersonalizedMovies.toJson() = this.map { movie -> movie.toJson() }.let(::ReviewedMovieListJson)
+
+fun MovieDetails.toJson() = MovieDetailJson(this.id.value, this.title.value, this.review.toJson())

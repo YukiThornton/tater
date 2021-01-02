@@ -25,6 +25,10 @@ class TaterApi {
         return getRequestWith("${Configurations.taterApiEndpoint}/v1/top-rated")
     }
 
+    fun getV1MoviesWithId(movieId: String, userId: String): Response {
+        return getRequestWith("${Configurations.taterApiEndpoint}/v1/movies/$movieId", userId)
+    }
+
     private fun getRequestWith(path: String, userId: String? = null): Response {
         val builder = if (userId != null ) {
             Request.Builder().url(path).header("tater-user-id", userId)
