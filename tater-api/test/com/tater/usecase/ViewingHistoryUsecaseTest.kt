@@ -4,7 +4,7 @@ import com.tater.AutoResetMock
 import com.tater.domain.*
 import com.tater.domain.attribute.MovieId
 import com.tater.domain.attribute.MovieIds
-import com.tater.port.MovieSummaryPort
+import com.tater.port.MoviePort
 import com.tater.port.ViewingHistoryPort
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
@@ -31,7 +31,7 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
     private lateinit var viewingHistoryPort: ViewingHistoryPort
 
     @MockK
-    private lateinit var movieSummaryPort: MovieSummaryPort
+    private lateinit var moviePort: MoviePort
 
     @Nested
     @DisplayName("allMoviesWatchedBy")
@@ -46,6 +46,8 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
             private val movieId1 = mockk<MovieId>()
             private val movieId2 = mockk<MovieId>()
             private val historiesForTheUser = ViewingHistories(theUserId, MovieIds(listOf(movieId1, movieId2)))
+            private val movie1 = mockk<Movie>()
+            private val movie2 = mockk<Movie>()
             private val summary1 = mockk<MovieSummary>()
             private val summary2 = mockk<MovieSummary>()
 
@@ -53,8 +55,10 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(theUserId) } returns theUserId
                 every { viewingHistoryPort.getViewingHistoriesFor(theUserId) } returns historiesForTheUser
-                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
-                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns summary2
+                coEvery { moviePort.fetchMovieOf(movieId1) } returns movie1
+                coEvery { moviePort.fetchMovieOf(movieId2) } returns movie2
+                every { movie1.summarize() } returns summary1
+                every { movie2.summarize() } returns summary2
             }
 
             @Test
@@ -65,12 +69,14 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
             }
 
             @Test
-            fun `Gets all viewing histories for specified user and then fetches each movie summary`() {
+            fun `Gets all viewing histories for specified user and then fetches each movie to create summaries`() {
                 sut.allMoviesWatchedBy(theUserId)
 
                 verify(exactly = 1) { viewingHistoryPort.getViewingHistoriesFor(theUserId) }
-                coVerify(exactly = 1) { movieSummaryPort.fetchMovieSummaryOf(movieId1) }
-                coVerify(exactly = 1) { movieSummaryPort.fetchMovieSummaryOf(movieId2) }
+                coVerify(exactly = 1) { moviePort.fetchMovieOf(movieId1) }
+                coVerify(exactly = 1) { moviePort.fetchMovieOf(movieId2) }
+                verify { movie1.summarize() }
+                verify { movie2.summarize() }
             }
 
             @Test
@@ -87,6 +93,8 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
 
             private val theUserId = UserId("userId1")
 
+            private val movie1 = mockk<Movie>()
+            private val movie3 = mockk<Movie>()
             private val summary1 = mockk<MovieSummary>()
             private val summary3 = mockk<MovieSummary>()
 
@@ -98,10 +106,11 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
                 val historiesForTheUser = ViewingHistories(theUserId, MovieIds(listOf(movieId1, movieId2, movieId3)))
                 every { userIdChecker.makeSureUserIdExists(theUserId) } returns theUserId
                 every { viewingHistoryPort.getViewingHistoriesFor(theUserId) } returns historiesForTheUser
-                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } returns summary1
-                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns null
-                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId3) } returns summary3
-
+                coEvery { moviePort.fetchMovieOf(movieId1) } returns movie1
+                coEvery { moviePort.fetchMovieOf(movieId2) } returns null
+                coEvery { moviePort.fetchMovieOf(movieId3) } returns movie3
+                every { movie1.summarize() } returns summary1
+                every { movie3.summarize() } returns summary3
             }
 
             @Test
@@ -150,8 +159,8 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
         }
 
         @Nested
-        @DisplayName("When movieSummaryPort throws an UnavailableException")
-        inner class WhenMovieSummaryPortThrowsAnUnavailableException {
+        @DisplayName("When moviePort throws an UnavailableException")
+        inner class WhenMoviePortThrowsAnUnavailableException {
 
             private val theUserId = UserId("userId1")
 
@@ -162,14 +171,14 @@ class ViewingHistoryUsecaseTest: AutoResetMock {
                 val histories = ViewingHistories(theUserId, MovieIds(listOf(movieId1, movieId2)))
                 every { userIdChecker.makeSureUserIdExists(theUserId) } returns theUserId
                 every { viewingHistoryPort.getViewingHistoriesFor(theUserId) } returns histories
-                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId1) } throws MovieSummaryPort.UnavailableException("error", Exception(""))
-                coEvery { movieSummaryPort.fetchMovieSummaryOf(movieId2) } returns mockk();
+                coEvery { moviePort.fetchMovieOf(movieId1) } throws MoviePort.UnavailableException(Exception(""), "error")
+                coEvery { moviePort.fetchMovieOf(movieId2) } returns mockk();
             }
 
             @Test
-            fun `Throws a WatchedMoviesUnavailableException when movieSummaryPort throws a UnavailableException`() {
+            fun `Throws a WatchedMoviesUnavailableException when moviePort throws a UnavailableException`() {
                 val expectedException = WatchedMoviesUnavailableException::class
-                val exceptionCause = MovieSummaryPort.UnavailableException::class
+                val exceptionCause = MoviePort.UnavailableException::class
                 val exceptionMessage = "Movies(ids=[movieId1,movieId2]) watched by user(id=userId1) are unavailable"
 
                 { sut.allMoviesWatchedBy(theUserId) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage

@@ -1,11 +1,6 @@
 package com.tater
 
-import com.tater.rest.HttpRequestExecutor
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.tater.config.Configuration
 import com.tater.driver.MovieApi
 import com.tater.driver.MovieApiClient
@@ -13,18 +8,21 @@ import com.tater.driver.TaterDb
 import com.tater.driver.TaterPostgresqlDb
 import com.tater.gateway.MovieGateway
 import com.tater.gateway.ReviewedMovieGateway
-import com.tater.gateway.MovieSummaryGateway
 import com.tater.gateway.ViewingHistoryGateway
 import com.tater.port.MoviePort
 import com.tater.port.ReviewedMoviePort
-import com.tater.port.MovieSummaryPort
 import com.tater.port.ViewingHistoryPort
+import com.tater.rest.HttpRequestExecutor
 import com.tater.usecase.MovieAcquisitionUsecase
 import com.tater.usecase.MovieSearchUsecase
 import com.tater.usecase.UserIdChecker
 import com.tater.usecase.ViewingHistoryUsecase
-import io.ktor.jackson.*
+import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.jackson.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
@@ -47,7 +45,6 @@ fun Application.module(testing: Boolean = false) {
         bind<TaterDb>() with singleton { TaterPostgresqlDb(configuration.taterDb()) }
         bind<MovieApi>() with singleton { MovieApiClient(configuration.movieApi()) }
         bind<MoviePort>() with singleton { MovieGateway(instance()) }
-        bind<MovieSummaryPort>() with singleton { MovieSummaryGateway(instance()) }
         bind<ViewingHistoryPort>() with singleton { ViewingHistoryGateway(instance()) }
         bind<ReviewedMoviePort>() with singleton { ReviewedMovieGateway(instance()) }
         bind<UserIdChecker>() with singleton { UserIdChecker() }

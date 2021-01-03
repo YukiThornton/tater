@@ -10,4 +10,6 @@ data class Movie(
         val title: MovieTitle,
         val overview: MovieOverview,
         val review: MovieReview
-)
+) {
+    fun summarize() = MovieSummary(id, title)
+}

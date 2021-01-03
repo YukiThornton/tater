@@ -14,9 +14,22 @@ class MovieGateway(
         } catch (e: MovieApi.NotFoundException) {
             null
         } catch (e: Throwable) {
-            throw MoviePort.UnavailableException(e, "Movie(id=${movieId.value}) is unavailable")
+            throw unavailableException(e, movieId)
         }
     }
+
+    override suspend fun fetchMovieOf(movieId: MovieId): Movie? {
+        return try {
+            movieApi.fetchMovie(movieId.value).toMovie()
+        } catch (e: MovieApi.NotFoundException) {
+            null
+        } catch (e: Throwable) {
+            throw unavailableException(e, movieId)
+        }
+    }
+
+    private fun unavailableException(e: Throwable, movieId: MovieId) =
+            MoviePort.UnavailableException(e, "Movie(id=${movieId.value}) is unavailable")
 
     private fun MovieApi.MovieDetailJson.toMovie() = Movie(
             MovieId(this.id),

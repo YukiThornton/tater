@@ -5,14 +5,11 @@ import com.tater.domain.*
 import com.tater.domain.attribute.*
 import com.tater.driver.MovieApi
 import com.tater.port.MoviePort
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldThrow
-import org.amshove.kluent.withCause
-import org.amshove.kluent.withMessage
+import kotlinx.coroutines.runBlocking
+import org.amshove.kluent.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -106,6 +103,86 @@ class MovieGatewayTest: AutoResetMock {
                 { sut.getMovieOf(MovieId("movieId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
 
                 verify(exactly = 1) { movieApi.getMovie("movieId1") }
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("fetchMovieOf")
+    inner class FetchMovieOfTest {
+
+        @Nested
+        @DisplayName("When movie exists")
+        inner class WhenMovieExists {
+
+            @BeforeEach
+            fun setup() {
+                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieDetailJson("movieId1", "title1", "overview1", 5.6, 1000)
+            }
+
+            @Test
+            fun `Returns MovieSummary of specified MovieId`() {
+                runBlocking {
+                    val actual = sut.fetchMovieOf(MovieId("movieId1"))
+
+                    actual shouldBeEqualTo Movie(
+                            MovieId("movieId1"),
+                            MovieTitle("title1"),
+                            MovieOverview("overview1"),
+                            MovieReview(AverageScore(5.6), ReviewCount(1000))
+                    )
+                }
+            }
+
+            @Test
+            fun `Fetches movie from MovieApi`() {
+                runBlocking {
+                    sut.fetchMovieOf(MovieId("movieId1"))
+                }
+
+                coVerify(exactly = 1) { movieApi.fetchMovie("movieId1") }
+            }
+        }
+
+        @Nested
+        @DisplayName("When movie does not exist")
+        inner class WhenMovieDoesNotExist {
+
+            @BeforeEach
+            fun setup() {
+                coEvery { movieApi.fetchMovie("movieId1") } throws MovieApi.NotFoundException("", RuntimeException())
+            }
+
+            @Test
+            fun `Returns null`() {
+                runBlocking {
+                    val actual = sut.fetchMovieOf(MovieId("movieId1"))
+
+                    actual shouldBeEqualTo null
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When movie api throws an error")
+        inner class WhenMovieApiThrowsAnError {
+
+            private val errorFromMovieApi = mockk<Throwable>()
+
+            @BeforeEach
+            fun setup() {
+                coEvery { movieApi.fetchMovie("movieId1") } throws errorFromMovieApi
+            }
+
+            @Test
+            fun `Throws a UnavailableException`() {
+                val expectedException = MoviePort.UnavailableException::class
+                val exceptionCause = Throwable::class
+                val exceptionMessage = "Movie(id=movieId1) is unavailable"
+
+                runBlocking {
+                    coInvoking{ sut.fetchMovieOf(MovieId("movieId1")) } shouldThrow expectedException withMessage exceptionMessage withCause exceptionCause
+                }
             }
         }
     }

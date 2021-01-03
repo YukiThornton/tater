@@ -2,14 +2,14 @@ package com.tater.usecase
 
 import com.tater.domain.*
 import com.tater.domain.attribute.MovieIds
-import com.tater.port.MovieSummaryPort
+import com.tater.port.MoviePort
 import com.tater.port.ViewingHistoryPort
 import kotlinx.coroutines.*
 
 class ViewingHistoryUsecase(
     private val userIdChecker: UserIdChecker,
     private val viewingHistoryPort: ViewingHistoryPort,
-    private val movieSummaryPort: MovieSummaryPort
+    private val moviePort: MoviePort
 ) {
 
     fun allMoviesWatchedBy(userIdOrNull: UserId?): MovieSummaries = runBlocking {
@@ -30,21 +30,21 @@ class ViewingHistoryUsecase(
 
     private suspend fun fetchMovieSummariesOf(movieIds: MovieIds): MovieSummaries = try {
         coroutineScope {
-            startFetchingSummariesOf(movieIds)
+            startFetchingMoviesOf(movieIds)
                 .waitAllToComplete()
-                .wrapToSummariesSkippingNull()
+                .convertToSummariesSkippingNull()
         }
-    } catch (e: MovieSummaryPort.UnavailableException) {
+    } catch (e: MoviePort.UnavailableException) {
         throw DataAccessException(e, movieIds)
     }
 
-    private suspend fun startFetchingSummariesOf(movieIds: MovieIds) = coroutineScope {
-        movieIds.map { async { movieSummaryPort.fetchMovieSummaryOf(it) } }
+    private suspend fun startFetchingMoviesOf(movieIds: MovieIds) = coroutineScope {
+        movieIds.map { async { moviePort.fetchMovieOf(it) } }
     }
 
-    private suspend fun List<Deferred<MovieSummary?>>.waitAllToComplete() = awaitAll(*this.toTypedArray())
+    private suspend fun List<Deferred<Movie?>>.waitAllToComplete() = awaitAll(*this.toTypedArray())
 
-    private fun List<MovieSummary?>.wrapToSummariesSkippingNull() = this.filterNotNull().let(::MovieSummaries)
+    private fun List<Movie?>.convertToSummariesSkippingNull() = this.filterNotNull().map{ it.summarize() }.let(::MovieSummaries)
 
     private class DataAccessException(override val cause: Throwable, val movieIds: MovieIds? = null): RuntimeException() {
         fun toUnavailableExceptionWith(userId: UserId): WatchedMoviesUnavailableException {
