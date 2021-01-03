@@ -51,7 +51,7 @@ class MovieTest {
             JsonReader.isJson(response) shouldBeEqualTo true
         }
 
-        //TODO: タグライン、ジャンル、リリース日、上映時間も取得する
+        //TODO: タグライン、ジャンル、リリース日も取得する
         @Nested
         @DisplayName("映画の情報として次の項目を返すこと")
         inner class MovieItems {
@@ -93,6 +93,14 @@ class MovieTest {
 
                 val responseJson = JsonReader.parseResponseBody(response)
                 responseJson.shouldHaveValueOf("overview", "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.")
+            }
+
+            @Test
+            fun `上映時間`() {
+                val response = taterApi.getV1Movie("496243", userId = "1")
+
+                val responseJson = JsonReader.parseResponseBody(response)
+                responseJson.shouldHaveValueOf("runtime", 133)
             }
         }
     }

@@ -35,6 +35,7 @@ class MovieGateway(
             MovieId(this.id),
             MovieTitle(this.title),
             MovieOverview(this.overview),
+            Runtime(this.runtime),
             MovieReview(AverageScore(this.voteAverage), ReviewCount(this.voteCount))
     )
 }

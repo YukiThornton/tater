@@ -268,6 +268,7 @@ class HttpRequestExecutorTest: AutoResetMock {
                 every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } returns Movie(
                         MovieId("movieId1"), MovieTitle("title1"),
                         MovieOverview("overview1"),
+                        Runtime(123),
                         MovieReview(AverageScore(5.6), ReviewCount(1000))
                 )
             }
@@ -290,6 +291,7 @@ class HttpRequestExecutorTest: AutoResetMock {
                         "movieId1",
                         "title1",
                         "overview1",
+                        123,
                         ReviewJson(5.6, 1000)
                 )
             }

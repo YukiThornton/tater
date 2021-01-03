@@ -38,6 +38,7 @@ class MovieGatewayTest: AutoResetMock {
                         "movieId1",
                         "title1",
                         "overview1",
+                        123,
                         5.6,
                         1000
                 )
@@ -58,6 +59,7 @@ class MovieGatewayTest: AutoResetMock {
                         MovieId("movieId1"),
                         MovieTitle("title1"),
                         MovieOverview("overview1"),
+                        Runtime(123),
                         MovieReview(AverageScore(5.6), ReviewCount(1000))
                 )
             }
@@ -117,7 +119,7 @@ class MovieGatewayTest: AutoResetMock {
 
             @BeforeEach
             fun setup() {
-                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieDetailJson("movieId1", "title1", "overview1", 5.6, 1000)
+                coEvery { movieApi.fetchMovie("movieId1") } returns MovieApi.MovieDetailJson("movieId1", "title1", "overview1", 123, 5.6, 1000)
             }
 
             @Test
@@ -129,6 +131,7 @@ class MovieGatewayTest: AutoResetMock {
                             MovieId("movieId1"),
                             MovieTitle("title1"),
                             MovieOverview("overview1"),
+                            Runtime(123),
                             MovieReview(AverageScore(5.6), ReviewCount(1000))
                     )
                 }

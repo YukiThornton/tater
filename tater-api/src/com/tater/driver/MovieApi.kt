@@ -11,6 +11,7 @@ interface MovieApi {
             val id: String,
             val title: String,
             val overview: String,
+            val runtime: Int,
             @JsonAlias("vote_average") val voteAverage: Double,
             @JsonAlias("vote_count") val voteCount: Int)
 
