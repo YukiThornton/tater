@@ -4,8 +4,6 @@ import com.tater.AutoResetMock
 import com.tater.domain.*
 import com.tater.driver.MovieApi
 import com.tater.port.MovieDetailPort
-import com.tater.port.MoviePort
-import com.tater.usecase.MovieDetailsUnavailableException
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK

@@ -3,7 +3,7 @@ package com.tater.gateway
 import com.tater.AutoResetMock
 import com.tater.domain.*
 import com.tater.driver.MovieApi
-import com.tater.port.MoviePort
+import com.tater.port.ReviewedMoviePort
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -15,11 +15,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("MovieGateway")
-class MovieGatewayTest: AutoResetMock {
+@DisplayName("ReviewedMovieGateway")
+class ReviewedMovieGatewayTest: AutoResetMock {
 
     @InjectMockKs
-    private lateinit var sut: MovieGateway
+    private lateinit var sut: ReviewedMovieGateway
 
     @MockK
     private lateinit var movieApi: MovieApi
@@ -68,10 +68,10 @@ class MovieGatewayTest: AutoResetMock {
             fun `Returns found movies`() {
                 val actual = sut.searchMovies(theFilter, theSortKey)
 
-                actual shouldBeEqualTo Movies(listOf(
-                        Movie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000))),
-                        Movie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200))),
-                        Movie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900))),
+                actual shouldBeEqualTo ReviewedMovies(listOf(
+                        ReviewedMovie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000))),
+                        ReviewedMovie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200))),
+                        ReviewedMovie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900))),
                 ))
             }
         }
@@ -95,7 +95,7 @@ class MovieGatewayTest: AutoResetMock {
 
             @Test
             fun `Throws a SearchUnavailableException`() {
-                val expectedException = MoviePort.SearchUnavailableException::class
+                val expectedException = ReviewedMoviePort.SearchUnavailableException::class
                 val exceptionCause = Throwable::class
                 val message = "MovieApi's movie search functionality is not available"
 

@@ -2,14 +2,14 @@ package com.tater.gateway
 
 import com.tater.domain.*
 import com.tater.driver.MovieApi
-import com.tater.port.MoviePort
+import com.tater.port.ReviewedMoviePort
 
-class MovieGateway(private val movieApi: MovieApi): MoviePort {
-    override fun searchMovies(searchFilter: MovieSearchFilter, sort: SortedBy): Movies {
+class ReviewedMovieGateway(private val movieApi: MovieApi): ReviewedMoviePort {
+    override fun searchMovies(searchFilter: MovieSearchFilter, sort: SortedBy): ReviewedMovies {
         return try {
             movieApi.searchMovies(createConditions(sort, searchFilter)).toMovies()
         } catch (e: Throwable) {
-            throw MoviePort.SearchUnavailableException("MovieApi's movie search functionality is not available", e)
+            throw ReviewedMoviePort.SearchUnavailableException("MovieApi's movie search functionality is not available", e)
         }
     }
 
@@ -26,9 +26,9 @@ class MovieGateway(private val movieApi: MovieApi): MoviePort {
         SortedBy.ReviewAverageDesc -> "vote_average.desc"
     }
 
-    private fun MovieApi.MovieListJson.toMovies() = this.results.map { it.toMovie() }.let(::Movies)
+    private fun MovieApi.MovieListJson.toMovies() = this.results.map { it.toMovie() }.let(::ReviewedMovies)
 
-    private fun MovieApi.MovieJson.toMovie() = Movie(
+    private fun MovieApi.MovieJson.toMovie() = ReviewedMovie(
             MovieId(this.id),
             MovieTitle(this.title),
             MovieReview(AverageScore(this.voteAverage), ReviewCount(this.voteCount)))

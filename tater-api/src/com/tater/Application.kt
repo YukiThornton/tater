@@ -12,11 +12,11 @@ import com.tater.driver.MovieApiClient
 import com.tater.driver.TaterDb
 import com.tater.driver.TaterPostgresqlDb
 import com.tater.gateway.MovieDetailGateway
-import com.tater.gateway.MovieGateway
+import com.tater.gateway.ReviewedMovieGateway
 import com.tater.gateway.MovieSummaryGateway
 import com.tater.gateway.ViewingHistoryGateway
 import com.tater.port.MovieDetailPort
-import com.tater.port.MoviePort
+import com.tater.port.ReviewedMoviePort
 import com.tater.port.MovieSummaryPort
 import com.tater.port.ViewingHistoryPort
 import com.tater.usecase.MovieDetailUsecase
@@ -49,7 +49,7 @@ fun Application.module(testing: Boolean = false) {
         bind<MovieDetailPort>() with singleton { MovieDetailGateway(instance()) }
         bind<MovieSummaryPort>() with singleton { MovieSummaryGateway(instance()) }
         bind<ViewingHistoryPort>() with singleton { ViewingHistoryGateway(instance()) }
-        bind<MoviePort>() with singleton { MovieGateway(instance()) }
+        bind<ReviewedMoviePort>() with singleton { ReviewedMovieGateway(instance()) }
         bind<UserIdChecker>() with singleton { UserIdChecker() }
         bind<MovieDetailUsecase>() with singleton { MovieDetailUsecase(instance(), instance()) }
         bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance(), instance()) }

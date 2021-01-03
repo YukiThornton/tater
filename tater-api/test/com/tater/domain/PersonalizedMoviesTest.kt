@@ -17,10 +17,10 @@ class PersonalizedMoviesTest: AutoResetMock {
 
         @Test
         fun `Creates PersonalizedMovies from Movies and ViewingHistories`() {
-            val movie1 = Movie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000)))
-            val movie2 = Movie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200)))
-            val movie3 = Movie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900)))
-            val movies = Movies(listOf(movie1, movie2, movie3))
+            val movie1 = ReviewedMovie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000)))
+            val movie2 = ReviewedMovie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200)))
+            val movie3 = ReviewedMovie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900)))
+            val movies = ReviewedMovies(listOf(movie1, movie2, movie3))
             val viewingHistories = mockk<ViewingHistories>()
 
             every { viewingHistories.userId } returns UserId("userId1")
