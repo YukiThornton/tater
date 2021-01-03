@@ -27,8 +27,8 @@ class MovieGatewayTest: AutoResetMock {
     private lateinit var movieApi: MovieApi
 
     @Nested
-    @DisplayName("getDetailsOf")
-    inner class GetDetailsOf {
+    @DisplayName("getMovieOf")
+    inner class GetMovieOf {
 
         @Nested
         @DisplayName("When specified movie exist and succeeds to get the data")
@@ -47,14 +47,14 @@ class MovieGatewayTest: AutoResetMock {
 
             @Test
             fun `Gets a movie from MovieApi`() {
-                sut.getDetailsOf(MovieId("movieId1"))
+                sut.getMovieOf(MovieId("movieId1"))
 
                 verify(exactly = 1) { movieApi.getMovie("movieId1") }
             }
 
             @Test
-            fun `Returns a MovieDetails`() {
-                val actual = sut.getDetailsOf(MovieId("movieId1"))
+            fun `Returns a Movie`() {
+                val actual = sut.getMovieOf(MovieId("movieId1"))
 
                 actual shouldBeEqualTo Movie(
                         MovieId("movieId1"),
@@ -78,7 +78,7 @@ class MovieGatewayTest: AutoResetMock {
 
             @Test
             fun `Returns null`() {
-                val actual = sut.getDetailsOf(MovieId("movieId1"))
+                val actual = sut.getMovieOf(MovieId("movieId1"))
 
                 verify(exactly = 1) { movieApi.getMovie("movieId1") }
                 actual shouldBeEqualTo null
@@ -102,7 +102,7 @@ class MovieGatewayTest: AutoResetMock {
                 val exceptionCause = Throwable::class
                 val exceptionMessage = "Movie(id=movieId1) is unavailable"
 
-                { sut.getDetailsOf(MovieId("movieId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
+                { sut.getMovieOf(MovieId("movieId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
 
                 verify(exactly = 1) { movieApi.getMovie("movieId1") }
             }

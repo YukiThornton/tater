@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAlias
 interface MovieApi {
     suspend fun fetchMovie(id: String): MovieDetailJson
     fun getMovie(id: String): MovieDetailJson
-    fun searchMovies(conditions: Map<String, Any>): MovieListJson
+    fun searchMovies(conditions: Map<String, Any>): SearchedMovieListJson
 
     data class MovieDetailJson(
             val id: String,
@@ -14,12 +14,12 @@ interface MovieApi {
             @JsonAlias("vote_average") val voteAverage: Double,
             @JsonAlias("vote_count") val voteCount: Int)
 
-    data class MovieJson(
+    data class SearchedMovieJson(
             val id: String,
             val title: String,
             @JsonAlias("vote_average") val voteAverage: Double,
             @JsonAlias("vote_count") val voteCount: Int)
-    data class MovieListJson(val results: List<MovieJson>)
+    data class SearchedMovieListJson(val results: List<SearchedMovieJson>)
 
     class NotFoundException(override val message: String?, override val cause: Throwable?): RuntimeException()
 }

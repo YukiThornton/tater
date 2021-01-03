@@ -42,7 +42,7 @@ class MovieApiClient(
 
     private fun notFoundException(id: String) = MovieApi.NotFoundException("movie(id=$id) not found", null)
 
-    override fun searchMovies(conditions: Map<String, Any>): MovieApi.MovieListJson {
+    override fun searchMovies(conditions: Map<String, Any>): MovieApi.SearchedMovieListJson {
         val queryParams = conditions.plus(mapOf(
                 "api_key" to config.authToken(),
                 "page" to 1

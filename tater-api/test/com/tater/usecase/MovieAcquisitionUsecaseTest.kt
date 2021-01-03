@@ -19,11 +19,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("MovieDetailUsecase")
-class MovieDetailUsecaseTest: AutoResetMock {
+@DisplayName("MovieAcquisitionUsecase")
+class MovieAcquisitionUsecaseTest: AutoResetMock {
 
     @InjectMockKs
-    private lateinit var sut: MovieDetailUsecase
+    private lateinit var sut: MovieAcquisitionUsecase
 
     @MockK
     private lateinit var userIdChecker: UserIdChecker
@@ -32,11 +32,11 @@ class MovieDetailUsecaseTest: AutoResetMock {
     private lateinit var moviePort: MoviePort
 
     @Nested
-    @DisplayName("detailsOf")
-    inner class DetailsOf {
+    @DisplayName("getMovieOf")
+    inner class GetMovieOfTest {
 
         @Nested
-        @DisplayName("When movie details is available")
+        @DisplayName("When movie data is available")
         inner class WhenMovieIsAvailable {
 
             private val expected = mockk<Movie>()
@@ -44,63 +44,63 @@ class MovieDetailUsecaseTest: AutoResetMock {
             @BeforeEach
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
-                every { moviePort.getDetailsOf(MovieId("movieId1")) } returns expected
+                every { moviePort.getMovieOf(MovieId("movieId1")) } returns expected
             }
 
             @Test
             fun `Makes sure that userId exists with UserIdChecker`() {
-                sut.detailsOf(MovieId("movieId1"), UserId("userId1"))
+                sut.getMovieOf(MovieId("movieId1"), UserId("userId1"))
 
                 verify { userIdChecker.makeSureUserIdExists(UserId("userId1")) }
             }
 
             @Test
-            fun `Gets movie details from port and returns as it is`() {
-                val actual = sut.detailsOf(MovieId("movieId1"), UserId("userId1"))
+            fun `Gets the movie from port and returns as it is`() {
+                val actual = sut.getMovieOf(MovieId("movieId1"), UserId("userId1"))
 
-                verify(exactly = 1) { moviePort.getDetailsOf(MovieId("movieId1")) }
+                verify(exactly = 1) { moviePort.getMovieOf(MovieId("movieId1")) }
                 actual shouldBeEqualTo expected
             }
         }
 
         @Nested
-        @DisplayName("When movie details is not found")
+        @DisplayName("When movie data is not found")
         inner class WhenMovieIsNotFound {
 
             @BeforeEach
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
-                every { moviePort.getDetailsOf(MovieId("movieId1")) } returns null
+                every { moviePort.getMovieOf(MovieId("movieId1")) } returns null
             }
 
             @Test
             fun `Returns null`() {
-                val actual = sut.detailsOf(MovieId("movieId1"), UserId("userId1"))
+                val actual = sut.getMovieOf(MovieId("movieId1"), UserId("userId1"))
 
-                verify(exactly = 1) { moviePort.getDetailsOf(MovieId("movieId1")) }
+                verify(exactly = 1) { moviePort.getMovieOf(MovieId("movieId1")) }
                 actual shouldBeEqualTo null
             }
         }
 
         @Nested
-        @DisplayName("When movie details is unavailable")
+        @DisplayName("When movie data is unavailable")
         inner class WhenMovieIsUnavailable {
 
             @BeforeEach
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
-                every { moviePort.getDetailsOf(MovieId("movieId1")) } throws MoviePort.UnavailableException(RuntimeException(""), "")
+                every { moviePort.getMovieOf(MovieId("movieId1")) } throws MoviePort.UnavailableException(RuntimeException(""), "")
             }
 
             @Test
-            fun `Throws a MovieDetailsUnavailableException`() {
-                val expectedException = MovieDetailsUnavailableException::class
+            fun `Throws a MovieUnavailableException`() {
+                val expectedException = MovieUnavailableException::class
                 val exceptionCause = MoviePort.UnavailableException::class
                 val exceptionMessage = "Movie(id=movieId1) requested by user(id=userId1) is unavailable"
 
-                { sut.detailsOf(MovieId("movieId1"), UserId("userId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
+                { sut.getMovieOf(MovieId("movieId1"), UserId("userId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
 
-                verify(exactly = 1) { moviePort.getDetailsOf(MovieId("movieId1")) }
+                verify(exactly = 1) { moviePort.getMovieOf(MovieId("movieId1")) }
             }
         }
     }

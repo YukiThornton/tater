@@ -25,7 +25,7 @@ class HttpRequestExecutorTest: AutoResetMock {
     private lateinit var movieSearchUsecase: MovieSearchUsecase
 
     @MockK
-    private lateinit var movieDetailUsecase: MovieDetailUsecase
+    private lateinit var movieAcquisitionUsecase: MovieAcquisitionUsecase
 
     @Nested
     @DisplayName("getV1Watched")
@@ -255,7 +255,7 @@ class HttpRequestExecutorTest: AutoResetMock {
     inner class GetV1MoviesWithIdTest {
 
         @Nested
-        @DisplayName("When usecase returns movie details")
+        @DisplayName("When usecase returns movie")
         inner class WhenUsecaseReturnsMovies {
 
             private val theCall = mockk<ApplicationCall>()
@@ -264,7 +264,7 @@ class HttpRequestExecutorTest: AutoResetMock {
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { theCall.parameters["id"] } returns "movieId1"
-                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } returns Movie(
+                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } returns Movie(
                         MovieId("movieId1"), MovieTitle("title1"),
                         MovieOverview("overview1"),
                         MovieReview(AverageScore(5.6), ReviewCount(1000))
@@ -277,7 +277,7 @@ class HttpRequestExecutorTest: AutoResetMock {
 
                 verify { theCall.request.header("tater-user-id") }
                 verify { theCall.parameters["id"] }
-                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+                verify { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) }
             }
 
             @Test
@@ -285,7 +285,7 @@ class HttpRequestExecutorTest: AutoResetMock {
                 val actual = sut.getV1MovieWithId(theCall)
 
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
-                actual.responseBody shouldBeEqualTo MovieDetailJson(
+                actual.responseBody shouldBeEqualTo MovieJson(
                         "movieId1",
                         "title1",
                         "overview1",
@@ -304,14 +304,14 @@ class HttpRequestExecutorTest: AutoResetMock {
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { theCall.parameters["id"] } returns "movieId1"
-                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } returns null
+                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } returns null
             }
 
             @Test
             fun `Returns a result with status BadRequest`() {
                 val actual = sut.getV1MovieWithId(theCall)
 
-                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+                verify { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) }
 
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.NotFound
                 actual.responseBody shouldBeEqualTo null
@@ -331,14 +331,14 @@ class HttpRequestExecutorTest: AutoResetMock {
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { theCall.parameters["id"] } returns "movieId1"
-                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } throws userNotSpecifiedException
+                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } throws userNotSpecifiedException
             }
 
             @Test
             fun `Returns a result with status BadRequest and error`() {
                 val actual = sut.getV1MovieWithId(theCall)
 
-                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+                verify { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) }
 
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.BadRequest
                 actual.responseBody shouldBeEqualTo null
@@ -347,29 +347,29 @@ class HttpRequestExecutorTest: AutoResetMock {
         }
 
         @Nested
-        @DisplayName("When usecase throws a MovieDetailsUnavailableException")
+        @DisplayName("When usecase throws a MovieUnavailableException")
         inner class WhenUsecaseThrowsAMovieUnavailableException {
 
             private val theCall = mockk<ApplicationCall>()
 
-            private val movieDetailsUnavailableException = MovieDetailsUnavailableException(RuntimeException(""), "")
+            private val movieUnavailableException = MovieUnavailableException(RuntimeException(""), "")
 
             @BeforeEach
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { theCall.parameters["id"] } returns "movieId1"
-                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } throws movieDetailsUnavailableException
+                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } throws movieUnavailableException
             }
 
             @Test
             fun `Returns a result with status InternalServerError and error`() {
                 val actual = sut.getV1MovieWithId(theCall)
 
-                verify { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) }
+                verify { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) }
 
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.InternalServerError
                 actual.responseBody shouldBeEqualTo null
-                actual.error shouldBeEqualTo movieDetailsUnavailableException
+                actual.error shouldBeEqualTo movieUnavailableException
             }
         }
     }

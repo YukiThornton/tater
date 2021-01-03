@@ -5,19 +5,19 @@ import com.tater.domain.MovieId
 import com.tater.domain.UserId
 import com.tater.port.MoviePort
 
-class MovieDetailUsecase(
+class MovieAcquisitionUsecase(
         private val userIdChecker: UserIdChecker,
         private val moviePort: MoviePort
 ) {
-    fun detailsOf(movieId: MovieId, userIdOrNull: UserId?): Movie? {
+    fun getMovieOf(movieId: MovieId, userIdOrNull: UserId?): Movie? {
         val userId = userIdChecker.makeSureUserIdExists(userIdOrNull)
         return try {
-            moviePort.getDetailsOf(movieId)
+            moviePort.getMovieOf(movieId)
         } catch (e: MoviePort.UnavailableException) {
             val message = "Movie(id=${movieId.value}) requested by user(id=${userId.value}) is unavailable"
-            throw MovieDetailsUnavailableException(e, message)
+            throw MovieUnavailableException(e, message)
         }
     }
 }
 
-class MovieDetailsUnavailableException(override val cause: Throwable, override val message: String?): RuntimeException()
+class MovieUnavailableException(override val cause: Throwable, override val message: String?): RuntimeException()

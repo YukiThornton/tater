@@ -26,9 +26,9 @@ class ReviewedMovieGateway(private val movieApi: MovieApi): ReviewedMoviePort {
         SortedBy.ReviewAverageDesc -> "vote_average.desc"
     }
 
-    private fun MovieApi.MovieListJson.toMovies() = this.results.map { it.toMovie() }.let(::ReviewedMovies)
+    private fun MovieApi.SearchedMovieListJson.toMovies() = this.results.map { it.toMovie() }.let(::ReviewedMovies)
 
-    private fun MovieApi.MovieJson.toMovie() = ReviewedMovie(
+    private fun MovieApi.SearchedMovieJson.toMovie() = ReviewedMovie(
             MovieId(this.id),
             MovieTitle(this.title),
             MovieReview(AverageScore(this.voteAverage), ReviewCount(this.voteCount)))

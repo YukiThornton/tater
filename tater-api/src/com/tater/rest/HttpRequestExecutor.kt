@@ -7,9 +7,9 @@ import io.ktor.http.*
 import io.ktor.request.*
 
 class HttpRequestExecutor(
-    private val viewingHistoryUsecase: ViewingHistoryUsecase,
-    private val movieSearchUsecase: MovieSearchUsecase,
-    private val movieDetailUsecase: MovieDetailUsecase,
+        private val viewingHistoryUsecase: ViewingHistoryUsecase,
+        private val movieSearchUsecase: MovieSearchUsecase,
+        private val movieAcquisitionUsecase: MovieAcquisitionUsecase,
 ) {
 
     companion object {
@@ -40,15 +40,15 @@ class HttpRequestExecutor(
         }
     }
 
-    fun getV1MovieWithId(requestCall: ApplicationCall): Result<MovieDetailJson> {
+    fun getV1MovieWithId(requestCall: ApplicationCall): Result<MovieJson> {
         val movieId = requestCall.parameters["id"]!!.let(::MovieId)
         val userId = requestCall.request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
-            movieDetailUsecase.detailsOf(movieId, userId)?.toJson()?.toOkResult()
+            movieAcquisitionUsecase.getMovieOf(movieId, userId)?.toJson()?.toOkResult()
                     ?: Result(HttpStatusCode.NotFound, null, null)
         } catch (e: UserNotSpecifiedException) {
             Result(HttpStatusCode.BadRequest, null, e)
-        } catch (e: MovieDetailsUnavailableException) {
+        } catch (e: MovieUnavailableException) {
             Result(HttpStatusCode.InternalServerError, null, e)
         }
     }
@@ -63,4 +63,4 @@ fun MovieReview.toJson() = ReviewJson(this.averageScore.value, this.count.value)
 fun PersonalizedMovie.toJson() = ReviewedMovieJson(this.movieId.value, this.movieTitle.value, this.watched, this.movieReview.toJson())
 fun PersonalizedMovies.toJson() = this.map { movie -> movie.toJson() }.let(::ReviewedMovieListJson)
 
-fun Movie.toJson() = MovieDetailJson(this.id.value, this.title.value, this.overview.value, this.review.toJson())
+fun Movie.toJson() = MovieJson(this.id.value, this.title.value, this.overview.value, this.review.toJson())

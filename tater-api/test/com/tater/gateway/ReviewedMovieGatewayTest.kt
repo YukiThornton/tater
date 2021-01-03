@@ -47,10 +47,10 @@ class ReviewedMovieGatewayTest: AutoResetMock {
                 every { theFilter.minReviewCount() } returns 1234
                 every { theFilter.includeAdult() } returns false
                 every { theFilter.includeVideo() } returns true
-                every { movieApi.searchMovies(conditions) } returns MovieApi.MovieListJson(listOf(
-                        MovieApi.MovieJson("id1", "title1", 5.6, 1000),
-                        MovieApi.MovieJson("id2", "title2", 5.5, 1200),
-                        MovieApi.MovieJson("id3", "title3", 5.4, 900),
+                every { movieApi.searchMovies(conditions) } returns MovieApi.SearchedMovieListJson(listOf(
+                        MovieApi.SearchedMovieJson("id1", "title1", 5.6, 1000),
+                        MovieApi.SearchedMovieJson("id2", "title2", 5.5, 1200),
+                        MovieApi.SearchedMovieJson("id3", "title3", 5.4, 900),
                 ))
             }
 

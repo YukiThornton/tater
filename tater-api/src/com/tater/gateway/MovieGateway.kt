@@ -7,9 +7,9 @@ import com.tater.port.MoviePort
 class MovieGateway(
         private val movieApi: MovieApi
 ): MoviePort {
-    override fun getDetailsOf(movieId: MovieId): Movie? {
+    override fun getMovieOf(movieId: MovieId): Movie? {
         return try {
-            movieApi.getMovie(movieId.value).toMovieDetails()
+            movieApi.getMovie(movieId.value).toMovie()
         } catch (e: MovieApi.NotFoundException) {
             null
         } catch (e: Throwable) {
@@ -17,7 +17,7 @@ class MovieGateway(
         }
     }
 
-    private fun MovieApi.MovieDetailJson.toMovieDetails() = Movie(
+    private fun MovieApi.MovieDetailJson.toMovie() = Movie(
             MovieId(this.id),
             MovieTitle(this.title),
             MovieOverview(this.overview),
