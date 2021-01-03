@@ -2,6 +2,7 @@ package com.tater.rest
 
 import com.tater.AutoResetMock
 import com.tater.domain.*
+import com.tater.domain.attribute.*
 import com.tater.usecase.*
 import io.ktor.application.*
 import io.ktor.http.*

@@ -2,6 +2,7 @@ package com.tater.usecase
 
 import com.tater.AutoResetMock
 import com.tater.domain.*
+import com.tater.domain.attribute.ReviewCount
 import com.tater.port.ReviewedMoviePort
 import com.tater.port.ViewingHistoryPort
 import io.mockk.*

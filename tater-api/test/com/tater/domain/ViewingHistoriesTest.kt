@@ -1,6 +1,7 @@
 package com.tater.domain
 
-import io.mockk.every
+import com.tater.domain.attribute.MovieId
+import com.tater.domain.attribute.MovieIds
 import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.DisplayName

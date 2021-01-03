@@ -1,6 +1,8 @@
 package com.tater.rest
 
 import com.tater.domain.*
+import com.tater.domain.attribute.MovieId
+import com.tater.domain.attribute.MovieReview
 import com.tater.usecase.*
 import io.ktor.application.*
 import io.ktor.http.*

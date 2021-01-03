@@ -1,6 +1,8 @@
 package com.tater.gateway
 
 import com.tater.domain.*
+import com.tater.domain.attribute.MovieId
+import com.tater.domain.attribute.MovieTitle
 import com.tater.driver.MovieApi
 import com.tater.port.MovieSummaryPort
 

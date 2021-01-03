@@ -1,4 +1,4 @@
-package com.tater.domain
+package com.tater.domain.attribute
 
 data class MovieReview(
         val averageScore: AverageScore,

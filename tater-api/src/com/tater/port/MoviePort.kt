@@ -1,7 +1,7 @@
 package com.tater.port
 
 import com.tater.domain.Movie
-import com.tater.domain.MovieId
+import com.tater.domain.attribute.MovieId
 
 interface MoviePort {
     fun getMovieOf(movieId: MovieId): Movie?

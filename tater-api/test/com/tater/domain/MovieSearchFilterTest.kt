@@ -1,6 +1,6 @@
 package com.tater.domain
 
-import io.mockk.mockk
+import com.tater.domain.attribute.ReviewCount
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

@@ -1,6 +1,7 @@
 package com.tater.usecase
 
 import com.tater.domain.*
+import com.tater.domain.attribute.MovieIds
 import com.tater.port.MovieSummaryPort
 import com.tater.port.ViewingHistoryPort
 import kotlinx.coroutines.*

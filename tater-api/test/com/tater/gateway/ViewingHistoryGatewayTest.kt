@@ -2,6 +2,8 @@ package com.tater.gateway
 
 import com.tater.AutoResetMock
 import com.tater.domain.*
+import com.tater.domain.attribute.MovieId
+import com.tater.domain.attribute.MovieIds
 import com.tater.driver.TaterDb
 import com.tater.port.ViewingHistoryPort
 import io.mockk.every

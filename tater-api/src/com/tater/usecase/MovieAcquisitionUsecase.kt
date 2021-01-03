@@ -1,7 +1,7 @@
 package com.tater.usecase
 
 import com.tater.domain.Movie
-import com.tater.domain.MovieId
+import com.tater.domain.attribute.MovieId
 import com.tater.domain.UserId
 import com.tater.port.MoviePort
 

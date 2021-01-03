@@ -2,6 +2,7 @@ package com.tater.gateway
 
 import com.tater.AutoResetMock
 import com.tater.domain.*
+import com.tater.domain.attribute.*
 import com.tater.driver.MovieApi
 import com.tater.port.ReviewedMoviePort
 import io.mockk.every

@@ -1,6 +1,7 @@
 package com.tater.domain
 
 import com.tater.AutoResetMock
+import com.tater.domain.attribute.*
 import io.mockk.every
 import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo

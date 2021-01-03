@@ -1,5 +1,7 @@
 package com.tater.domain
 
+import com.tater.domain.attribute.ReviewCount
+
 data class MovieSearchFilter private constructor(
         private val minReviewCount: ReviewCount,
         private val includeVideo: Boolean = false,
