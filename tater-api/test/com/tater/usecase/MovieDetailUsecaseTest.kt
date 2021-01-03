@@ -1,10 +1,10 @@
 package com.tater.usecase
 
 import com.tater.AutoResetMock
-import com.tater.domain.MovieDetails
+import com.tater.domain.Movie
 import com.tater.domain.MovieId
 import com.tater.domain.UserId
-import com.tater.port.MovieDetailPort
+import com.tater.port.MoviePort
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -29,7 +29,7 @@ class MovieDetailUsecaseTest: AutoResetMock {
     private lateinit var userIdChecker: UserIdChecker
 
     @MockK
-    private lateinit var movieDetailPort: MovieDetailPort
+    private lateinit var moviePort: MoviePort
 
     @Nested
     @DisplayName("detailsOf")
@@ -37,14 +37,14 @@ class MovieDetailUsecaseTest: AutoResetMock {
 
         @Nested
         @DisplayName("When movie details is available")
-        inner class WhenMovieDetailsIsAvailable {
+        inner class WhenMovieIsAvailable {
 
-            private val expected = mockk<MovieDetails>()
+            private val expected = mockk<Movie>()
 
             @BeforeEach
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
-                every { movieDetailPort.getDetailsOf(MovieId("movieId1")) } returns expected
+                every { moviePort.getDetailsOf(MovieId("movieId1")) } returns expected
             }
 
             @Test
@@ -58,49 +58,49 @@ class MovieDetailUsecaseTest: AutoResetMock {
             fun `Gets movie details from port and returns as it is`() {
                 val actual = sut.detailsOf(MovieId("movieId1"), UserId("userId1"))
 
-                verify(exactly = 1) { movieDetailPort.getDetailsOf(MovieId("movieId1")) }
+                verify(exactly = 1) { moviePort.getDetailsOf(MovieId("movieId1")) }
                 actual shouldBeEqualTo expected
             }
         }
 
         @Nested
         @DisplayName("When movie details is not found")
-        inner class WhenMovieDetailsIsNotFound {
+        inner class WhenMovieIsNotFound {
 
             @BeforeEach
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
-                every { movieDetailPort.getDetailsOf(MovieId("movieId1")) } returns null
+                every { moviePort.getDetailsOf(MovieId("movieId1")) } returns null
             }
 
             @Test
             fun `Returns null`() {
                 val actual = sut.detailsOf(MovieId("movieId1"), UserId("userId1"))
 
-                verify(exactly = 1) { movieDetailPort.getDetailsOf(MovieId("movieId1")) }
+                verify(exactly = 1) { moviePort.getDetailsOf(MovieId("movieId1")) }
                 actual shouldBeEqualTo null
             }
         }
 
         @Nested
         @DisplayName("When movie details is unavailable")
-        inner class WhenMovieDetailsIsUnavailable {
+        inner class WhenMovieIsUnavailable {
 
             @BeforeEach
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
-                every { movieDetailPort.getDetailsOf(MovieId("movieId1")) } throws MovieDetailPort.UnavailableException(RuntimeException(""), "")
+                every { moviePort.getDetailsOf(MovieId("movieId1")) } throws MoviePort.UnavailableException(RuntimeException(""), "")
             }
 
             @Test
             fun `Throws a MovieDetailsUnavailableException`() {
                 val expectedException = MovieDetailsUnavailableException::class
-                val exceptionCause = MovieDetailPort.UnavailableException::class
+                val exceptionCause = MoviePort.UnavailableException::class
                 val exceptionMessage = "Movie(id=movieId1) requested by user(id=userId1) is unavailable"
 
                 { sut.detailsOf(MovieId("movieId1"), UserId("userId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
 
-                verify(exactly = 1) { movieDetailPort.getDetailsOf(MovieId("movieId1")) }
+                verify(exactly = 1) { moviePort.getDetailsOf(MovieId("movieId1")) }
             }
         }
     }

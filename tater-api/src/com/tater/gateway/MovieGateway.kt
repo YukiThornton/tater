@@ -2,22 +2,22 @@ package com.tater.gateway
 
 import com.tater.domain.*
 import com.tater.driver.MovieApi
-import com.tater.port.MovieDetailPort
+import com.tater.port.MoviePort
 
-class MovieDetailGateway(
+class MovieGateway(
         private val movieApi: MovieApi
-): MovieDetailPort {
-    override fun getDetailsOf(movieId: MovieId): MovieDetails? {
+): MoviePort {
+    override fun getDetailsOf(movieId: MovieId): Movie? {
         return try {
             movieApi.getMovie(movieId.value).toMovieDetails()
         } catch (e: MovieApi.NotFoundException) {
             null
         } catch (e: Throwable) {
-            throw MovieDetailPort.UnavailableException(e, "Movie(id=${movieId.value}) is unavailable")
+            throw MoviePort.UnavailableException(e, "Movie(id=${movieId.value}) is unavailable")
         }
     }
 
-    private fun MovieApi.MovieDetailJson.toMovieDetails() = MovieDetails(
+    private fun MovieApi.MovieDetailJson.toMovieDetails() = Movie(
             MovieId(this.id),
             MovieTitle(this.title),
             MovieOverview(this.overview),

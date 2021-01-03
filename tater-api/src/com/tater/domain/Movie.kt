@@ -1,6 +1,6 @@
 package com.tater.domain
 
-data class MovieDetails(
+data class Movie(
         val id: MovieId,
         val title: MovieTitle,
         val overview: MovieOverview,

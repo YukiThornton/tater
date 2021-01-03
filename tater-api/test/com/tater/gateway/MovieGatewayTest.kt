@@ -3,7 +3,7 @@ package com.tater.gateway
 import com.tater.AutoResetMock
 import com.tater.domain.*
 import com.tater.driver.MovieApi
-import com.tater.port.MovieDetailPort
+import com.tater.port.MoviePort
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -18,10 +18,10 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.lang.RuntimeException
 
-class MovieDetailGatewayTest: AutoResetMock {
+class MovieGatewayTest: AutoResetMock {
 
     @InjectMockKs
-    private lateinit var sut: MovieDetailGateway
+    private lateinit var sut: MovieGateway
 
     @MockK
     private lateinit var movieApi: MovieApi
@@ -56,7 +56,7 @@ class MovieDetailGatewayTest: AutoResetMock {
             fun `Returns a MovieDetails`() {
                 val actual = sut.getDetailsOf(MovieId("movieId1"))
 
-                actual shouldBeEqualTo MovieDetails(
+                actual shouldBeEqualTo Movie(
                         MovieId("movieId1"),
                         MovieTitle("title1"),
                         MovieOverview("overview1"),
@@ -98,7 +98,7 @@ class MovieDetailGatewayTest: AutoResetMock {
 
             @Test
             fun `Throws an UnavailableException`() {
-                val expectedException = MovieDetailPort.UnavailableException::class
+                val expectedException = MoviePort.UnavailableException::class
                 val exceptionCause = Throwable::class
                 val exceptionMessage = "Movie(id=movieId1) is unavailable"
 

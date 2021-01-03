@@ -264,7 +264,7 @@ class HttpRequestExecutorTest: AutoResetMock {
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { theCall.parameters["id"] } returns "movieId1"
-                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } returns MovieDetails(
+                every { movieDetailUsecase.detailsOf(MovieId("movieId1"), UserId("userId1")) } returns Movie(
                         MovieId("movieId1"), MovieTitle("title1"),
                         MovieOverview("overview1"),
                         MovieReview(AverageScore(5.6), ReviewCount(1000))
@@ -348,7 +348,7 @@ class HttpRequestExecutorTest: AutoResetMock {
 
         @Nested
         @DisplayName("When usecase throws a MovieDetailsUnavailableException")
-        inner class WhenUsecaseThrowsAMovieDetailsUnavailableException {
+        inner class WhenUsecaseThrowsAMovieUnavailableException {
 
             private val theCall = mockk<ApplicationCall>()
 

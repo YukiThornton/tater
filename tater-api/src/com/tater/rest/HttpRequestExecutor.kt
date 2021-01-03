@@ -63,4 +63,4 @@ fun MovieReview.toJson() = ReviewJson(this.averageScore.value, this.count.value)
 fun PersonalizedMovie.toJson() = ReviewedMovieJson(this.movieId.value, this.movieTitle.value, this.watched, this.movieReview.toJson())
 fun PersonalizedMovies.toJson() = this.map { movie -> movie.toJson() }.let(::ReviewedMovieListJson)
 
-fun MovieDetails.toJson() = MovieDetailJson(this.id.value, this.title.value, this.overview.value, this.review.toJson())
+fun Movie.toJson() = MovieDetailJson(this.id.value, this.title.value, this.overview.value, this.review.toJson())
