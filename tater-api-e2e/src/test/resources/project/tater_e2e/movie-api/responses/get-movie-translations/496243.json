@@ -1,0 +1,551 @@
+{
+  "id": 496243,
+  "translations": [
+    {
+      "iso_3166_1": "SA",
+      "iso_639_1": "ar",
+      "name": "العربية",
+      "english_name": "Arabic",
+      "data": {
+        "homepage": "",
+        "overview": "تدور أحداث الفيلم حول عائلة عاطلة عن العمل، تُقيم داخل شقة فقيرة، تتغير حياتهم كُليًا عندما يلتحق الابن بوظيفة مدرس لابنة عائلة ثرية، وسرعان ما يصير جميع أفراد اﻷسرة الفقيرة عاملين لدى اﻷسرة الثرية إلى أن يتورطوا في حادث غير متوقع.",
+        "runtime": 0,
+        "tagline": "تصرف وكأنك تملك المكان.",
+        "title": "طفيلي"
+      }
+    },
+    {
+      "iso_3166_1": "BG",
+      "iso_639_1": "bg",
+      "name": "български език",
+      "english_name": "Bulgarian",
+      "data": {
+        "homepage": "",
+        "overview": "Корейско семейство живее в сутерен и се прехранва с мизерните надници от временна работа. Положението се променя, когато по-големият син, благодарение на препоръките на приятел, фалшива диплома и вроденото си обаяние започва работа като частен учител по английски на дъщерята на богат бизнесмен. Попадайки в разкошния дом, момчето открива необичаен начин да реши проблемите на цялото си семейство.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Паразити"
+      }
+    },
+    {
+      "iso_3166_1": "CZ",
+      "iso_639_1": "cs",
+      "name": "Český",
+      "english_name": "Czech",
+      "data": {
+        "homepage": "",
+        "overview": "Černá komedie sledující chudou, ale mazanou čtyřčlennou rodinu, která se rozhodne infiltrovat do bohaté domácnosti byznysmena Parka. Co se může stát, když se setkají dva tak odlišné světy?",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parazit"
+      }
+    },
+    {
+      "iso_3166_1": "DK",
+      "iso_639_1": "da",
+      "name": "Dansk",
+      "english_name": "Danish",
+      "data": {
+        "homepage": "https://grandteatret.dk/film/parasite/",
+        "overview": "Da den arbejdsløse unge mand Ki-taek bliver spurgt af sin ven, om han vil overtage hans tjans som engelsklærer for en ung pige i en velhavende familie, griber Ki-taek chancen. Han indynder sig hurtigt hos både pigen og hendes mor, og ved snilde og svindel overtaler han dem til også at ansætte sin mor, far og søster.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "DE",
+      "iso_639_1": "de",
+      "name": "Deutsch",
+      "english_name": "German",
+      "data": {
+        "homepage": "http://capelight.de/parasite-kino-2",
+        "overview": "Familie Kim ist ganz unten angekommen: Vater, Mutter, Sohn und Tochter hausen in einem grünlich-schummrigen Keller und sind sich für keinen Aushilfsjob zu schade. Erst als der Jüngste eine Anstellung als Nachhilfelehrer in der todschicken Villa der Familie Park antritt, steigen die Kims ein ins Karussell der Klassenkämpfe. Mit findigen Tricksereien, bemerkenswertem Talent und großem Mannschaftsgeist gelingt es ihnen, die bisherigen Bediensteten der Familie Park nach und nach loszuwerden. Bald schon sind die Kims unverzichtbar für ihre neuen Herrschaften. Doch dann löst ein unerwarteter Zwischenfall eine Kette von Ereignissen aus, die so unvorhersehbar wie unfassbar sind.",
+        "runtime": 132,
+        "tagline": "Finde den Eindringling!",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "GR",
+      "iso_639_1": "el",
+      "name": "ελληνικά",
+      "english_name": "Greek",
+      "data": {
+        "homepage": "http://www.sevenfilms.gr/movies/%cf%80%ce%b1%cf%81%ce%ac%cf%83%ce%b9%cf%84%ce%b1-parasite/",
+        "overview": "Το ανατρεπτικό νοτιοκορεατικό θρίλερ που απέσπασε τον Χρυσό Φοίνικα στις Κάνες. Δύο οικογένειες: η πλούσια Παρκ και η φτωχή Κιμ. Είτε η τύχη είτε η μοίρα, ενώνει αυτά τα δύο σπίτια και οι Κίμς νιώθουν μια χρυσή ευκαιρία. Με τη καθοδήγηση του Ki-woo, του μεγάλου γιου των Κιμ, τα παιδιά των Κιμ εκμεταλλεύονται τους Παρκς. Σύντομα, σχηματίζεται μια συμβιωτική σχέση μεταξύ των δύο οικογενειών. Οι Κιμς παρέχουν \"απαραίτητες\" πολυτελείς υπηρεσίες, ενώ οι Παρκς δίνουν στους Κιμς μια διέξοδο από τις άσχημες καταστάσεις τους. Αλλά αυτό το νέο οικοσύστημα είναι εύθραυστο, και σύντομα αρκετή απληστία και ταξική προκατάληψη απειλούν την νεοσυσταθείσα άνεση των Κιμς.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Παράσιτα"
+      }
+    },
+    {
+      "iso_3166_1": "US",
+      "iso_639_1": "en",
+      "name": "English",
+      "english_name": "English",
+      "data": {
+        "homepage": "https://www.parasite-movie.com/",
+        "overview": "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.",
+        "runtime": 133,
+        "tagline": "Act like you own the place.",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "ES",
+      "iso_639_1": "es",
+      "name": "Español",
+      "english_name": "Spanish",
+      "data": {
+        "homepage": "https://laaventuraaudiovisual.com/parasitos/",
+        "overview": "Tanto Gi Taek como su familia están sin trabajo. Cuando su hijo mayor, Gi Woo, empieza a recibir clases particulares en casa de Park, las dos familias, que tienen mucho en común pese a pertenecer a dos mundos totalmente distintos, comienzan una interrelación de resultados imprevisibles.",
+        "runtime": 132,
+        "tagline": "Descubre al impostor.",
+        "title": "Parásitos"
+      }
+    },
+    {
+      "iso_3166_1": "MX",
+      "iso_639_1": "es",
+      "name": "Español",
+      "english_name": "Spanish",
+      "data": {
+        "homepage": "",
+        "overview": "Tanto Gi Taek como su familia están sin trabajo. Cuando su hijo mayor, Gi Woo, empieza a recibir clases particulares en casa de Park, las dos familias, que tienen mucho en común pese a pertenecer a dos mundos totalmente distintos, comienzan una interrelación de resultados impresivibles.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parásitos"
+      }
+    },
+    {
+      "iso_3166_1": "FI",
+      "iso_639_1": "fi",
+      "name": "suomi",
+      "english_name": "Finnish",
+      "data": {
+        "homepage": "",
+        "overview": "Ki-taekin koko nelihenkinen köyhä perhe elää kädestä suuhun halvassa kellarihuoneistossa. Tulevaisuus näyttää synkältä, kunnes onnellisen sattuman ja ystävän suosituksen ansiosta perheen vanhin poika Ki-woo onnistuu saamaan työpaikan varakkaasta Parkin perheestä teini-ikäisen tyttären Da-hyen yksityisenä englanninopettajana. Muodollisen pätevyyden takia Ki-woon sisko Ki-jungin täytyy vain väärentää veljelleen yliopiston päästötodistus. Työpaikka luo toiveita säännöllisistä tuloista. Perheensä suuret odotukset ja väärennetty koulutodistus mukanaan Ki-woo menee varakkaan Parkin perheen kotiin haastatteluun. Eivätkä huijaukset jää siihen, kun kaikille Ki-taekin perheenjäsenille löydetään roolit Parkien yltäkylläisen elämän ympäriltä. Lopulta kahden perheen kohtaaminen käynnistää hallitsemattoman tapahtumaketjun, jolla on arvaamattomia seurauksia.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "CA",
+      "iso_639_1": "fr",
+      "name": "Français",
+      "english_name": "French",
+      "data": {
+        "homepage": "",
+        "overview": "Toute la famille de Ki-taek est au chômage, et s’intéresse fortement au train de vie de la richissime famille Park. Un jour, leur fils réussit à se faire recommander pour donner des cours particuliers d’anglais chez les Park. C’est le début d’un engrenage incontrôlable, dont personne ne sortira véritablement indemne...",
+        "runtime": 0,
+        "tagline": "",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "FR",
+      "iso_639_1": "fr",
+      "name": "Français",
+      "english_name": "French",
+      "data": {
+        "homepage": "",
+        "overview": "Toute la famille de Ki-taek est au chômage. Elle s’intéresse particulièrement au train de vie de la richissime famille Park. Mais un incident se produit et les 2 familles se retrouvent mêlées, sans le savoir, à une bien étrange histoire…",
+        "runtime": 135,
+        "tagline": "Cherchez l'intrus.",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "IL",
+      "iso_639_1": "he",
+      "name": "עִבְרִית",
+      "english_name": "Hebrew",
+      "data": {
+        "homepage": "",
+        "overview": "\"פרזיטים\", סרטו המדובר של הבמאי הקוריאני בונג ג'ון-הו שהתקבל בתשואות בפסטיבל קאן האחרון ואף זכה בדקל הזהב, הוא דרמה קומית המציגה את סיפורה של משפחה ענייה המסתננת לאחוזה של משפחה עשירה. סאטירה חברתית מושחזת המטפלת בסוגיה חברתית גלובאלית באופן מקורי, עם שפע של יצירתיות, הברקות וסגנוניות.",
+        "runtime": 132,
+        "tagline": "על אדונים ומשרתים",
+        "title": "פרזיטים"
+      }
+    },
+    {
+      "iso_3166_1": "HR",
+      "iso_639_1": "hr",
+      "name": "Hrvatski",
+      "english_name": "Croatian",
+      "data": {
+        "homepage": "",
+        "overview": "Četveročlana obitelj Ki-taeka je bliska, ali potpuno nezaposlena, pred njom je mračna budućnost. Sina Ki-wooa preporučuje njegov prijatelj, student na prestižnom sveučilištu, za dobro plaćeni posao podučavanja, te se nada da će tako imati redovite prihode. Sa svim očekivanjima svoje obitelji, Ki-woo odlazi u obiteljski dom na intervju. Stigavši u kuću gospodina Parka, vlasnika globalne IT tvrtke, Ki-woo susreće njegovu suprugu Yeon-kia, lijepu mladu damu. Ali nakon ovog prvog susreta između dviju obitelji, uslijediti će nezaustavljivi niz nezgoda.",
+        "runtime": 0,
+        "tagline": "",
+        "title": "Parazit"
+      }
+    },
+    {
+      "iso_3166_1": "HU",
+      "iso_639_1": "hu",
+      "name": "Magyar",
+      "english_name": "Hungarian",
+      "data": {
+        "homepage": "",
+        "overview": "Ki-taek családja igazi semmirekellőkből áll. Ők mindig a könnyebbik utat választják – bármit megtesznek, csak dolgozni ne kelljen. Irigykedve nézik a Park család fényűző életmódját, és ördögi tervet eszelnek ki, hogy a közelükbe férkőzzenek. Azonban természetesen semmi sem a családfő tervei szerint alakul.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Élősködők"
+      }
+    },
+    {
+      "iso_3166_1": "ID",
+      "iso_639_1": "id",
+      "name": "Bahasa indonesia",
+      "english_name": "Indonesian",
+      "data": {
+        "homepage": "",
+        "overview": "Semua menganggur, keluarga Ki-taek memiliki minat khusus pada Taman kaya dan glamor untuk mata pencaharian mereka sampai mereka terjerat dalam insiden tak terduga.",
+        "runtime": 0,
+        "tagline": "",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "IS",
+      "iso_639_1": "is",
+      "name": "Íslenska",
+      "english_name": "Icelandic",
+      "data": {
+        "homepage": "",
+        "overview": "",
+        "runtime": 0,
+        "tagline": "",
+        "title": "Sníkjudýrin"
+      }
+    },
+    {
+      "iso_3166_1": "IT",
+      "iso_639_1": "it",
+      "name": "Italiano",
+      "english_name": "Italian",
+      "data": {
+        "homepage": "",
+        "overview": "Tutta la famiglia di Ki-taek è senza lavoro. Ki-taek è particolarmente interessata allo stile di vita della ricchissima famiglia Park. Un giorno, suo figlio riesce a farsi assumere dai Park e le due famiglie si ritrovano così intrecciate da una serie di eventi incontrollabili.",
+        "runtime": 132,
+        "tagline": "Cerca l'intruso",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "JP",
+      "iso_639_1": "ja",
+      "name": "日本語",
+      "english_name": "Japanese",
+      "data": {
+        "homepage": "",
+        "overview": "過去に度々事業に失敗、計画性も仕事もないが楽天的な父キム・ギテク。そんな甲斐性なしの夫に強くあたる母チュンスク。大学受験に落ち続け、若さも能力も持て余している息子ギウ。美大を目指すが上手くいかず、予備校に通うお金もない娘ギジョンは、“ 半地下住宅”で 暮らす貧しい4人家族だ。“半地下”の家は、暮らしにくい。窓を開ければ、路上で散布される消毒剤が入ってくる。電波が悪い。Wi-Fiも弱い。水圧が低いからトイレが家の一番高い位置に鎮座している。家族全員、ただただ“普通の暮らし”がしたい。受験経験は豊富だが学歴のないギウは、ある時、エリート大学生の友人から留学中の代打を頼まれる。ギウが向かった先は、IT企業の社長パク・ドンイク一家が暮らす高台の大豪邸だった。",
+        "runtime": 0,
+        "tagline": "",
+        "title": "パラサイト 半地下の家族"
+      }
+    },
+    {
+      "iso_3166_1": "GE",
+      "iso_639_1": "ka",
+      "name": "ქართული",
+      "english_name": "Georgian",
+      "data": {
+        "homepage": "",
+        "overview": "",
+        "runtime": 0,
+        "tagline": "",
+        "title": "პარაზიტი"
+      }
+    },
+    {
+      "iso_3166_1": "KR",
+      "iso_639_1": "ko",
+      "name": "한국어/조선말",
+      "english_name": "Korean",
+      "data": {
+        "homepage": "",
+        "overview": "전원 백수로 살 길 막막하지만 사이는 좋은 기택 가족. 장남 기우에게 명문대생 친구가 연결시켜 준 고액 과외 자리는 모처럼 싹튼 고정수입의 희망이다. 온 가족의 도움과 기대 속에 박 사장 집으로 향하는 기우. 글로벌 IT기업의 CEO인 박 사장의 저택에 도착하자 젊고 아름다운 사모님 연교와 가정부 문광이 기우를 맞이한다. 큰 문제 없이 박 사장의 딸 다혜의 과외를 시작한 기우. 그러나 이렇게 시작된 두 가족의 만남 뒤로, 걷잡을 수 없는 사건이 기다리고 있는데...",
+        "runtime": 131,
+        "tagline": "행복은 나눌수록 커지잖아요",
+        "title": ""
+      }
+    },
+    {
+      "iso_3166_1": "LT",
+      "iso_639_1": "lt",
+      "name": "Lietuvių",
+      "english_name": "Lithuanian",
+      "data": {
+        "homepage": "",
+        "overview": "Bedarbis Kitaekas suklastoja dokumentus ir tampa turtingos šeimos atžalos korepetitoriumi. Iš pradžių viskas klostosi puikiai, bet vieną dieną pradeda dėtis keisti dalykai.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parazitas"
+      }
+    },
+    {
+      "iso_3166_1": "LV",
+      "iso_639_1": "lv",
+      "name": "Latviešu",
+      "english_name": "Latvian",
+      "data": {
+        "homepage": "",
+        "overview": "",
+        "runtime": 0,
+        "tagline": "",
+        "title": "Parazīts"
+      }
+    },
+    {
+      "iso_3166_1": "NL",
+      "iso_639_1": "nl",
+      "name": "Nederlands",
+      "english_name": "Dutch",
+      "data": {
+        "homepage": "",
+        "overview": "Parasite volgt twee gezinnen waarbij elke persoon over unieke eigenschappen beschikt. De gezinsleden krijgen een bijzondere fascinatie voor de familie Park waarop ze erg gelijken, maar op vlak van uiterlijk er heel anders uitzien.",
+        "runtime": 132,
+        "tagline": "Doe alsof je de eigenaar bent.",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "NO",
+      "iso_639_1": "no",
+      "name": "Norsk",
+      "english_name": "Norwegian",
+      "data": {
+        "homepage": "",
+        "overview": "I PARASITT møter vi en familie på fire som bor i en nedslitt kjellerleilighet i byen. Utsikten er en glipe på gateplan mot et smug der bedrukne karer har for vane å late vannet. Med varierende hell tyvlåner de internett fra etasjen over, og for å få mat på bordet pakker de pizzaesker for en restaurantkjede i nærheten. På tross av samholdet og kjærligheten til hverandre, er det ikke stort til liv. Etter et besøk fra en venn av familiens sønn, åpenbarer det seg med ett en gyllen mulighet, en vei ut av elendigheten. Familien griper sjansen med begge hender. Etter regissørens eget ønske, skal ikke mer av handlingen røpes her. Dette er en opplevelse som nytes best uten å vite for mye på forhånd.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parasitt"
+      }
+    },
+    {
+      "iso_3166_1": "PL",
+      "iso_639_1": "pl",
+      "name": "Polski",
+      "english_name": "Polish",
+      "data": {
+        "homepage": "",
+        "overview": "Żywot rodziny pana Ki-taeka nie należy do najbardziej udanych. Rodzice z dwójką dorosłych dzieci żyją w nędzy, wszyscy są bezrobotni, a przyszłość rysuje się tylko w szarych barwach. Jednak pomimo niedoli, potrafią być ze sobą blisko, kochać się i trwać w zgodzie - nikt tu nie krzyczy w desperacji \"Jak żyć?!\". Pewnego dnia otrzymują prezent od losu, który przepełnia ich nadzieją oraz wizją stałego dochodu. Syn Ki-woo zostaje polecony przez kolegę, studenta prestiżowego uniwersytetu, na dobrze płatną posadę korepetytora. Chłopak udaje się na rozmowę kwalifikacyjną do domu rodziny Parków, żyjących w zupełnie innym świecie. Pan Park jest właścicielem międzynarodowej firmy z branży IT, ma też piękną żonę Yeon-kyo. Spotkanie dwóch jakże odmiennych rodzin prowadzi do ciągu tragikomicznych wydarzeń.",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parasite"
+      }
+    },
+    {
+      "iso_3166_1": "BR",
+      "iso_639_1": "pt",
+      "name": "Português",
+      "english_name": "Portuguese",
+      "data": {
+        "homepage": "",
+        "overview": "Toda a família de Ki-taek está desempregada, vivendo num porão sujo e apertado. Uma obra do acaso faz com que o filho adolescente da família comece a dar aulas de inglês à garota de uma família rica. Fascinados com a vida luxuosa destas pessoas, pai, mãe, filho e filha bolam um plano para se infiltrarem também na família burguesa, um a um. No entanto, os segredos e mentiras necessários à ascensão social custarão caro a todos.",
+        "runtime": 132,
+        "tagline": "Aja como se fosse o dono do lugar.",
+        "title": "Parasita"
+      }
+    },
+    {
+      "iso_3166_1": "PT",
+      "iso_639_1": "pt",
+      "name": "Português",
+      "english_name": "Portuguese",
+      "data": {
+        "homepage": "",
+        "overview": "Ki-taek tem uma família unida, mas estão todos desempregados e as suas perspectivas futuras são negras. O filho Ki-woo é recomendado por um amigo para dar explicações bem pagas, o que vem desencadear a esperança de um rendimento regular na família. Portador das expectativas familiares, Ki-woo dirige-se à casa dos Park para uma entrevista de trabalho. Chegado à casa do Sr. Park, Ki-woo conhece Yeon-kyo, a bela e jovem dona da casa. Este primeiro encontro entre as duas famílias vai provocar uma imparável cadeia de incidentes.",
+        "runtime": 132,
+        "tagline": "É um assunto de família",
+        "title": "Parasitas"
+      }
+    },
+    {
+      "iso_3166_1": "RO",
+      "iso_639_1": "ro",
+      "name": "Română",
+      "english_name": "Romanian",
+      "data": {
+        "homepage": "",
+        "overview": "Membrii familiei lui Ki-Taek au o relație apropiată, dar toți patru sunt șomeri. Într-o zi, fiul cel mare, Ki-woo, este recomandat de către prietenul său, student la o universitate de prestigiu, pentru un post de meditator și bine plătit de o familie bogată. În speranța unui venit constant pentru familia sa, Ki-woo se îndreaptă spre casa familiei Park pentru un interviu. Ajuns acolo, o întâlnește pe Yeon-kyo, frumoasa moștenitoare a acestui imperiu. În urma acestei prime întâlniri între două familii și două lumi total opuse, membrii lor se trezesc în mijlocul unor situații incontrolabile.  Parazit este o comedie neagră cu accente de thriller ce descrie violența generată de inegalitățile sociale.",
+        "runtime": 132,
+        "tagline": "Acționează ca și cum ai deținut locul.",
+        "title": "Parazit"
+      }
+    },
+    {
+      "iso_3166_1": "RU",
+      "iso_639_1": "ru",
+      "name": "Pусский",
+      "english_name": "Russian",
+      "data": {
+        "homepage": "",
+        "overview": "Обычное корейское семейство жизнь не балует. Приходится жить в сыром грязном полуподвале, воровать интернет у соседей и перебиваться случайными подработками. Однажды друг сына семейства, уезжая на стажировку за границу, предлагает тому заменить его и поработать репетитором у старшеклассницы в богатой семье Пак. Подделав диплом о высшем образовании, парень отправляется в шикарный дизайнерский особняк и производит на хозяйку дома хорошее впечатление. Тут же ему в голову приходит необычный план по трудоустройству сестры.",
+        "runtime": 131,
+        "tagline": "«Найди злоумышленника»",
+        "title": "Паразиты"
+      }
+    },
+    {
+      "iso_3166_1": "SK",
+      "iso_639_1": "sk",
+      "name": "Slovenčina",
+      "english_name": "Slovak",
+      "data": {
+        "homepage": "",
+        "overview": "Čierna komédia sleduje chudobnú, ale prefíkanú štvorčlennú rodinu, ktorá sa rozhodne infiltrovať do bohatej domácnosti biznismena Parka. Čo sa môže stať, keď sa stretnú dva odlišné svety?",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parazit"
+      }
+    },
+    {
+      "iso_3166_1": "SI",
+      "iso_639_1": "sl",
+      "name": "Slovenščina",
+      "english_name": "Slovenian",
+      "data": {
+        "homepage": "",
+        "overview": "Štiričlanska Ki-taekova družina si je sicer zelo blizu, vendar nihče nima službe, prihodnost pa ni obetavna. Sinu Ki-wooju se nasmehne sreča, ko ga prijatelj, ki obiskuje prestižno univerzo, predlaga za dobro plačano službo. Ki-woo, ki na ramenih nosi pričakovanja celotne družine, se odpravi k družini Park na razgovor. Glava družine je g. Park, lastnik mednarodnega računalniškega podjetja. Ki-woo tam spozna Yeon-kyo, prelepo mladenko. Kmalu po prvem srečanju se odnosi med družinama zapletejo, kar pripelje do niza nesrečnih pripetljajev.",
+        "runtime": 0,
+        "tagline": "Film je prejel 4 oskarje in sicer za najboljši film, za najboljši tujejezični film, za najboljšega režiserja in za najboljši izvirni scenarij.",
+        "title": "Parazit"
+      }
+    },
+    {
+      "iso_3166_1": "RS",
+      "iso_639_1": "sr",
+      "name": "Srpski",
+      "english_name": "Serbian",
+      "data": {
+        "homepage": "",
+        "overview": "Сви су незапослени у Ки-таековој породици. Они показују велико интересовање за богате и гламурозне Паркове, све док не постану протагонисти веома чудног и неочекиваног догађаја.",
+        "runtime": 0,
+        "tagline": "",
+        "title": "Паразит"
+      }
+    },
+    {
+      "iso_3166_1": "SE",
+      "iso_639_1": "sv",
+      "name": "svenska",
+      "english_name": "Swedish",
+      "data": {
+        "homepage": "https://triart.se/filmer/parasit/",
+        "overview": "Ki-taeks familj är en färgstark skara som hankar sig fram genom livet med hjälp av påhittighet och list. Men några pengar har de inte, så när sonen Ki-woo blir erbjuden jobb som privatlärare åt dottern i en rik familj, tvekar han inte en sekund. Väl på plats börjar han smida planer för resten av sin familj, som en efter en får jobb i huset. Men lögnerna blir allt fler och det dröjer inte länge förrän situationen är helt utom kontroll…",
+        "runtime": 132,
+        "tagline": "",
+        "title": "Parasit"
+      }
+    },
+    {
+      "iso_3166_1": "TH",
+      "iso_639_1": "th",
+      "name": "ภาษาไทย",
+      "english_name": "Thai",
+      "data": {
+        "homepage": "",
+        "overview": "เรื่องราวประหลาดเกี่ยวกับครอบครัว 2 ครอบครัว ที่ใช้ชีวิตอยู่ในโลกที่ค่อนข้างจะแตกต่าง แต่มันก็ยังมีบางอย่างที่คล้ายคลึงกันอยู่บ้าง โดยครอบครัวของ \"กีแทค\" จะเป็นครอบครัวที่ยึดติดอยู่กับความร่ำรวย ขณะที่ครอบครัว \"พัค\" นั้นจะสนุกสนานตื่นเต้นไปกับการดำเนินชีวิตในแต่ละวันของพวกเขา แต่แล้ววันหนึ่งทั้ง 2 ครอบครัวกลับต้องเข้ามาพัวพันกับเหตุการณ์ที่ไม่คาดฝัน ซึ่งหนังเรื่องนี้จะสะท้อนให้คุณได้เห็นถึงความเหลื่อมล้ำในสังคมบนโลกแห่งความจริงที่พวกเราอาศัยอยู่อย่างเจ็บแสบ",
+        "runtime": 0,
+        "tagline": "",
+        "title": "ชนชั้นปรสิต"
+      }
+    },
+    {
+      "iso_3166_1": "TR",
+      "iso_639_1": "tr",
+      "name": "Türkçe",
+      "english_name": "Turkish",
+      "data": {
+        "homepage": "",
+        "overview": "Film, birbirinden yapı olarak tamamen farklı iki aileyi konu ediniyor. Ki-taek ve ailesi komple işsizdir ve varoşlarda yaşamaktadırlar. Ki-taek’in oğlu Ki-woo, bir arkadaşının referansı ile çok zengin, bir o kadar da saf olan Park ailesinin kızına İngilizce için özel ders vermeye başlar. Ancak bu onlara yeterli gelmez ve maaile Park ailesinin evdeki çalışanlarının adım adım kuyusunu kazarak çeşitli üçkağıtçılıklarla kapağı Park ailesine atmayı başarırlar. Ancak fazla açgözlülükleri ve beleşçilikleri günün birinde başlarına bela olacaktır.",
+        "runtime": 132,
+        "tagline": "Doğru Ev. Yanlış Aile.",
+        "title": "Parazit"
+      }
+    },
+    {
+      "iso_3166_1": "UA",
+      "iso_639_1": "uk",
+      "name": "Український",
+      "english_name": "Ukrainian",
+      "data": {
+        "homepage": "",
+        "overview": "У сім’ї чотирьох безробітних похмурі життєві перспективи. Ситуація змінюється, коли старшому синові пропонують високооплачуваний підробіток репетитором. З допомогою сестри він робить фальшиві документи про освіту та приходить до розкішного маєтку заможного бізнесмена. Справивши гарне враження, старший син дізнається про ще одну відкриту вакансію, і у нього з’являється дуже незвичайний план з працевлаштування сестри.",
+        "runtime": 131,
+        "tagline": "",
+        "title": "Паразити"
+      }
+    },
+    {
+      "iso_3166_1": "UZ",
+      "iso_639_1": "uz",
+      "name": "ozbek",
+      "english_name": "Uzbek",
+      "data": {
+        "homepage": "",
+        "overview": "",
+        "runtime": 0,
+        "tagline": "",
+        "title": "Parazit"
+      }
+    },
+    {
+      "iso_3166_1": "VN",
+      "iso_639_1": "vi",
+      "name": "Tiếng Việt",
+      "english_name": "Vietnamese",
+      "data": {
+        "homepage": "",
+        "overview": "Bộ phim xoay quanh hai gia đình hoàn toàn trái ngược: một bên vô cùng giàu có, còn một bên luôn sống trong cảnh nghèo túng. Họ tình cờ gặp gỡ và quen biết nhau sau một biến cố không ngờ.",
+        "runtime": 132,
+        "tagline": "Parasite",
+        "title": "Ký Sinh Trùng"
+      }
+    },
+    {
+      "iso_3166_1": "CN",
+      "iso_639_1": "zh",
+      "name": "普通话",
+      "english_name": "Mandarin",
+      "data": {
+        "homepage": "",
+        "overview": "基宇（崔宇植 饰）出生在一个贫穷的家庭之中，和妹妹基婷（朴素丹 饰）以及父母在狭窄的地下室里过着相依为命的日子。一天，基宇的同学上门拜访，他告诉基宇，自己在一个有钱人家里给他们的女儿做家教，太太是一个头脑简单出手又阔绰的女人，因为自己要出国留学，所以将家教的职位暂时转交给基宇。就这样，基宇来到了朴社长（李善均 饰）家中，并且见到了他的太太（赵汝贞 饰），没过多久，基宇的妹妹和父母也如同寄生虫一般的进入了朴社长家里工作。然而，他们的野心并没有止步于此，基宇更是和大小姐坠入了爱河。随着时间的推移，朴社长家里隐藏的秘密渐渐浮出了水面。",
+        "runtime": 132,
+        "tagline": "",
+        "title": "寄生虫"
+      }
+    },
+    {
+      "iso_3166_1": "HK",
+      "iso_639_1": "zh",
+      "name": "普通话",
+      "english_name": "Mandarin",
+      "data": {
+        "homepage": "",
+        "overview": "窮爸爸基澤(宋康昊 飾)一家四口全是無業遊民，他們終日望天打卦，直至長子基佑(崔宇植 飾)以偽造文憑，成功受聘為神秘富豪(李善均 飾)子女的補習老師，這潦倒的一家彷彿重獲生機，「共享」上流人的榮華富貴，但無止境的貧富差距最終令人性失控....",
+        "runtime": 132,
+        "tagline": "",
+        "title": "上流寄生族"
+      }
+    },
+    {
+      "iso_3166_1": "TW",
+      "iso_639_1": "zh",
+      "name": "普通话",
+      "english_name": "Mandarin",
+      "data": {
+        "homepage": "",
+        "overview": "一家四口全是無業遊民的爸爸基澤（宋康昊 飾）成天遊手好閒，直到積極向上的長子基宇（崔宇植 飾）靠著偽造的文憑來到富豪朴社長（李善均 飾）的家應徵家教，兩個天差地遠的家庭因而被捲入一連串意外事件中……",
+        "runtime": 132,
+        "tagline": "幸福，不該是越分享越多嗎？",
+        "title": "寄生上流"
+      }
+    }
+  ]
+}

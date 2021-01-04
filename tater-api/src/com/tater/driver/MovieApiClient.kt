@@ -55,6 +55,15 @@ class MovieApiClient(
         }
     }
 
+    override fun getMovieTranslations(id: String): MovieApi.TranslationsJson {
+        val request = createRequest("/3/movie/$id/translations", mapOf("api_key" to config.authToken()))
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return when(response.statusCode()) {
+            200 -> mapper.readValue(response.body())
+            else -> TODO("status node not 200")
+        }
+    }
+
     private fun HttpResponse<String>.toException() =
             RuntimeException("statusCode=${this.statusCode()}, body=${this.body()}")
 

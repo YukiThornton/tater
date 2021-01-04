@@ -265,12 +265,13 @@ class HttpRequestExecutorTest: AutoResetMock {
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { theCall.parameters["id"] } returns "movieId1"
-                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } returns Movie(
-                        MovieId("movieId1"), MovieTitle("title1"),
-                        MovieOverview("overview1"),
-                        Runtime(123),
-                        MovieReview(AverageScore(5.6), ReviewCount(1000))
-                )
+                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } returns LocalizedMovie(
+                        Movie(MovieId("movieId1"), MovieTitle("englishTitle1"),
+                            MovieOverview("overview1"),
+                            Runtime(123),
+                            MovieReview(AverageScore(5.6), ReviewCount(1000))
+                        ),
+                        LocalizedMovieAttributes(MovieTitle("japaneseTitle1")))
             }
 
             @Test
@@ -289,7 +290,7 @@ class HttpRequestExecutorTest: AutoResetMock {
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
                 actual.responseBody shouldBeEqualTo MovieJson(
                         "movieId1",
-                        "title1",
+                        LocalizedTextJson("englishTitle1", "japaneseTitle1"),
                         "overview1",
                         123,
                         ReviewJson(5.6, 1000)

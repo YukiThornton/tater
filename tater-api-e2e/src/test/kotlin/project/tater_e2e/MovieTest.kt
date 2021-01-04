@@ -33,6 +33,7 @@ class MovieTest {
         @BeforeEach
         fun setup() {
             movieApi.returnsMovieDetailsWhenMovieIdIs("496243")
+            movieApi.returnsMovieTranslationsWhenMovieIdIs("496243")
         }
 
         @Test
@@ -40,6 +41,7 @@ class MovieTest {
             taterApi.getV1Movie("496243", userId = "1")
 
             movieApi.receivedARequestForMovieDetailsOf("496243")
+            movieApi.receivedARequestForMovieTranslationsOf("496243")
         }
 
         @Test
@@ -64,11 +66,19 @@ class MovieTest {
             }
 
             @Test
-            fun `タイトル`() {
+            fun `タイトル(en)`() {
                 val response = taterApi.getV1Movie("496243", userId = "1")
 
                 val responseJson = JsonReader.parseResponseBody(response)
-                responseJson.shouldHaveValueOf("title", "Parasite")
+                responseJson.shouldHaveValueOf("title.en", "Parasite")
+            }
+
+            @Test
+            fun `タイトル(ja)`() {
+                val response = taterApi.getV1Movie("496243", userId = "1")
+
+                val responseJson = JsonReader.parseResponseBody(response)
+                responseJson.shouldHaveValueOf("title.ja", "パラサイト 半地下の家族")
             }
 
             @Test

@@ -1,9 +1,12 @@
 package com.tater.usecase
 
 import com.tater.AutoResetMock
+import com.tater.domain.LocalizedMovie
+import com.tater.domain.LocalizedMovieAttributes
 import com.tater.domain.Movie
 import com.tater.domain.attribute.MovieId
 import com.tater.domain.UserId
+import com.tater.port.LocalizedAttributesPort
 import com.tater.port.MoviePort
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -31,6 +34,9 @@ class MovieAcquisitionUsecaseTest: AutoResetMock {
     @MockK
     private lateinit var moviePort: MoviePort
 
+    @MockK
+    private lateinit var localizedAttributesPort: LocalizedAttributesPort
+
     @Nested
     @DisplayName("getMovieOf")
     inner class GetMovieOfTest {
@@ -39,12 +45,14 @@ class MovieAcquisitionUsecaseTest: AutoResetMock {
         @DisplayName("When movie data is available")
         inner class WhenMovieIsAvailable {
 
-            private val expected = mockk<Movie>()
+            private val movie = mockk<Movie>()
+            private val japaneseAttributes = mockk<LocalizedMovieAttributes>()
 
             @BeforeEach
             fun setup() {
                 every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
-                every { moviePort.getMovieOf(MovieId("movieId1")) } returns expected
+                every { moviePort.getMovieOf(MovieId("movieId1")) } returns movie
+                every { localizedAttributesPort.getJapaneseAttributesOf(MovieId("movieId1")) } returns japaneseAttributes
             }
 
             @Test
@@ -55,11 +63,12 @@ class MovieAcquisitionUsecaseTest: AutoResetMock {
             }
 
             @Test
-            fun `Gets the movie from port and returns as it is`() {
+            fun `Gets the movie and japanese attributes from port and returns LocalizedMovie`() {
                 val actual = sut.getMovieOf(MovieId("movieId1"), UserId("userId1"))
 
                 verify(exactly = 1) { moviePort.getMovieOf(MovieId("movieId1")) }
-                actual shouldBeEqualTo expected
+                verify(exactly = 1) { localizedAttributesPort.getJapaneseAttributesOf(MovieId("movieId1")) }
+                actual shouldBeEqualTo LocalizedMovie(movie, japaneseAttributes)
             }
         }
 
@@ -78,6 +87,7 @@ class MovieAcquisitionUsecaseTest: AutoResetMock {
                 val actual = sut.getMovieOf(MovieId("movieId1"), UserId("userId1"))
 
                 verify(exactly = 1) { moviePort.getMovieOf(MovieId("movieId1")) }
+                verify(exactly = 0) { localizedAttributesPort.getJapaneseAttributesOf(any()) }
                 actual shouldBeEqualTo null
             }
         }
@@ -101,6 +111,7 @@ class MovieAcquisitionUsecaseTest: AutoResetMock {
                 { sut.getMovieOf(MovieId("movieId1"), UserId("userId1")) } shouldThrow expectedException withCause exceptionCause withMessage exceptionMessage
 
                 verify(exactly = 1) { moviePort.getMovieOf(MovieId("movieId1")) }
+                verify(exactly = 0) { localizedAttributesPort.getJapaneseAttributesOf(any()) }
             }
         }
     }

@@ -50,6 +50,22 @@ class MovieApiMock {
         wireMock.verifyThat(0, anyRequestedFor(anyUrl()))
     }
 
+    fun returnsMovieTranslationsWhenMovieIdIs(movieId: String) {
+        wireMock.register(requestForMovieTranslationsFor(movieId)
+                .willReturn(okJson(JsonReader.readFile("$responseBasePath/get-movie-translations/$movieId.json"))
+                ))
+    }
+
+    private fun requestForMovieTranslationsFor(movieId: String): MappingBuilder {
+        return get(urlPathEqualTo("/3/movie/$movieId/translations"))
+                .withQueryParam("api_key", equalTo(Configurations.movieApiToken))
+    }
+
+    fun receivedARequestForMovieTranslationsOf(movieId: String) {
+        wireMock.verifyThat(getRequestedFor(urlPathEqualTo("/3/movie/$movieId/translations"))
+                .withQueryParam("api_key", equalTo(Configurations.movieApiToken)))
+    }
+
     fun returnsDiscoveredMoviesOfPage(page: Int) {
         wireMock.register(requestForMovieDiscovery(page)
                 .willReturn(okJson(JsonReader.readFile("$responseBasePath/movie-discovery/$page.json"))

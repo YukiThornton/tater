@@ -65,4 +65,5 @@ fun MovieReview.toJson() = ReviewJson(this.averageScore.value, this.count.value)
 fun PersonalizedMovie.toJson() = ReviewedMovieJson(this.movieId.value, this.movieTitle.value, this.watched, this.movieReview.toJson())
 fun PersonalizedMovies.toJson() = this.map { movie -> movie.toJson() }.let(::ReviewedMovieListJson)
 
-fun Movie.toJson() = MovieJson(this.id.value, this.title.value, this.overview.value, this.runtime.minuteValue, this.review.toJson())
+fun LocalizedMovie.toLocalizedTitleJson() = LocalizedTextJson(this.title(Language.English).value, this.title(Language.Japanese).value)
+fun LocalizedMovie.toJson() = MovieJson(this.id().value, this.toLocalizedTitleJson(), this.overview().value, this.runtime().minuteValue, this.review().toJson())

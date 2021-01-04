@@ -6,9 +6,11 @@ import com.tater.driver.MovieApi
 import com.tater.driver.MovieApiClient
 import com.tater.driver.TaterDb
 import com.tater.driver.TaterPostgresqlDb
+import com.tater.gateway.LocalizedAttributesGateway
 import com.tater.gateway.MovieGateway
 import com.tater.gateway.ReviewedMovieGateway
 import com.tater.gateway.ViewingHistoryGateway
+import com.tater.port.LocalizedAttributesPort
 import com.tater.port.MoviePort
 import com.tater.port.ReviewedMoviePort
 import com.tater.port.ViewingHistoryPort
@@ -45,10 +47,11 @@ fun Application.module(testing: Boolean = false) {
         bind<TaterDb>() with singleton { TaterPostgresqlDb(configuration.taterDb()) }
         bind<MovieApi>() with singleton { MovieApiClient(configuration.movieApi()) }
         bind<MoviePort>() with singleton { MovieGateway(instance()) }
+        bind<LocalizedAttributesPort>() with singleton { LocalizedAttributesGateway(instance()) }
         bind<ViewingHistoryPort>() with singleton { ViewingHistoryGateway(instance()) }
         bind<ReviewedMoviePort>() with singleton { ReviewedMovieGateway(instance()) }
         bind<UserIdChecker>() with singleton { UserIdChecker() }
-        bind<MovieAcquisitionUsecase>() with singleton { MovieAcquisitionUsecase(instance(), instance()) }
+        bind<MovieAcquisitionUsecase>() with singleton { MovieAcquisitionUsecase(instance(), instance(), instance()) }
         bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance(), instance()) }
         bind<MovieSearchUsecase>() with singleton { MovieSearchUsecase(instance(), instance(), instance()) }
         bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(instance(), instance(), instance()) }
