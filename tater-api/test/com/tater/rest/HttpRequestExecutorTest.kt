@@ -20,6 +20,9 @@ class HttpRequestExecutorTest: AutoResetMock {
     private lateinit var sut: HttpRequestExecutor
 
     @MockK
+    private lateinit var jsonConverter: JsonConverter
+
+    @MockK
     private lateinit var viewingHistoryUsecase: ViewingHistoryUsecase
 
     @MockK
@@ -37,14 +40,14 @@ class HttpRequestExecutorTest: AutoResetMock {
         inner class WhenUsecaseReturnsSummaries {
 
             private val theCall = mockk<ApplicationCall>()
+            private val summaries = mockk<MovieSummaries>()
+            private val movieSummariesJson = mockk<MovieSummariesJson>()
 
             @BeforeEach
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
-                every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } returns MovieSummaries(listOf(
-                    MovieSummary(MovieId("id1"), MovieTitle("title1")),
-                    MovieSummary(MovieId("id2"), MovieTitle("title2"))
-                ))
+                every { viewingHistoryUsecase.allMoviesWatchedBy(UserId("userId1")) } returns summaries
+                every { jsonConverter.toMovieSummariesJson(summaries) } returns movieSummariesJson
             }
 
             @Test
@@ -56,15 +59,14 @@ class HttpRequestExecutorTest: AutoResetMock {
             }
 
             @Test
-            fun `Returns a result with status OK and MovieSummariesJson`() {
+            fun `Returns a result with status OK and MovieSummariesJson created by JsonConverter`() {
                 val actual = sut.getV1Watched(theCall)
 
+                verify { jsonConverter.toMovieSummariesJson(summaries) }
                 actual shouldBeEqualTo HttpRequestExecutor.Result(
                         HttpStatusCode.OK,
-                        MovieSummariesJson(listOf(
-                                MovieSummaryJson("id1", "title1"),
-                                MovieSummaryJson("id2", "title2")
-                        )))
+                        movieSummariesJson
+                )
             }
         }
 
@@ -76,8 +78,10 @@ class HttpRequestExecutorTest: AutoResetMock {
 
             @BeforeEach
             fun setup() {
+                val summaries = mockk<MovieSummaries>()
                 every { theCall.request.header("tater-user-id") } returns null
-                every { viewingHistoryUsecase.allMoviesWatchedBy(null) } returns MovieSummaries(emptyList())
+                every { viewingHistoryUsecase.allMoviesWatchedBy(null) } returns summaries
+                every { jsonConverter.toMovieSummariesJson(summaries) } returns mockk()
             }
 
             @Test
@@ -150,15 +154,14 @@ class HttpRequestExecutorTest: AutoResetMock {
         inner class WhenUsecaseReturnsMovies {
 
             private val theCall = mockk<ApplicationCall>()
+            private val personalizedMovies = mockk<PersonalizedMovies>()
+            private val reviewedMovieListJson = mockk<ReviewedMovieListJson>()
 
             @BeforeEach
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
-                every { movieSearchUsecase.topRatedMovies(UserId("userId1")) } returns PersonalizedMovies(listOf(
-                        PersonalizedMovie(UserId("userId1"), false, ReviewedMovie(MovieId("id1"), MovieTitle("title1"), MovieReview(AverageScore(5.6), ReviewCount(1000)))),
-                        PersonalizedMovie(UserId("userId1"), true, ReviewedMovie(MovieId("id2"), MovieTitle("title2"), MovieReview(AverageScore(5.5), ReviewCount(1200)))),
-                        PersonalizedMovie(UserId("userId1"), true, ReviewedMovie(MovieId("id3"), MovieTitle("title3"), MovieReview(AverageScore(5.4), ReviewCount(900)))),
-                ))
+                every { movieSearchUsecase.topRatedMovies(UserId("userId1")) } returns personalizedMovies
+                every { jsonConverter.toReviewedMovieListJson(personalizedMovies) } returns reviewedMovieListJson
             }
 
             @Test
@@ -170,15 +173,12 @@ class HttpRequestExecutorTest: AutoResetMock {
             }
 
             @Test
-            fun `Returns a result with status OK and json`() {
+            fun `Returns a result with status OK and json created by JsonConverter`() {
                 val actual = sut.getV1TopRated(theCall)
 
+                every { jsonConverter.toReviewedMovieListJson(personalizedMovies) }
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
-                actual.responseBody shouldBeEqualTo ReviewedMovieListJson(listOf(
-                        ReviewedMovieJson("id1", "title1", false, ReviewJson(5.6, 1000)),
-                        ReviewedMovieJson("id2", "title2", true, ReviewJson(5.5, 1200)),
-                        ReviewedMovieJson("id3", "title3", true, ReviewJson(5.4, 900)),
-                ))
+                actual.responseBody shouldBeEqualTo reviewedMovieListJson
             }
         }
 
@@ -257,21 +257,18 @@ class HttpRequestExecutorTest: AutoResetMock {
 
         @Nested
         @DisplayName("When usecase returns movie")
-        inner class WhenUsecaseReturnsMovies {
+        inner class WhenUsecaseReturnsMovie {
 
             private val theCall = mockk<ApplicationCall>()
+            private val localizedMovie = mockk<LocalizedMovie>()
+            private val movieJson = mockk<MovieJson>()
 
             @BeforeEach
             fun setup() {
                 every { theCall.request.header("tater-user-id") } returns "userId1"
                 every { theCall.parameters["id"] } returns "movieId1"
-                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } returns LocalizedMovie(
-                        Movie(MovieId("movieId1"), MovieTitle("englishTitle1"),
-                            MovieOverview("overview1"),
-                            Runtime(123),
-                            MovieReview(AverageScore(5.6), ReviewCount(1000))
-                        ),
-                        LocalizedMovieAttributes(MovieTitle("japaneseTitle1")))
+                every { movieAcquisitionUsecase.getMovieOf(MovieId("movieId1"), UserId("userId1")) } returns localizedMovie
+                every { jsonConverter.toMovieJson(localizedMovie) } returns movieJson
             }
 
             @Test
@@ -284,17 +281,12 @@ class HttpRequestExecutorTest: AutoResetMock {
             }
 
             @Test
-            fun `Returns a result with status OK and json`() {
+            fun `Returns a result with status OK and json created by JsonConverter`() {
                 val actual = sut.getV1MovieWithId(theCall)
 
+                verify { jsonConverter.toMovieJson(localizedMovie) }
                 actual.responseStatus shouldBeEqualTo HttpStatusCode.OK
-                actual.responseBody shouldBeEqualTo MovieJson(
-                        "movieId1",
-                        LocalizedTextJson("englishTitle1", "japaneseTitle1"),
-                        "overview1",
-                        123,
-                        ReviewJson(5.6, 1000)
-                )
+                actual.responseBody shouldBeEqualTo movieJson
             }
         }
 

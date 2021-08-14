@@ -116,6 +116,55 @@ class MovieTest {
     }
 
     @Nested
+    @DisplayName("002_日本語の映画情報だけが取得できないとき")
+    inner class WhenFailsToFetchOnlyJapaneseMovieInformation {
+
+        @BeforeEach
+        fun setup() {
+            movieApi.returnsMovieDetailsWhenMovieIdIs("426674")
+            movieApi.returnsMovieTranslationsWhenMovieIdIs("426674")
+        }
+
+        @Test
+        fun `MovieAPIに対して指定した映画の情報を問い合わせていること`() {
+            taterApi.getV1Movie("426674", userId = "1")
+
+            movieApi.receivedARequestForMovieDetailsOf("426674")
+            movieApi.receivedARequestForMovieTranslationsOf("426674")
+        }
+
+        @Test
+        fun `ステータスコード200 & JSON形式のレスポンスが返ること`() {
+            val response = taterApi.getV1Movie("426674", userId = "1")
+
+            response.code() shouldBeEqualTo 200
+            response.header("Content-Type") shouldContain "application/json"
+            JsonReader.isJson(response) shouldBeEqualTo true
+        }
+
+        @Nested
+        @DisplayName("映画の情報として次の項目を返すこと")
+        inner class MovieItems {
+            @Test
+            fun `タイトル(en) としてはnullでない値を返す`() {
+                val response = taterApi.getV1Movie("426674", userId = "1")
+
+                val responseJson = JsonReader.parseResponseBody(response)
+                responseJson.shouldHaveValueOf("title.en", "Once Upon a Sesame Street Christmas")
+            }
+
+            @Test
+            fun `タイトル(ja) としてはnull値を返す`() {
+                val response = taterApi.getV1Movie("426674", userId = "1")
+
+                val responseJson = JsonReader.parseResponseBody(response)
+                responseJson.shouldHave("title.em")
+                responseJson.shouldHaveNullValueOf("title.ja")
+            }
+        }
+    }
+
+    @Nested
     @DisplayName("501_ユーザを指定しないと")
     inner class WhenUserIsNotSpecified {
         @Test

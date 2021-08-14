@@ -15,6 +15,7 @@ import com.tater.port.MoviePort
 import com.tater.port.ReviewedMoviePort
 import com.tater.port.ViewingHistoryPort
 import com.tater.rest.HttpRequestExecutor
+import com.tater.rest.JsonConverter
 import com.tater.usecase.MovieAcquisitionUsecase
 import com.tater.usecase.MovieSearchUsecase
 import com.tater.usecase.UserIdChecker
@@ -54,7 +55,7 @@ fun Application.module(testing: Boolean = false) {
         bind<MovieAcquisitionUsecase>() with singleton { MovieAcquisitionUsecase(instance(), instance(), instance()) }
         bind<ViewingHistoryUsecase>() with singleton { ViewingHistoryUsecase(instance(), instance(), instance()) }
         bind<MovieSearchUsecase>() with singleton { MovieSearchUsecase(instance(), instance(), instance()) }
-        bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(instance(), instance(), instance()) }
+        bind<HttpRequestExecutor>() with singleton { HttpRequestExecutor(JsonConverter(), instance(), instance(), instance()) }
     }
 
     val executor by kodein().instance<HttpRequestExecutor>()

@@ -4,5 +4,5 @@ import com.tater.domain.LocalizedMovieAttributes
 import com.tater.domain.attribute.MovieId
 
 interface LocalizedAttributesPort {
-    fun getJapaneseAttributesOf(movieId: MovieId): LocalizedMovieAttributes
+    fun getJapaneseAttributesOf(movieId: MovieId): LocalizedMovieAttributes?
 }

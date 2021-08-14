@@ -1,9 +1,11 @@
 package com.tater.domain
 
-data class LocalizedMovie(private val movie: Movie, private val japaneseAttributes: LocalizedMovieAttributes) {
+import com.tater.domain.attribute.MovieTitle
+
+data class LocalizedMovie(private val movie: Movie, private val japaneseAttributes: LocalizedMovieAttributes?) {
     fun id() = movie.id
-    fun title(language: Language)
-            = if (language == Language.English) movie.title else japaneseAttributes.title
+    fun englishTitle() = movie.title
+    fun japaneseTitle(): MovieTitle? = japaneseAttributes?.title
     fun overview() = movie.overview
     fun runtime() = movie.runtime
     fun review() = movie.review

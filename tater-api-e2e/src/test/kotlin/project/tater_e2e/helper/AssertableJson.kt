@@ -1,8 +1,18 @@
 package project.tater_e2e.helper
 
+import org.amshove.kluent.any
 import org.amshove.kluent.should
 
 data class AssertableJson(private val jsonMap: Map<Any, Any>) {
+    fun shouldHave(keys: String) = should("The key \"$keys\" should exist, but it does not exist in json ${this.jsonMap}") {
+        try {
+            getRecursively(jsonMap, keys.split("."))
+            true
+        } catch (e: Throwable) {
+            false
+        }
+    }
+
     fun shouldHaveValueOf(keys: String, expected: String) = should("The value of key \"$keys\" should be \"$expected\", but it was ${getValueOf(keys)?.let{ "\"$it\"" } ?: "null"} in json ${this.jsonMap}") {
         this.getValueOf(keys) == expected
     }
@@ -17,6 +27,10 @@ data class AssertableJson(private val jsonMap: Map<Any, Any>) {
 
     fun shouldHaveValueOf(keys: String, expected: Boolean) = should("The value of key \"$keys\" should be $expected, but it was ${getBooleanValueOf(keys)} in json ${this.jsonMap}") {
         this.getBooleanValueOf(keys) == expected
+    }
+
+    fun shouldHaveNullValueOf(keys: String) = should("The value of key \"$keys\" should be null, but it was ${getValueOf(keys)} in json ${this.jsonMap}") {
+        this.getValueOf(keys) == null
     }
 
     fun shouldHaveExpectedAmountOf(keys: String, expectedAmount: Int) = should("Element amount of key \"$keys\" should be $expectedAmount, but it was ${elementCountOf(keys)} in json $jsonMap") {

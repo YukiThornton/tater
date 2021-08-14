@@ -29,21 +29,48 @@ class LocalizedAttributesGatewayTest: AutoResetMock {
     @DisplayName("getJapaneseAttributesOf")
     inner class GetJapaneseAttributesOfTest {
 
-        @BeforeEach
-        fun setup() {
-            every { movieApi.getMovieTranslations("movieId1") } returns MovieApi.TranslationsJson(listOf(
-                    MovieApi.TranslationJson("it", MovieApi.TranslatedDataJson("italianTitle1")),
-                    MovieApi.TranslationJson("ja", MovieApi.TranslatedDataJson("japaneseTitle1")),
-                    MovieApi.TranslationJson("ko", MovieApi.TranslatedDataJson("koreanTitle1"))
-            ))
+        @Nested
+        @DisplayName("When Japanese attributes exist")
+        inner class WhenJapaneseAttributesExist {
+
+            @BeforeEach
+            fun setup() {
+                every { movieApi.getMovieTranslations("movieId1") } returns MovieApi.TranslationsJson(listOf(
+                        MovieApi.TranslationJson("it", MovieApi.TranslatedDataJson("italianTitle1")),
+                        MovieApi.TranslationJson("ja", MovieApi.TranslatedDataJson("japaneseTitle1")),
+                        MovieApi.TranslationJson("ko", MovieApi.TranslatedDataJson("koreanTitle1"))
+                ))
+            }
+
+            @Test
+            fun `Calls movie api once and returns a Japanese LocalizedMovieAttributes`() {
+                val actual = sut.getJapaneseAttributesOf(MovieId("movieId1"))
+
+                verify(exactly = 1) { movieApi.getMovieTranslations("movieId1") }
+                actual shouldBeEqualTo LocalizedMovieAttributes(MovieTitle("japaneseTitle1"))
+            }
+
         }
 
-        @Test
-        fun `Calls movie api once and returns a Japanese LocalizedMovieAttributes`() {
-            val actual = sut.getJapaneseAttributesOf(MovieId("movieId1"))
+        @Nested
+        @DisplayName("When Japanese attributes do not exist")
+        inner class WhenJapaneseAttributesDoNotExist {
 
-            verify(exactly = 1) { movieApi.getMovieTranslations("movieId1") }
-            actual shouldBeEqualTo LocalizedMovieAttributes(MovieTitle("japaneseTitle1"))
+            @BeforeEach
+            fun setup() {
+                every { movieApi.getMovieTranslations("movieId1") } returns MovieApi.TranslationsJson(listOf(
+                        MovieApi.TranslationJson("it", MovieApi.TranslatedDataJson("italianTitle1")),
+                        MovieApi.TranslationJson("ko", MovieApi.TranslatedDataJson("koreanTitle1"))
+                ))
+            }
+
+            @Test
+            fun `Returns null`() {
+                val actual = sut.getJapaneseAttributesOf(MovieId("movieId1"))
+
+                actual shouldBeEqualTo null
+            }
+
         }
     }
 }

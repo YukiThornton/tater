@@ -73,6 +73,27 @@ class MovieAcquisitionUsecaseTest: AutoResetMock {
         }
 
         @Nested
+        @DisplayName("When japanese attributes are not available")
+        inner class WhenJapaneseAttributesAreNotAvailable {
+
+            private val movie = mockk<Movie>()
+
+            @BeforeEach
+            fun setup() {
+                every { userIdChecker.makeSureUserIdExists(UserId("userId1")) } returns UserId("userId1")
+                every { moviePort.getMovieOf(MovieId("movieId1")) } returns movie
+                every { localizedAttributesPort.getJapaneseAttributesOf(MovieId("movieId1")) } returns null
+            }
+
+            @Test
+            fun `Creates a LocalizedMovie with null Japanese attributes`() {
+                val actual = sut.getMovieOf(MovieId("movieId1"), UserId("userId1"))
+
+                actual shouldBeEqualTo LocalizedMovie(movie, null)
+            }
+        }
+
+        @Nested
         @DisplayName("When movie data is not found")
         inner class WhenMovieIsNotFound {
 

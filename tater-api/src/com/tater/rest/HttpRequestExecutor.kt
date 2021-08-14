@@ -9,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.request.*
 
 class HttpRequestExecutor(
+        private val jsonConverter: JsonConverter,
         private val viewingHistoryUsecase: ViewingHistoryUsecase,
         private val movieSearchUsecase: MovieSearchUsecase,
         private val movieAcquisitionUsecase: MovieAcquisitionUsecase,
@@ -23,7 +24,9 @@ class HttpRequestExecutor(
     fun getV1Watched(requestCall: ApplicationCall): Result<MovieSummariesJson> {
         val userId = requestCall.request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
-            viewingHistoryUsecase.allMoviesWatchedBy(userId).toJson().toOkResult()
+            viewingHistoryUsecase.allMoviesWatchedBy(userId)
+                    .let { jsonConverter.toMovieSummariesJson(it) }
+                    .toOkResult()
         } catch (e: UserNotSpecifiedException) {
             Result(HttpStatusCode.BadRequest, null, e)
         } catch (e: WatchedMoviesUnavailableException) {
@@ -34,7 +37,9 @@ class HttpRequestExecutor(
     fun getV1TopRated(request: ApplicationCall): Result<ReviewedMovieListJson> {
         val userId = request.request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
-            movieSearchUsecase.topRatedMovies(userId).toJson().toOkResult()
+            movieSearchUsecase.topRatedMovies(userId)
+                    .let { jsonConverter.toReviewedMovieListJson(it) }
+                    .toOkResult()
         } catch (e: UserNotSpecifiedException) {
             Result(HttpStatusCode.BadRequest, null, e)
         } catch (e: TopRatedMoviesUnavailableException) {
@@ -46,7 +51,9 @@ class HttpRequestExecutor(
         val movieId = requestCall.parameters["id"]!!.let(::MovieId)
         val userId = requestCall.request.header(HEADER_USER_ID)?.let(::UserId)
         return try {
-            movieAcquisitionUsecase.getMovieOf(movieId, userId)?.toJson()?.toOkResult()
+            movieAcquisitionUsecase.getMovieOf(movieId, userId)
+                    ?.let { jsonConverter.toMovieJson(it) }
+                    ?.toOkResult()
                     ?: Result(HttpStatusCode.NotFound, null, null)
         } catch (e: UserNotSpecifiedException) {
             Result(HttpStatusCode.BadRequest, null, e)
@@ -57,13 +64,3 @@ class HttpRequestExecutor(
 
     private fun <T> T.toOkResult(): Result<T> = Result(HttpStatusCode.OK, this)
 }
-
-fun MovieSummary.toJson() = MovieSummaryJson(this.id.value, this.title.value)
-fun MovieSummaries.toJson() = this.map { summary -> summary.toJson() }.let(::MovieSummariesJson)
-
-fun MovieReview.toJson() = ReviewJson(this.averageScore.value, this.count.value)
-fun PersonalizedMovie.toJson() = ReviewedMovieJson(this.movieId.value, this.movieTitle.value, this.watched, this.movieReview.toJson())
-fun PersonalizedMovies.toJson() = this.map { movie -> movie.toJson() }.let(::ReviewedMovieListJson)
-
-fun LocalizedMovie.toLocalizedTitleJson() = LocalizedTextJson(this.title(Language.English).value, this.title(Language.Japanese).value)
-fun LocalizedMovie.toJson() = MovieJson(this.id().value, this.toLocalizedTitleJson(), this.overview().value, this.runtime().minuteValue, this.review().toJson())

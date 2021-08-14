@@ -18,14 +18,33 @@ class LocalizedMovieTest {
     }
 
     @Test
-    fun `Returns title of specified language`() {
+    fun `Returns English title`() {
         val target = LocalizedMovie(
                 Movie(mockk(), MovieTitle("englishTitle1"), mockk(), mockk(), mockk()),
                 LocalizedMovieAttributes(MovieTitle("japaneseTitle1"))
         )
 
-        target.title(Language.English) shouldBeEqualTo MovieTitle("englishTitle1")
-        target.title(Language.Japanese) shouldBeEqualTo MovieTitle("japaneseTitle1")
+        target.englishTitle() shouldBeEqualTo MovieTitle("englishTitle1")
+    }
+
+    @Test
+    fun `Returns Japanese title`() {
+        val target = LocalizedMovie(
+                Movie(mockk(), MovieTitle("englishTitle1"), mockk(), mockk(), mockk()),
+                LocalizedMovieAttributes(MovieTitle("japaneseTitle1"))
+        )
+
+        target.japaneseTitle() shouldBeEqualTo MovieTitle("japaneseTitle1")
+    }
+
+    @Test
+    fun `Returns null for Japanese title when LocalizedMovieAttributes does not exist`() {
+        val target = LocalizedMovie(
+                Movie(mockk(), MovieTitle("englishTitle1"), mockk(), mockk(), mockk()),
+                null
+        )
+
+        target.japaneseTitle() shouldBeEqualTo null
     }
 
     @Test
