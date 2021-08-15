@@ -9,7 +9,7 @@
 
 ## 使い方
 
-#### ローカル環境
+#### API=ローカル環境 + それ以外=k8s環境
 
 * 初回は以下のように local.properties のリンクを所定の場所に作成する
 
@@ -17,6 +17,12 @@
 cd /etc
 sudo mkdir tater & cd tater
 sudo ln -s <app directory>/environment/tater-api/local.properties app.properties
+```
+
+* skaffoldでDB, Wiremockを起動する
+
+```bash
+skaffold dev -p no-api
 ```
 
 * IntelliJなどでアプリを実行する (DB, wiremockはE2E環境を参照)

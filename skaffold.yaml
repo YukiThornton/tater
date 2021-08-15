@@ -3,6 +3,10 @@ kind: Config
 metadata:
   name: tater-e2e
 build:
+  tagPolicy:
+    dateTime:
+      format: "local_20060102_150405"
+      timezone: "Local"
   artifacts:
   - image: tater-api
     context: ./tater-api
@@ -37,3 +41,12 @@ portForward:
   namespace: tater-e2e
   port: 8080
   localPort: 18001
+profiles:
+  - name: no-api
+    patches:
+      - op: remove
+        path: /build/artifacts/0
+      - op: remove
+        path: /deploy/kubectl/manifests/0
+      - op: remove
+        path: /portForward/0
