@@ -1,4 +1,4 @@
-environment/tater-api/production.properties
+environment/tater-api/helm/secrets/production.properties
 environment/tater-api/production-credentials.txt
 environment/tater-db/samples/*-tmp.sql
 

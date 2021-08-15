@@ -29,12 +29,10 @@ skaffold dev -p no-api
 
 #### E2E環境 (k8s namespace=tater-e2e)
 
-* 初回は以下のように Namespace と Secret を作成する
+* 初回は以下のように Namespace を作成する
 
 ```bash
 cd <app directory>/environment & kubectl apply -f namespace-e2e.yml
-cd <app directory>/environment/tater-api
-./create-secret.sh tater-e2e e2e.properties
 ```
 
 * skaffoldで起動する
@@ -45,7 +43,7 @@ skaffold dev
 
 #### 本番環境 (k8s namespace=tater-prd)
 
-* 初回は以下のように Namespace と Secret を作成する
+* 初回は以下のように Namespace と Secret 用ファイルを作成する
 
 ```bash
 cd <app directory>/environment & kubectl apply -f namespace-prd.yml
@@ -56,10 +54,7 @@ cp production-credentials.template.txt production-credentials.txt
 
 # credentials を適用した production.properties を作成
 # MacOSでは生成したファイルの末尾に空行が入れられるので注意 ( gsed を使うか、手動で空行を消すこと)
-./replace-credentials.sh production.template.properties production-credentials.txt production.properties
-
-# Secretを作成
-./create-secret.sh tater-prd production.properties
+cd <app directory>/environment/bin && ./replace-credentials.sh ../tater-api/helm/secrets/production.template.properties ../tater-api/production-credentials.txt ../tater-api/helm/secrets/production.properties
 ```
 
 * skaffoldで起動/停止する
