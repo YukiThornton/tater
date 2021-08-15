@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: tater-api
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       name: tater-api
@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: tater-api
-        image: tater-api:latest
-        imagePullPolicy: Never
+        image: "{{.Values.imageKey.repository}}:{{.Values.imageKey.tag}}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 8080
         volumeMounts:

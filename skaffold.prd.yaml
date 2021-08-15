@@ -15,9 +15,19 @@ build:
   local:
     useBuildkit: true
 deploy:
+  helm:
+    releases:
+    - name: tater-api
+      chartPath: ./environment/tater-api/helm
+      namespace: tater-prd
+      artifactOverrides:
+        imageKey: tater-api
+      imageStrategy:
+        helm: {}
+      valuesFiles:
+      - ./environment/tater-api/helm/values-prd.yaml
   kubectl:
     manifests:
-    - ./environment/tater-api/k8s/*.yml
     - ./environment/tater-db/k8s/*.yml
     defaultNamespace: tater-prd
 portForward:

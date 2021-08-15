@@ -19,9 +19,17 @@ build:
   local:
     useBuildkit: true
 deploy:
+  helm:
+    releases:
+    - name: tater-api
+      chartPath: ./environment/tater-api/helm
+      namespace: tater-e2e
+      artifactOverrides:
+        imageKey: tater-api
+      imageStrategy:
+        helm: {}
   kubectl:
     manifests:
-    - ./environment/tater-api/k8s/*.yml
     - ./environment/tater-db/k8s/*.yml
     - ./environment/wiremock/k8s/*.yml
     defaultNamespace: tater-e2e
@@ -47,6 +55,6 @@ profiles:
       - op: remove
         path: /build/artifacts/0
       - op: remove
-        path: /deploy/kubectl/manifests/0
+        path: /deploy/helm
       - op: remove
         path: /portForward/0
