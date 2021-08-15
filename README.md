@@ -31,15 +31,11 @@ cd <app directory>/environment/tater-api
 ./create-secret.sh tater-e2e e2e.properties
 ```
 
-* 必要に応じて Docker Image をビルドする
+* skaffoldで起動する
 
 ```bash
-cd <app directory>/environment/tater-api & ./build-image.sh
-cd <app directory>/environment/tater-db & ./build-image.sh
+skaffold dev
 ```
-
-* `environment/prep-e2e-env.sh` でE2E用の環境を全て構築
-* `environment/clean-e2e-env.sh` でE2E用の環境を全て削除
 
 #### 本番環境 (k8s namespace=tater-prd)
 
@@ -60,8 +56,12 @@ cp production-credentials.template.txt production-credentials.txt
 ./create-secret.sh tater-prd production.properties
 ```
 
-* `environment/prep-prd-env.sh` で本番用の環境を全て構築
-* `environment/clean-prd-env.sh` で本番用の環境を全て削除
+* skaffoldで起動/停止する
+
+```bash
+skaffold run -f skaffold.prd.yaml --port-forward=user --tail
+skaffold delete -f skaffold.prd.yaml
+```
 
 * 必要に応じて以下のコマンドでデータを投入する
 

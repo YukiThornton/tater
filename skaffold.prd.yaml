@@ -1,0 +1,28 @@
+apiVersion: skaffold/v2beta21
+kind: Config
+metadata:
+  name: tater-prd
+build:
+  artifacts:
+  - image: tater-api
+    context: ./tater-api
+    docker:
+      dockerfile: ./environment/tater-api/Dockerfile
+  - image: tater-db
+    context: ./environment/tater-db
+    docker:
+      dockerfile: ./environment/tater-db/Dockerfile
+  local:
+    useBuildkit: true
+deploy:
+  kubectl:
+    manifests:
+    - ./environment/tater-api/k8s/*.yml
+    - ./environment/tater-db/k8s/*.yml
+    defaultNamespace: tater-prd
+portForward:
+- resourceType: service
+  resourceName: tater-api-svc
+  namespace: tater-prd
+  port: 18000
+  localPort: 19000

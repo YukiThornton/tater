@@ -1,0 +1,39 @@
+apiVersion: skaffold/v2beta21
+kind: Config
+metadata:
+  name: tater-e2e
+build:
+  artifacts:
+  - image: tater-api
+    context: ./tater-api
+    docker:
+      dockerfile: ./environment/tater-api/Dockerfile
+  - image: tater-db
+    context: ./environment/tater-db
+    docker:
+      dockerfile: ./environment/tater-db/Dockerfile
+  local:
+    useBuildkit: true
+deploy:
+  kubectl:
+    manifests:
+    - ./environment/tater-api/k8s/*.yml
+    - ./environment/tater-db/k8s/*.yml
+    - ./environment/wiremock/k8s/*.yml
+    defaultNamespace: tater-e2e
+portForward:
+- resourceType: service
+  resourceName: tater-api-svc
+  namespace: tater-e2e
+  port: 18000
+  localPort: 18000
+- resourceType: service
+  resourceName: tater-db-svc
+  namespace: tater-e2e
+  port: 5432
+  localPort: 18002
+- resourceType: service
+  resourceName: wiremock-svc
+  namespace: tater-e2e
+  port: 8080
+  localPort: 18001
