@@ -26,10 +26,15 @@ deploy:
         helm: {}
       valuesFiles:
       - ./environment/tater-api/helm/values-prd.yaml
-  kubectl:
-    manifests:
-    - ./environment/tater-db/k8s/*.yml
-    defaultNamespace: tater-prd
+    - name: tater-db
+      chartPath: ./environment/tater-db/helm
+      namespace: tater-prd
+      artifactOverrides:
+        imageKey: tater-db
+      imageStrategy:
+        helm: {}
+      valuesFiles:
+      - ./environment/tater-db/helm/values-prd.yaml
 portForward:
 - resourceType: service
   resourceName: tater-api-svc

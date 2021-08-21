@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: tater-db
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       name: tater-db
@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: tater-db
-        image: tater-db:latest
-        imagePullPolicy: Never
+        image: "{{.Values.imageKey.repository}}:{{.Values.imageKey.tag}}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 5432
         env:

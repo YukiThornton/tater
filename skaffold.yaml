@@ -28,11 +28,25 @@ deploy:
         imageKey: tater-api
       imageStrategy:
         helm: {}
-  kubectl:
-    manifests:
-    - ./environment/tater-db/k8s/*.yml
-    - ./environment/wiremock/k8s/*.yml
-    defaultNamespace: tater-e2e
+    - name: tater-db
+      chartPath: ./environment/tater-db/helm
+      namespace: tater-e2e
+      artifactOverrides:
+        imageKey: tater-db
+      imageStrategy:
+        helm: {}
+    - name: wiremock
+      repo: https://lebenitza.github.io/charts
+      remoteChart: wiremock
+      namespace: tater-e2e
+      setValues:
+        persistence:
+          enabled: false
+        serviceAccount:
+          create: false
+        service:
+          port: 8080
+          type: "NodePort"
 portForward:
 - resourceType: service
   resourceName: tater-api-svc
@@ -45,7 +59,7 @@ portForward:
   port: 5432
   localPort: 18002
 - resourceType: service
-  resourceName: wiremock-svc
+  resourceName: wiremock
   namespace: tater-e2e
   port: 8080
   localPort: 18001
