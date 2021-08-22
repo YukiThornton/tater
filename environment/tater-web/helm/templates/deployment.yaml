@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tater-web
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      name: tater-web
+  template:
+    metadata:
+      labels:
+        name: tater-web
+    spec:
+      containers:
+      - name: tater-web
+        image: "{{.Values.imageKey.repository}}:{{.Values.imageKey.tag}}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 80

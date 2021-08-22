@@ -8,6 +8,10 @@ build:
       format: "local_20060102_150405"
       timezone: "Local"
   artifacts:
+  - image: tater-web
+    context: ./tater-web
+    docker:
+      dockerfile: ./environment/tater-web/Dockerfile
   - image: tater-api
     context: ./tater-api
     docker:
@@ -21,6 +25,13 @@ build:
 deploy:
   helm:
     releases:
+    - name: tater-web
+      chartPath: ./environment/tater-web/helm
+      namespace: tater-e2e
+      artifactOverrides:
+        imageKey: tater-web
+      imageStrategy:
+        helm: {}
     - name: tater-api
       chartPath: ./environment/tater-api/helm
       namespace: tater-e2e
@@ -49,6 +60,11 @@ deploy:
           type: "NodePort"
 portForward:
 - resourceType: service
+  resourceName: tater-web-svc
+  namespace: tater-e2e
+  port: 18100
+  localPort: 18100
+- resourceType: service
   resourceName: tater-api-svc
   namespace: tater-e2e
   port: 18000
@@ -64,11 +80,19 @@ portForward:
   port: 8080
   localPort: 18001
 profiles:
-  - name: no-api
+  - name: no-web
     patches:
       - op: remove
         path: /build/artifacts/0
       - op: remove
-        path: /deploy/helm
+        path: /deploy/helm/releases/0
       - op: remove
         path: /portForward/0
+  - name: no-api
+    patches:
+      - op: remove
+        path: /build/artifacts/1
+      - op: remove
+        path: /deploy/helm/releases/1
+      - op: remove
+        path: /portForward/1

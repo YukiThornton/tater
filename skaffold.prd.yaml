@@ -4,6 +4,10 @@ metadata:
   name: tater-prd
 build:
   artifacts:
+  - image: tater-web
+    context: ./tater-web
+    docker:
+      dockerfile: ./environment/tater-web/Dockerfile
   - image: tater-api
     context: ./tater-api
     docker:
@@ -17,6 +21,13 @@ build:
 deploy:
   helm:
     releases:
+    - name: tater-web
+      chartPath: ./environment/tater-web/helm
+      namespace: tater-prd
+      artifactOverrides:
+        imageKey: tater-web
+      imageStrategy:
+        helm: {}
     - name: tater-api
       chartPath: ./environment/tater-api/helm
       namespace: tater-prd
@@ -36,6 +47,11 @@ deploy:
       valuesFiles:
       - ./environment/tater-db/helm/values-prd.yaml
 portForward:
+- resourceType: service
+  resourceName: tater-web-svc
+  namespace: tater-prd
+  port: 18100
+  localPort: 19100
 - resourceType: service
   resourceName: tater-api-svc
   namespace: tater-prd
