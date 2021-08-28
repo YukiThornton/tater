@@ -5,12 +5,14 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear --port 18100",
+    "start": "sirv public --no-clear --single --port 18100",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "@tsconfig/svelte": "^2.0.1",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
@@ -19,12 +21,11 @@
     "svelte": "^3.0.0",
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",
-    "@rollup/plugin-typescript": "^8.0.0",
-    "typescript": "^4.0.0",
     "tslib": "^2.0.0",
-    "@tsconfig/svelte": "^2.0.0"
+    "typescript": "4.3.5"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.0"
+    "sirv-cli": "^1.0.14",
+    "svelte-navigator": "^3.1.5"
   }
 }

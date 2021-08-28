@@ -10,3 +10,4 @@ RUN npm run build
 
 FROM nginx:mainline
 COPY --from=build-env /work/public /usr/share/nginx/html
+COPY nginx-server.conf /etc/nginx/conf.d/default.conf
