@@ -1,6 +1,6 @@
 <script lang="ts">
     import { navigate } from 'svelte-navigator';
-    import { userId } from './../../store';
+    import { userId } from '@stores/store';
 
     let userIdInput = '';
     function login() {

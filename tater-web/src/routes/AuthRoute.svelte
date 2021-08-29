@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Route } from 'svelte-navigator';
-    import AuthGuard from './AuthGuard.svelte';
+    import AuthGuard from '@routes/AuthGuard.svelte';
 
     export let path;
 </script>

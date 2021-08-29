@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { userId } from '../../store';
+    import { userId } from '@stores/store';
 </script>
 
 <header>

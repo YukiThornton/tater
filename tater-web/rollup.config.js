@@ -1,6 +1,7 @@
 import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import alias from '@rollup/plugin-alias';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
@@ -63,6 +64,13 @@ export default {
 			sourceMap: !production,
 			inlineSources: !production
 		}),
+        
+        alias({
+            entries: [
+                {find: '@pages', replacement: `${__dirname}/src/components/pages`},
+                {find: '@routes', replacement: `${__dirname}/src/routes`}
+            ]
+        }),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
