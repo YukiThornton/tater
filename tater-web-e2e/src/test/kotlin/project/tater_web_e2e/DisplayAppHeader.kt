@@ -4,7 +4,7 @@ import com.codeborne.selenide.Condition.exactText
 import com.codeborne.selenide.Selenide.`$`
 import com.thoughtworks.gauge.Step
 
-class CommonUi {
+class DisplayAppHeader {
 
     @Step("ヘッダー部のアプリ名として<appName>が表示されている")
     fun appNameIsDisplayed(appName: String) {

@@ -6,11 +6,6 @@ import com.thoughtworks.gauge.Step
 
 class Login {
 
-    @Step("ログイン画面を表示する")
-    fun openPage() {
-        open(Page.Login.path)
-    }
-
     @Step("ユーザID入力欄に<id>を入力する")
     fun loginWithUserId(userId: String) {
         `$`("[data-tater-user-id-input]").value = userId

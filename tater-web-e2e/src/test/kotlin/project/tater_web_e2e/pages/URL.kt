@@ -1,4 +1,4 @@
-package project.tater_web_e2e
+package project.tater_web_e2e.pages
 
 object URL {
     fun baseUrl() = "http://localhost:18100"
