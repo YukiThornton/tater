@@ -42,6 +42,13 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
+    install(CORS) {
+        method(HttpMethod.Options)
+        method(HttpMethod.Get)
+        header("tater-user-id")
+        anyHost()
+    }
+
     kodein {
         val configuration = Configuration("/etc/tater/app.properties")
         bind<Configuration>() with singleton { configuration }

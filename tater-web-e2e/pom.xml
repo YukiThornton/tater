@@ -34,6 +34,18 @@
             <version>1.68</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.natpryce</groupId>
+            <artifactId>konfig</artifactId>
+            <version>1.6.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>2.27.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

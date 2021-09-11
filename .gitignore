@@ -4,6 +4,7 @@ environment/tater-db/samples/*-tmp.sql
 
 .DS_Store
 target/
+.vscode/
 
 **/.mvn/wrapper/maven-wrapper.jar
 

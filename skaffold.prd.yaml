@@ -8,6 +8,8 @@ build:
     context: ./tater-web
     docker:
       dockerfile: ./environment/tater-web/Dockerfile
+      buildArgs:
+        API_URL: http://localhost:19000
   - image: tater-api
     context: ./tater-api
     docker:

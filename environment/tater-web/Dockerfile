@@ -2,6 +2,7 @@
 
 FROM node:lts-alpine AS build-env
 WORKDIR /work
+ARG API_URL
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install

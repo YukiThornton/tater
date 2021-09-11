@@ -1,9 +1,7 @@
 package project.tater_web_e2e
 
-import com.codeborne.selenide.Condition
-import com.codeborne.selenide.Condition.*
+import com.codeborne.selenide.Condition.exactText
 import com.codeborne.selenide.Selenide.`$`
-import com.codeborne.selenide.Selenide.open
 import com.thoughtworks.gauge.Step
 
 class Login {
@@ -20,6 +18,6 @@ class Login {
 
     @Step("エラーメッセージとして<message>と表示されている")
     fun assertThatErrorMessageIsDisplayed(message: String) {
-        `$`("[data-tater-login-message]").shouldHave(text(message))
+        `$`("[data-tater-login-message]").shouldHave(exactText(message))
     }
 }
