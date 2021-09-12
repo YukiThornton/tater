@@ -1,6 +1,6 @@
 <script lang="ts">
     import { navigate } from 'svelte-navigator';
-    import { userId } from '@stores/store';
+    import { userId } from '@stores/user';
 
     $: authorized = !!$userId;
     $: if (!authorized) {

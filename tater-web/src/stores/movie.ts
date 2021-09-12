@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
-export interface StoredMovie {
+export interface MovieViewModel {
     title: string
 }
 
-export const movies = writable<StoredMovie[]>();
+export const movies = writable<MovieViewModel[]>();

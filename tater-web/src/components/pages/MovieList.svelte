@@ -1,14 +1,11 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { userId } from '@stores/store';
+    import { userId } from '@stores/user';
     import { movies } from '@stores/movie';
+    import MovieListController from 'src/controllers/MovieListController';
     
     onMount(async () => {
-        const response = await fetch(process.env.apiUrl + '/v1/top-rated', {
-            headers: { 'tater-user-id': $userId.toString() }
-        })
-        const json = await response.json()
-        movies.set(json.movies.map(movie => ({title: movie.title})))
+        new MovieListController().loadMovies()
     })
 </script>
 

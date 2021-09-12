@@ -1,6 +1,6 @@
 <script lang="ts">
     import { navigate } from 'svelte-navigator';
-    import { userId } from '@stores/store';
+    import { userId } from '@stores/user';
 
     let input: HTMLInputElement;
     let inputValue = '';
@@ -9,7 +9,7 @@
     function login() {
         const value = Number(inputValue)
         if (!Number.isNaN(value)) {
-            userId.set(value);
+            userId.set(value.toString());
             navigate("/")
         } else {
             showErrorMessage = true;
