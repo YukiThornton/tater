@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import { userId } from '@stores/user';
     import { movies } from '@stores/movie';
-    import { movieListController } from 'src/container';
+    import { movieListController } from '@container';
     
     onMount(async () => {
         movieListController.loadMovies()

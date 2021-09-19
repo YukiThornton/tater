@@ -1,6 +1,6 @@
 <script lang="ts">
     import { errorMessage } from '@stores/pages/login';
-    import { loginController } from 'src/container';
+    import { loginController } from '@container';
 
     let input: HTMLInputElement;
     let inputValue = '';

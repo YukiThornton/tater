@@ -1,4 +1,4 @@
-import type { TextInput } from "./Input";
+import type { TextInput } from "@domains/Input";
 
 export class UserId {
     constructor(readonly id: string) {}

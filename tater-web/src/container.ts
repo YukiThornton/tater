@@ -1,18 +1,18 @@
-import ApiClient from "./drivers/ApiClient";
-import MovieRepository from "./repositories/MovieRepository";
-import PagePresenter from "./presenters/PagePresenter";
-import AuthPresenter from "./presenters/AuthPresenter";
-import UserPresenter from "./presenters/UserPresenter";
-import LoginPagePresenter from "./presenters/LoginPagePresenter";
-import MoviePresenter from "./presenters/MoviePresenter";
-import AppInitUseCase from "./usecases/AppInitUseCase";
-import AuthUseCase from "./usecases/AuthUseCase";
-import LoginUseCase from "./usecases/LoginUseCase";
-import MovieListUseCase from "./usecases/MovieListUseCase";
-import AppController from "./controllers/AppController";
-import AuthController from "./controllers/AuthController";
-import LoginController from "./controllers/LoginController";
-import MovieListController from "./controllers/MovieListController";
+import ApiClient from "@drivers/ApiClient";
+import MovieRepository from "@repositories/MovieRepository";
+import PagePresenter from "@presenters/PagePresenter";
+import AuthPresenter from "@presenters/AuthPresenter";
+import UserPresenter from "@presenters/UserPresenter";
+import LoginPagePresenter from "@presenters/LoginPagePresenter";
+import MoviePresenter from "@presenters/MoviePresenter";
+import AppInitUseCase from "@usecases/AppInitUseCase";
+import AuthUseCase from "@usecases/AuthUseCase";
+import LoginUseCase from "@usecases/LoginUseCase";
+import MovieListUseCase from "@usecases/MovieListUseCase";
+import AppController from "@controllers/AppController";
+import AuthController from "@controllers/AuthController";
+import LoginController from "@controllers/LoginController";
+import MovieListController from "@controllers/MovieListController";
 
 import { 
     login as loginStore,

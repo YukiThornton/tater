@@ -6,7 +6,7 @@
     import AuthRoute from '@routes/AuthRoute.svelte';
     import Login from '@pages/Login.svelte';
     import MovieList from '@pages/MovieList.svelte';
-    import { appController } from '../../container';
+    import { appController } from '@container';
     
     let pages: [RouteModel, any][]
     onMount(() => {

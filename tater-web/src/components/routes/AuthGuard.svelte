@@ -1,6 +1,6 @@
 <script lang="ts">
     import { authenticated } from '@stores/auth';
-    import { authController } from 'src/container';
+    import { authController } from '@container';
 
     $: {
         authenticated

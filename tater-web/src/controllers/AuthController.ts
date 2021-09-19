@@ -1,4 +1,4 @@
-import type AuthUseCase from "src/usecases/AuthUseCase";
+import type AuthUseCase from "@usecases/AuthUseCase";
 
 export default class AuthController {
     constructor(private authUseCase: AuthUseCase){}

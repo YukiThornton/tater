@@ -1,6 +1,6 @@
-import Page from "src/domains/Page";
 import type { Writable } from "svelte/store";
 import { navigate } from 'svelte-navigator';
+import Page from "@domains/Page";
 import type { RouteModel } from "@stores/RouteModel";
 
 export default class PagePresenter {

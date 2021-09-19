@@ -1,4 +1,4 @@
-import type PagePresenter from "src/presenters/PagePresenter";
+import type PagePresenter from "@presenters/PagePresenter";
 
 export default class AppInitUseCase {
 

@@ -1,6 +1,6 @@
-import type { Movie } from 'src/domains/Movie';
-import type { MovieViewModel } from '@stores/movie';
 import type { Writable } from 'svelte/store';
+import type { Movie } from '@domains/Movie';
+import type { MovieViewModel } from '@stores/movie';
 
 export default class MoviePresenter {
     

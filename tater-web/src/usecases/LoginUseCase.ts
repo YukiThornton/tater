@@ -1,12 +1,12 @@
-import AuthState from "src/domains/AuthState";
-import type { TextInput } from "src/domains/Input";
-import { messages } from "src/domains/Message";
-import Page from "src/domains/Page";
-import { UserId } from "src/domains/User";
-import type AuthPresenter from "src/presenters/AuthPresenter";
-import type LoginPagePresenter from "src/presenters/LoginPagePresenter";
-import type PagePresenter from "src/presenters/PagePresenter";
-import type UserPresenter from "src/presenters/UserPresenter";
+import AuthState from "@domains/AuthState";
+import type { TextInput } from "@domains/Input";
+import { messages } from "@domains/Message";
+import Page from "@domains/Page";
+import { UserId } from "@domains/User";
+import type AuthPresenter from "@presenters/AuthPresenter";
+import type LoginPagePresenter from "@presenters/LoginPagePresenter";
+import type PagePresenter from "@presenters/PagePresenter";
+import type UserPresenter from "@presenters/UserPresenter";
 
 export default class LoginUseCase {
     

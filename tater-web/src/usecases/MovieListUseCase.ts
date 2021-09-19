@@ -1,6 +1,6 @@
-import type MoviePresenter from 'src/presenters/MoviePresenter';
-import type UserPresenter from 'src/presenters/UserPresenter';
-import type MovieRepository from 'src/repositories/MovieRepository';
+import type MoviePresenter from '@presenters/MoviePresenter';
+import type UserPresenter from '@presenters/UserPresenter';
+import type MovieRepository from '@repositories/MovieRepository';
 
 export default class MovieListUseCase {
     

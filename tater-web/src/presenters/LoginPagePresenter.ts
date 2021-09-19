@@ -1,5 +1,5 @@
-import type { Message } from "src/domains/Message";
 import type { Writable } from "svelte/store";
+import type { Message } from "@domains/Message";
 
 export default class LoginPagePresenter {
 

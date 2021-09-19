@@ -7,8 +7,14 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-        "@stores*": ["src/stores*"]
+        "@drivers*": ["src/drivers*"],
+        "@stores*": ["src/stores*"],
+        "@controllers*": ["src/controllers*"],
+        "@presenters*": ["src/presenters*"],
+        "@repositories*": ["src/repositories*"],
+        "@usecases*": ["src/usecases*"],
+        "@domains*": ["src/domains*"],
+        "@container": ["src/container"]
     }
   }
-
 }

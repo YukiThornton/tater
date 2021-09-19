@@ -1,5 +1,5 @@
-import { TextInput } from "src/domains/Input";
-import type LoginUseCase from "src/usecases/LoginUseCase";
+import { TextInput } from "@domains/Input";
+import type LoginUseCase from "@usecases/LoginUseCase";
 
 export default class LoginController {
     constructor(private loginUseCase: LoginUseCase){}

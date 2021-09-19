@@ -1,6 +1,6 @@
-import Page from "src/domains/Page";
-import type AuthPresenter from "src/presenters/AuthPresenter";
-import type PagePresenter from "src/presenters/PagePresenter";
+import Page from "@domains/Page";
+import type AuthPresenter from "@presenters/AuthPresenter";
+import type PagePresenter from "@presenters/PagePresenter";
 
 export default class AuthUseCase {
 

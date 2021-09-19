@@ -1,5 +1,5 @@
-import { UserId } from "src/domains/User";
 import { get, Writable } from 'svelte/store'
+import { UserId } from "@domains/User";
 
 export default class UserPresenter {
 

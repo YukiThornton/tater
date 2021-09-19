@@ -1,4 +1,4 @@
-import type AppInitUseCase from "src/usecases/AppInitUseCase";
+import type AppInitUseCase from "@usecases/AppInitUseCase";
 
 export default class AppController {
     

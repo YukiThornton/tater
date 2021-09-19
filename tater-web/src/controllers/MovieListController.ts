@@ -1,4 +1,4 @@
-import type MovieListUseCase from 'src/usecases/MovieListUseCase';
+import type MovieListUseCase from '@usecases/MovieListUseCase';
 
 export default class MovieListController {
 

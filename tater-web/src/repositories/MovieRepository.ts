@@ -1,6 +1,6 @@
-import { Movie } from "src/domains/Movie";
-import type { UserId } from "src/domains/User";
-import type ApiClient from "src/drivers/ApiClient";
+import { Movie } from "@domains/Movie";
+import type { UserId } from "@domains/User";
+import type ApiClient from "@drivers/ApiClient";
 
 export default class MovieRepository {
 

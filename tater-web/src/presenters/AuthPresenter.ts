@@ -1,5 +1,5 @@
-import AuthState from 'src/domains/AuthState';
-import { get, Writable } from 'svelte/store'
+import { get, Writable } from 'svelte/store';
+import AuthState from '@domains/AuthState';
 
 export default class AuthPresenter {
 
