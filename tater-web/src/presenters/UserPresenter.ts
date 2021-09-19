@@ -1,13 +1,15 @@
 import { UserId } from "src/domains/User";
-import { userId as userIdStore } from '@stores/user';
-import { get } from 'svelte/store'
+import { get, Writable } from 'svelte/store'
 
 export default class UserPresenter {
+
+    constructor(private userIdStore: Writable<string>) {}
+
     setUserId(userId: UserId) {
-        userIdStore.set(userId.id)
+        this.userIdStore.set(userId.id)
     }
 
     getUserId(): UserId {
-        return new UserId(get(userIdStore))
+        return new UserId(get(this.userIdStore))
     }
 }

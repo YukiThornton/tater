@@ -1,7 +1,8 @@
-import AuthUseCase from "src/usecases/AuthUseCase";
+import type AuthUseCase from "src/usecases/AuthUseCase";
 
 export default class AuthController {
-    private authUseCase = new AuthUseCase()
+    constructor(private authUseCase: AuthUseCase){}
+
     whenAuthStatusChanges() {
         this.authUseCase.showLoginIfNotAllPagesAreAuthorized()
     }

@@ -1,12 +1,15 @@
-import { errorMessage as errorMessageStore } from "@stores/pages/login";
 import type { Message } from "src/domains/Message";
+import type { Writable } from "svelte/store";
 
 export default class LoginPagePresenter {
+
+    constructor(private errorMessageStore: Writable<string>) {}
+
     setErrorMessage(message: Message) {
-        errorMessageStore.set(message.text);
+        this.errorMessageStore.set(message.text);
     }
     
     clearErrorMessage() {
-        errorMessageStore.set(null)
+        this.errorMessageStore.set(null)
     }
 }

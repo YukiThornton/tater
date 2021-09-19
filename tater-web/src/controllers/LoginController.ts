@@ -1,9 +1,10 @@
 import { TextInput } from "src/domains/Input";
-import LoginUseCase from "src/usecases/LoginUseCase";
+import type LoginUseCase from "src/usecases/LoginUseCase";
 
 export default class LoginController {
+    constructor(private loginUseCase: LoginUseCase){}
+
     login(id: string) {
-        const useCase = new LoginUseCase()
-        useCase.login(new TextInput(id));
+        this.loginUseCase.login(new TextInput(id));
     }
 }

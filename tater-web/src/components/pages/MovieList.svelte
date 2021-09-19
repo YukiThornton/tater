@@ -2,10 +2,10 @@
     import { onMount } from 'svelte';
     import { userId } from '@stores/user';
     import { movies } from '@stores/movie';
-    import MovieListController from 'src/controllers/MovieListController';
+    import { movieListController } from 'src/container';
     
     onMount(async () => {
-        new MovieListController().loadMovies()
+        movieListController.loadMovies()
     })
 </script>
 

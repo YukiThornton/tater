@@ -1,7 +1,10 @@
-import MovieListUseCase from 'src/usecases/MovieListUseCase';
+import type MovieListUseCase from 'src/usecases/MovieListUseCase';
 
 export default class MovieListController {
+
+    constructor(private movieListUseCase: MovieListUseCase){}
+
     async loadMovies() {
-        new MovieListUseCase().loadMovies()
+        this.movieListUseCase.loadMovies()
     }
 }

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { authenticated } from '@stores/auth';
-    import AuthController from 'src/controllers/AuthController';
+    import { authController } from 'src/container';
 
     $: {
         authenticated
-        new AuthController().whenAuthStatusChanges()
+        authController.whenAuthStatusChanges()
     }
 </script>
 

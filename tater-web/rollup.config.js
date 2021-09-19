@@ -69,7 +69,7 @@ export default {
         alias({
             entries: [
                 {find: '@pages', replacement: `${__dirname}/src/components/pages`},
-                {find: '@routes', replacement: `${__dirname}/src/routes`}
+                {find: '@routes', replacement: `${__dirname}/src/components/routes`}
             ]
         }),
 

@@ -1,14 +1,17 @@
-import MoviePresenter from 'src/presenters/MoviePresenter';
-import UserPresenter from 'src/presenters/UserPresenter';
-import MovieRepository from 'src/repositories/MovieRepository';
+import type MoviePresenter from 'src/presenters/MoviePresenter';
+import type UserPresenter from 'src/presenters/UserPresenter';
+import type MovieRepository from 'src/repositories/MovieRepository';
 
 export default class MovieListUseCase {
-    async loadMovies() {
-        const userRepo = new UserPresenter()
-        const movieRepo = new MovieRepository()
-        const moviePresenter = new MoviePresenter()
+    
+    constructor(
+        private movieRepo: MovieRepository,
+        private moviePresenter: MoviePresenter,
+        private userPresenter: UserPresenter,
+    ) {}
 
-        const m = await movieRepo.getTopRated(userRepo.getUserId())
-        moviePresenter.setMovies(m)
+    async loadMovies() {
+        const m = await this.movieRepo.getTopRated(this.userPresenter.getUserId())
+        this.moviePresenter.setMovies(m)
     }
 }

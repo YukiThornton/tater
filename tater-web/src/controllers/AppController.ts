@@ -1,8 +1,9 @@
-import AppInitUseCase from "src/usecases/AppInitUseCase";
+import type AppInitUseCase from "src/usecases/AppInitUseCase";
 
 export default class AppController {
     
-    private appInitUseCase = new AppInitUseCase()
+    constructor(private  appInitUseCase: AppInitUseCase){}
+
     initializePages() {
         this.appInitUseCase.initializePages()
     }

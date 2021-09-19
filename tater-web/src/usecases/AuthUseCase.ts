@@ -1,10 +1,13 @@
 import Page from "src/domains/Page";
-import AuthPresenter from "src/presenters/AuthPresenter";
-import PagePresenter from "src/presenters/PagePresenter";
+import type AuthPresenter from "src/presenters/AuthPresenter";
+import type PagePresenter from "src/presenters/PagePresenter";
 
 export default class AuthUseCase {
-    readonly authPresenter = new AuthPresenter()
-    readonly pagePresenter = new PagePresenter()
+
+    constructor(
+        private authPresenter: AuthPresenter,
+        private pagePresenter: PagePresenter,
+    ) {}
 
     showLoginIfNotAllPagesAreAuthorized() {
         if (!this.authPresenter.getAuthState().allPagesAreAuthorized()) {

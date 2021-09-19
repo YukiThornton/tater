@@ -1,6 +1,6 @@
 <script lang="ts">
     import { errorMessage } from '@stores/pages/login';
-    import LoginController from 'src/controllers/LoginController';
+    import { loginController } from 'src/container';
 
     let input: HTMLInputElement;
     let inputValue = '';
@@ -14,8 +14,7 @@
     }
 
     function login() {
-        const controller = new LoginController();
-        controller.login(inputValue);
+        loginController.login(inputValue);
     }
     
     function clearFocus() {

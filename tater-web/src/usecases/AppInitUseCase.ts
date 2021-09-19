@@ -1,7 +1,9 @@
-import PagePresenter from "src/presenters/PagePresenter";
+import type PagePresenter from "src/presenters/PagePresenter";
 
 export default class AppInitUseCase {
-    private pagePresenter = new PagePresenter();
+
+    constructor(private pagePresenter: PagePresenter) {}
+
     initializePages() {
         this.pagePresenter.initializePages();
     }
