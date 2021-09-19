@@ -1,29 +1,33 @@
 <script lang="ts">
-    import { navigate } from 'svelte-navigator';
-    import { userId } from '@stores/user';
+    import { errorMessage } from '@stores/pages/login';
+    import LoginController from 'src/controllers/LoginController';
 
     let input: HTMLInputElement;
     let inputValue = '';
-    let showErrorMessage = false;
+    let inputFocusRequired = false;
+    $: if ($errorMessage) {
+        inputFocusRequired = true;
+    }
+    $: if (inputFocusRequired) {
+        input.focus();
+        input.select();
+    }
 
     function login() {
-        const value = Number(inputValue)
-        if (!Number.isNaN(value)) {
-            userId.set(value.toString());
-            navigate("/")
-        } else {
-            showErrorMessage = true;
-            input.focus();
-            input.select();
-        }
+        const controller = new LoginController();
+        controller.login(inputValue);
+    }
+    
+    function clearFocus() {
+        inputFocusRequired = false;
     }
 </script>
 
 <main>
-    <input bind:this={input} bind:value={inputValue} data-tater-user-id-input />
+    <input bind:this={input} bind:value={inputValue} on:change={clearFocus} data-tater-user-id-input />
     <button on:click={login} data-tater-login-button>Login</button>
-    {#if showErrorMessage}
-        <p data-tater-login-message>Invalid ID</p>
+    {#if $errorMessage}
+        <p data-tater-login-message>{$errorMessage}</p>
     {/if}
 </main>
 

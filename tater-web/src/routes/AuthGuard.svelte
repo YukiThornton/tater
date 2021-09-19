@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { navigate } from 'svelte-navigator';
-    import { userId } from '@stores/user';
+    import { authenticated } from '@stores/auth';
+    import AuthController from 'src/controllers/AuthController';
 
-    $: authorized = !!$userId;
-    $: if (!authorized) {
-        navigate("/login", { replace: true });
+    $: {
+        authenticated
+        new AuthController().whenAuthStatusChanges()
     }
 </script>
 
-{#if authorized}
+{#if authenticated}
     <slot />
 {/if}
