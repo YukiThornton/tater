@@ -69,6 +69,9 @@ export default {
         alias({
             entries: [
                 {find: '@pages', replacement: `${__dirname}/src/components/pages`},
+                {find: '@organisms', replacement: `${__dirname}/src/components/organisms`},
+                {find: '@molecules', replacement: `${__dirname}/src/components/molecules`},
+                {find: '@atoms', replacement: `${__dirname}/src/components/atoms`},                
                 {find: '@routes', replacement: `${__dirname}/src/components/routes`}
             ]
         }),

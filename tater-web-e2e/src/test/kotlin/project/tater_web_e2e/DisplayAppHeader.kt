@@ -11,9 +11,9 @@ class DisplayAppHeader {
         `$`("[data-tater-app-name]").shouldHave(exactText(appName))
     }
 
-    @Step("表示中のユーザとしてID<userId>が表示されている")
-    fun assertThatUserIdIsDisplayed(userId: String) {
-        `$`("[data-tater-user-id").shouldHave(exactText(userId))
+    @Step("表示中のユーザとして<userIdLabel>が表示されている")
+    fun assertThatUserIdIsDisplayed(userIdLabel: String) {
+        `$`("[data-tater-user-id]").shouldHave(exactText(userIdLabel))
     }
 
 }

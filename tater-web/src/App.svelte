@@ -5,4 +5,9 @@
 <Routes />
 
 <style>
+    :global(body) {
+        margin: 0;
+        color: #e4e4e4;
+        font-family: 'Yusei Magic', sans-serif;
+    }
 </style>
