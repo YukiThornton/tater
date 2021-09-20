@@ -1,6 +1,6 @@
 <span class="logo" data-tater-app-name>Tater</span>
 
-<style>
+<style lang="scss">
     .logo {
         font-family: 'Sigmar One', cursive;
         font-size: 3em;

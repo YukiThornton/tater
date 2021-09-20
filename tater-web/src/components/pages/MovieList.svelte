@@ -23,12 +23,8 @@
     </main>
 </div>
 
-<style>
+<style lang="scss">
     .movie-list {
         background-color: #252525;
-    }
-    
-    h2 {
-        font-family: 'Yusei Magic', sans-serif;
     }
 </style>

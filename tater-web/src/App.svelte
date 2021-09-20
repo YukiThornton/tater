@@ -4,7 +4,7 @@
 
 <Routes />
 
-<style>
+<style lang="scss">
     :global(body) {
         margin: 0;
         color: #e4e4e4;

@@ -10,7 +10,7 @@
     <UserId userId={userId} />
 </header>
 
-<style>
+<style lang="scss">
     header {
         padding: 0 25px;
         display: flex;

@@ -5,7 +5,7 @@
 
 <span {...attr}>{text}</span>
 
-<style>
+<style lang="scss">
     span {
         font-size: 16px;
     }
