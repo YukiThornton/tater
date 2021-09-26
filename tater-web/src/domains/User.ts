@@ -4,6 +4,7 @@ export class UserId {
     constructor(readonly id: string) {}
     
     static isValid(text: TextInput): boolean {
+        if (text.value.length === 0) return false;
         const value = Number(text.value)
         return !Number.isNaN(value)
     }

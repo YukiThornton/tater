@@ -5,7 +5,7 @@
     import type { RouteModel } from '@stores/RouteModel';
     import AuthRoute from '@routes/AuthRoute.svelte';
     import Login from '@pages/Login.svelte';
-    import MovieList from '@pages/MovieList.svelte';
+    import Top from '@pages/Top.svelte';
     import { appController } from '@container';
     
     let pages: [RouteModel, any][]
@@ -14,7 +14,7 @@
 
         pages = [
             [$login, Login],
-            [$top, MovieList]
+            [$top, Top]
         ]
     })
 </script>

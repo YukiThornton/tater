@@ -4,10 +4,12 @@
 
 <Routes />
 
-<style lang="scss">
+<style lang="scss" global>
+    @import "../node_modules/normalize.css/normalize";
     :global(body) {
         margin: 0;
-        color: #e4e4e4;
-        font-family: 'Yusei Magic', sans-serif;
+        background-color: $g-bg-color;
+        color: $g-primary-text-color;
+        font-family: $g-primary-font-family;
     }
 </style>

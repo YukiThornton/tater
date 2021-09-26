@@ -1,34 +1,27 @@
 <script lang="ts">
     import { errorMessage } from '@stores/pages/login';
     import { loginController } from '@container';
+    import LoginTemplate from '@templates/Login.svelte';
 
-    let input: HTMLInputElement;
-    let inputValue = '';
-    let inputFocusRequired = false;
+    let userId = '';
+    let focusRequired = false;
     $: if ($errorMessage) {
-        inputFocusRequired = true;
-    }
-    $: if (inputFocusRequired) {
-        input.focus();
-        input.select();
+        focusRequired = true;
     }
 
     function login() {
-        loginController.login(inputValue);
+        loginController.login(userId);
     }
     
     function clearFocus() {
-        inputFocusRequired = false;
+        focusRequired = false;
     }
 </script>
 
-<main>
-    <input bind:this={input} bind:value={inputValue} on:change={clearFocus} data-tater-user-id-input />
-    <button on:click={login} data-tater-login-button>Login</button>
-    {#if $errorMessage}
-        <p data-tater-login-message>{$errorMessage}</p>
-    {/if}
-</main>
-
-<style lang="scss">
-</style>
+<LoginTemplate
+    bind:userId={userId}
+    bind:focusRequired={focusRequired}
+    bind:errorMessage={$errorMessage}
+    on:login={login}
+    on:input={clearFocus}
+/>
