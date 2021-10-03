@@ -1,7 +1,8 @@
 import { writable } from "svelte/store";
 
 export interface MovieViewModel {
-    title: string
+    readonly title: string,
+    readonly reviewAverage: string,
 }
 
 export const movies = writable<MovieViewModel[]>();

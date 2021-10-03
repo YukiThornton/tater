@@ -6,4 +6,5 @@
 
 <div data-tater-movie>
     <h2 data-tater-title>{movie.title}</h2>
+    <span data-tater-rating>{movie.reviewAverage}</span>
 </div>

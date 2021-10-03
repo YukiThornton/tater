@@ -7,9 +7,14 @@ export default class ApiClient {
     }
 }
 
+export interface ReviewJson {
+    average: number
+}
+
 export interface MovieJson {
     id: string,
     title: string,
+    review: ReviewJson
 }
 
 export interface MoviesJson {
